@@ -1,0 +1,84 @@
+<% layout("/layout/boilerplate.ejs") -%>
+
+
+<style>
+    .title{
+      color: black;
+    }
+    .container{
+        background-color: #b2bac7;
+        max-width: 100% !important;
+        padding: 10px;
+    }
+    .users-container{
+        width: 60%;
+        background-color: aliceblue;
+        margin: auto;
+        color: black;
+        border-radius: 10px;
+        padding: 20px 35px;
+    }
+    #profile-pic{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .indiv-user{
+        margin-bottom: 13px ;
+        display: flex;
+        flex-direction: row;
+    }
+    .user-info{
+        padding: 4px 10px;
+        width: 75%;
+    }
+    .follow-btn{
+        width: 20%;
+        justify-items: center;
+        align-content: center;
+    }
+    .follow-btn button:hover{
+     box-shadow: 0 0 20px black;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="users-container">
+            <h2 class="title is-3">Find new Friends</h2>
+            <% for(let User of allUsers) { %> 
+                <% if(!(User._id.equals(currUser._id)) ) { %> 
+                <div class="indiv-user">
+                    <div>
+                        <form action="/user/<%=User._id%>" method="GET">
+                            <button>
+                                <img id="profile-pic" src="<%=User.profilePic%>" alt="profilepic">
+                            </button>
+                        </form>
+                    </div>
+                    <div class="user-info">
+                        <form action="/user/<%=User._id%>" method="GET">
+                                <button  style="line-height: 1; text-align: start;"><b><%= User.name %></b><br><%= User.bio %></button>
+                        </form>
+                    </div>
+                    <div class="follow-btn">
+                        <form action="/follow/<%=User._id%>" method="GET">
+            <% // Check if the current user's ID is in the User's followers array
+                const isFollowByUser = User.followers.some(followId => followId.equals(currUser._id));
+                if(isFollowByUser) { %>
+                    <button class="button is-danger is-rounded">
+                        Unfollow
+                    </button>
+            <% } else { %>
+                    <button class="button is-success is-rounded">
+                        Follow
+                    </button>        
+            <% } %>
+            </button>
+                       </form>
+                    </div> 
+                </div>
+                <% }} %>
+        </div>
+    </div>
+</body>

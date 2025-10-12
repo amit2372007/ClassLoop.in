@@ -1,0 +1,253 @@
+<% layout("/layout/boilerplate.ejs") -%>
+
+<style>
+    .body-container{
+        display: flex;
+        flex-direction: row;
+    }
+    .body-container div{
+        background-color: #b2bac7;
+        color: black;
+        margin: 6px 4px;
+        /* border: 2px solid black; */
+        border-radius: 15px;
+        padding: 5px;
+    }
+   .features-container{
+    width: 25%;
+    height: 100%;
+   }
+   .post-container{
+    width:50%;
+    height: 100%;
+   }
+   .chats-container{
+    width: 25%;
+    height: 100%;
+   }
+   .post{
+     padding: 5px;
+     background-color: aliceblue !important;
+     /* border: 2px solid red ; */
+   }
+   .post div{
+    background-color: aliceblue !important;
+   }
+   .post-info{
+    padding: 0px !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid black;
+    border-radius: 0px !important;
+    /* border: 2px solid yellow ; */
+   }
+   .post-info div{
+    padding: 0px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+   }
+   .img{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 500px;
+    border-radius: 15px;
+   }
+   .post-react{
+      display: flex;
+      flex-direction: row;
+      margin-top: 0px !important;
+      margin-bottom: 0px !important;
+      padding-top: 0px !important;
+   }
+   .post-react i{
+      font-size: 25px;
+      margin-right: 5px;
+      text-decoration: none;
+   }
+    .love-react{
+        margin: 0px 4px !important;
+        padding: 0px !important;
+        align-content: center;
+    }
+    .post-react button:hover{
+      text-decoration: none;
+   }
+   .post-react div{
+      align-items: center;
+   }
+   .post-react p{
+      line-height: 1;
+   }
+   .likeBtn{
+      color: black;
+      background-color: aliceblue;
+      border: 0px solid;
+      padding: 5px !important;
+      margin: 6px 4px !important;
+   }
+   .abc{
+     padding: 0px 5px;
+   }
+   .post-comments{
+       border-radius: 0px !important;
+       border-top: 2px solid black ;
+   }
+   .akm{
+     margin: 0px 5px !important;
+     /* padding: 10px !important; */
+   }
+   .indiv-comments{
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px !important;
+    border-bottom: 2px solid black;
+   }
+   #profile-pic{
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        display: block;
+        object-fit: cover;
+    }
+
+</style>
+
+<body>
+<div class="body-container">
+    
+     <div class="features-container container">
+        features
+    </div>
+
+    <div class="post-container container">
+        <h1 style="margin-left: 7px; font-size: 30px;"><b>Posts</b></h1>
+        
+        <div class="post">
+            
+            <div class="post-info">
+                <div>
+                     <form action="/user/<%=Post.owner._id%>" method="get">
+                       <img id="profile-pic" src="<%=Post.owner.profilePic%>" alt="dp">
+                     </form>
+                   <div class="post-info-user">
+                      <form action="/user/<%=Post.owner._id%>" method="get">
+                        <button style="line-height: 1; text-align: start;"><%=Post.owner.name%><br/><%=Post.createdAt.toDateString()%></button> 
+                      </form>
+                    </div>
+                </div>
+                <div>
+                   <div class="show-post">
+                    
+                   </div>
+                   <div class="edit-btn">
+                   <% if(currUser && Post.owner._id.equals(currUser._id)) { %>
+                    <form action="/post/<%=Post._id%>/edit" method="GET">
+                        <button>Edit</button>
+                    </form>
+                    </div>
+                   <div class="delete-btn">
+                     <form action="/post/<%=Post._id%>/delete?_method=DELETE" method="POST" >
+                        <button>Delete</button>
+                     </form>
+                    <% } %> 
+                   </div>
+                </div>  
+            </div>
+
+            <post class="description">
+                <p style="margin-left: 17px;"><%=Post.description%></p>
+            </post>
+            
+            <div class="post-image">
+                <img class="img"
+                     src="<%=Post.image%>" 
+                     alt="This is image"
+                />
+            </div>
+
+            <div class="post-react">
+                <div class="love-react">
+                    <% if (currUser) { %>
+        <form action="/post/<%=Post._id%>/like" method="POST">
+            <button type="submit" class="button likeBtn">
+                
+                <% // Check if the current user's ID is in the Post's likes array
+                   const isLikedByUser = Post.like.some(likeId => likeId.equals(currUser._id));
+                %>
+
+                <p>
+                   <% if (isLikedByUser) { %>
+                        <i class="fa-solid fa-heart" style="color: red;"></i>
+                    <% } else { %>
+                        <i class="fa-regular fa-heart"></i>
+                    <% } %>
+                    <br>
+                    <p class="abc"><%= Post.like.length %></p>
+                </p>
+            </button>
+        </form>
+    <% } else { %>
+        <p>
+            <i class="fa-regular fa-heart"></i><br><p class="abc"><%= Post.like.length %></p>
+        </p>
+    <% } %>
+                </div>
+                <div class="comment-react">
+                     <p><i class="fa-regular fa-comment"></i><br><p class="abc"><%=Post.comments.length%></p></p> 
+                </div>
+                <div class="share-react">
+                     <p><i class="fa-regular fa-share-from-square"></i><br><p class="abc"><%=Post.like.length%></p></p>
+                </div>
+     
+            </div>
+            <!-- post comment section -->
+            <div class="post-comments">
+                <h2  style="color: black; margin-bottom: 0px;"  class="title is-title">Comments</h2>
+                <div class="add-comment">
+                    <form action="/post/<%=Post._id%>/comment" method="POST">
+                       <input style="width: 80%;"  class="input is-info" name="comments[comment]" type="text" placeholder="Add a comment" />
+                       <button class="button is-primary">Comment</button>
+                    </form>
+                </div>
+                <div class="akm">
+                    <% for(let Comments of Post.comments) { %>
+                    <div class="indiv-comments">
+                    <p style="font-size: 25px; margin-right: 4px; display: inline;"><i class="fa-solid fa-user"></i></p>
+                    <p style="line-height: 1; margin-left: 5px;"><span style="color: red;"><%=Comments.author.name%></span><br/><%= Comments.comment %></p>
+                    </div>
+                    <% } %>
+                </div>
+                
+                
+
+            </div>
+        </div>
+    </div>
+
+    <div class="chats-container container">
+        chats
+    </div>
+    
+</div>
+</body>
+
+<script>
+     let likeBtn = document.getElementById("likeBtn");
+     let toggle = false;
+     likeBtn.addEventListener("click" , ()=>{
+         if(!toggle) {
+            likeBtn.className = "fa-solid fa-heart";
+            likeBtn.style.color = "red";
+            toggle = true;
+         } else{
+            likeBtn.className = "fa-regular fa-heart";
+            toggle = false;
+         }
+     }); 
+
+</script>

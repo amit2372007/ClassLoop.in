@@ -1,0 +1,136 @@
+<% layout("/layout/boilerplate.ejs") -%>
+<style>
+    .container{
+      padding: 10px 0px;
+      max-width: 100% !important;
+      background-color: #b2bac7;
+    }
+    .user{
+      color: black;
+      background: aliceblue;
+      width: 50%; 
+      min-height: 100vh;  
+      max-height: 100%;
+      margin: auto;
+      padding: 7px ;
+      border-radius: 10px;
+    }
+    .user-info{
+      background: aliceblue;
+      width: 80%;
+      margin: 15px auto;  
+      padding: 6px; 
+      border-radius: 10px;
+      /* border: 2px solid black; */
+     
+    }
+    .bghk{
+       display: flex;
+       flex-direction: row;
+    }
+    #profile-pic{
+        width: 125px;
+        height: 125px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .shdbf{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 7px 30px;
+    }
+    .post-container {
+       padding: 0px 6px;
+       display: grid;
+       grid-template-columns: repeat(3, 1fr); 
+       gap: 1rem; 
+    }
+    .indiv-post img{
+       width: 100%;
+       height: 250px;
+        object-fit: cover; /* This is key for uniform look  */
+       border-radius: 10px;
+    }
+    .indiv-post img:hover{
+        box-shadow: 0 0 20px black;
+    }
+    .frnd-req{
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       margin: 0px auto;
+    }
+    
+</style>
+<body>
+    <div class="container">
+       <div class="user">
+        <div class="user-info">
+          <div class="bghk">
+             <div class="user-info-image">
+               <img id="profile-pic" 
+               src= "<%= User.profilePic %>"
+               alt="profile pic" 
+               />
+             </div>
+             <div style="padding: 4px 0px 4px 30px;">
+              <h5>Username:&nbsp<%=User.username%></h5>
+              <p><%=User.name%></p>
+              <p><%=User.bio%></p>
+              <p>Created At:&nbsp;<%=User.createdAt.toDateString()%></p> 
+             </div>
+             <div class="frnd-req">
+                <form action="/follow/<%=User._id%>" method="get">
+                    <% // Check if the current user's ID is in the User's followers array
+                const isFollowByUser = User.followers.some(followId => followId.equals(currUser._id));
+                if(isFollowByUser) { %>
+                    <button class="button is-danger is-rounded">
+                        Unfollow
+                    </button>
+            <% } else { %>
+                    <button class="button is-success is-rounded">
+                        Follow
+                    </button>        
+            <% } %>
+                </form>
+             </div>
+             </div>
+               <div class="shdbf">
+                <div class="posts-count">
+                  <h3><b>Posts</b></h3>
+                  <h3 style="text-align: center;"><%=User.post.length%></h3>
+                </div>
+                 <div class="followers">
+                  <h3 ><b>Followers</b></h3>
+                  <h3 style="text-align: center;"><%=User.followers.length%></h3>
+                 </div>
+                 <div class="followings">
+                  <h3><b>Followings</b></h3>
+                  <h3 style="text-align: center;"><%=User.following.length%></h3>
+                 </div>
+               </div>
+             </div>
+
+        <hr />
+
+        <div class="post-container">
+        <% for(let Post of User.post) { %>    
+            <div class="indiv-post">
+                <div>
+                  <form action="/post/<%=Post._id%>">
+                  <button style="width: 100%; display: block;">
+                   <img 
+                          src="<%= Post.image%>" 
+                          alt="post-image" 
+                      />
+                  </button> 
+                  </form>
+                </div>
+            </div>
+        <% } %>
+        </div>     
+          </div>
+       </div>
+    </div>
+</body>

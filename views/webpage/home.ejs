@@ -1,0 +1,203 @@
+<% layout("/layout/boilerplate.ejs") -%>
+
+<style>
+    .body-container{
+        display: flex;
+        flex-direction: row;
+    }
+    .body-container div{
+        background-color: #b2bac7;
+        color: black;
+        margin: 6px 4px;
+        /* border: 2px solid black; */
+        border-radius: 15px;
+        padding: 5px;
+    }
+   .features-container{
+    width: 25%;
+    height: 100%;
+   }
+   .post-container{
+    width:50%;
+    height: 100%;
+   }
+   .chats-container{
+    width: 25%;
+    height: 100%;
+   }
+   .post{
+     padding: 5px;
+     background-color: aliceblue !important;
+     /* border: 2px solid red ; */
+   }
+   .post div{
+    background-color: aliceblue !important;
+   }
+   .post-info{
+    padding: 0px !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* border-bottom: 2px solid black; */
+    margin: 3px 4px !important;
+    border-radius: 0px !important;
+    /* border: 2px solid yellow ; */
+   }
+   .post-info div{
+    padding: 0px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+   }
+   .img{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 500px;
+    border-radius: 15px;
+   }
+   .post-react{
+      display: flex;
+      flex-direction: row;
+      margin-top: 0px !important;
+      margin-bottom: 0px !important;
+      padding-top: 0px !important;
+      height: 65px;
+   }
+   .post-react i{
+      font-size: 25px;
+      margin-right: 5px;
+   }
+   .post-react div{
+      align-items: center;
+   }
+   .post-react p{
+      line-height: 1;
+   }
+   .likeBtn{
+      color: black;
+      background-color: aliceblue;
+      border: 0px solid;
+      padding: 5px !important;
+      margin-top: -5px !important;
+      margin-left: -3px !important;
+   }
+   .abc{
+     padding: 0px 5px;
+   }
+   #profile-pic{
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
+
+<body>
+<div class="body-container">
+    
+     <div class="features-container container">
+        features
+    </div>
+
+    <div class="post-container container">
+        <h1 class="title" style="margin-left: 10px; margin-bottom: 0px; color: black;">Posts</h1>
+        <% for (let Post of allPosts) { %>
+        <div class="post">
+            
+            <div class="post-info">
+                <div>
+                    <form action="/user/<%=Post.owner._id%>" method="get">
+                        <button>
+                           <img id="profile-pic" src="<%=Post.owner.profilePic%>" alt="dp">
+                        </button>    
+                    </form>
+                   <div class="post-info-user">
+                     <form action="/user/<%=Post.owner._id%>" method="get">
+                        <button>
+                          <p  style="line-height: 1; margin-left:6px; text-align: start;"><b><%=Post.owner.name%></b><br/><%=Post.createdAt.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' }).toLowerCase().replace(',', '')%></p>
+                        </button>
+                     </form>  
+                   </div>
+                </div>
+                <div>
+                   <div class="show-post">
+                    <form action="/post/<%=Post._id%>" method="GET">
+                        <button>Show Post</button>
+                    </form>
+                   </div>
+                   <% if(currUser && Post.owner._id.equals(currUser._id)) { %> 
+                   <div class="edit-btn">
+                    <form action="/post/<%=Post._id%>/edit" method="GET">
+                        <button>Edit</button>
+                    </form>
+                    </div>
+                   <div class="delete-btn">
+                     <form action="/post/<%=Post._id%>/delete?_method=DELETE" method="POST" >
+                        <button>Delete</button>
+                     </form>
+                   </div>
+                   <% } %>
+                </div>  
+            </div>
+
+            <post class="description">
+                <p style="margin-left: 17px;"><%=Post.description%></p>
+            </post>
+            
+            <div class="post-image">
+                <img class="img"
+                     src="<%=Post.image%>" 
+                     alt="This is image"
+                />
+            </div>
+
+            <div class="post-react">
+                <div class="love-react" style="width: 40px; height: 45px; box-shadow: 0px;">
+                    
+    <% if (currUser) { %>
+        <form action="/post/<%=Post._id%>/like" method="POST">
+            <button type="submit" class="button likeBtn">
+                
+                <% // Check if the current user's ID is in the Post's likes array
+                   const isLikedByUser = Post.like.some(likeId => likeId.equals(currUser._id));
+                %>
+
+                <p>
+                   <% if (isLikedByUser) { %>
+                        <i class="fa-solid fa-heart" style="color: red;"></i>
+                    <% } else { %>
+                        <i class="fa-regular fa-heart"></i>
+                    <% } %>
+                    <br>
+                    <%= Post.like.length %>
+                </p>
+            </button>
+        </form>
+    <% } else { %>
+        <p>
+            <i class="fa-regular fa-heart"></i><br><p class="abc"><%= Post.like.length %></p>
+        </p>
+    <% } %>
+    </div>
+
+                <div class="comment-react">
+                     <p><i class="fa-regular fa-comment"></i><br><p class="abc"><%=Post.comments.length%></p></p> 
+                </div>
+                <div class="share-react">
+                     <p><i class="fa-regular fa-share-from-square"></i><br><p class="abc"><%=Post.like.length%></p></p>
+                </div>
+     
+            </div>
+        </div>
+        <% } %>
+    </div>
+
+    <div class="chats-container container">
+        chats
+    </div>
+    
+</div>
+</body>
