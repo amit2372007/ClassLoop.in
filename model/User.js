@@ -3,48 +3,106 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = Schema({
-   name: {
+  //User Details
+  name: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
+  bio: {
+    type: String,
+    default: "Not specified",
+  },
+  location: {
+    type: String,
+    default: "Not specified",
+  },
+  designation: {
+    type: String,
+    required: true,
+    default: "other",
+    enum: ["student", "teacher", "principle", "admin", "classTeacher","other"],
+  },
+
+  //social media
+  post: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
+  synced: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  profilePic: {
+    url: {
       type: String,
-      require: true
-   },
-   post: [
-      {
-       type: Schema.Types.ObjectId,
-       ref: "Post"
-      },
-   ],
-   phone: {
-      type: Number,
-      require: true
-   },
-   following: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User"
-      },
-   ],
-   followers: [
-      {
-         type: Schema.Types.ObjectId,
-         ref: "User"
-      }
-   ],
-   createdAt: {
-      type: Date,
-      default: Date.now
-   },
-   bio: {
+      default: "https://ik.imagekit.io/xcrdwi6be/classloop_avatars/9434619.jpg",
+    },
+    fileId: {
       type: String,
-      require: true
-   },
-   profilePic: {
+      default: "default",
+    },
+  },
+  coverPic: {
+    url: {
       type: String,
-      default: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D"
-   }
-}); 
+      default:
+        "https://ik.imagekit.io/xcrdwi6be/classloop_avatars/freepik__fun-cartoonstyle-group-of-small-student-avatars-ch__31011.jpeg",
+    },
+    fileId: {
+      type: String,
+      default: "default",
+    },
+  },
+  loopSpace: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "LoopSpace",
+    },
+  ],
+  doubt: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Doubt",
+    },
+  ],
+
+  //instituition
+  rollNumber: Number,
+  employeeId: String,
+  instituition: {
+    school: {
+      type: Schema.Types.ObjectId,
+      ref: "School",
+    },
+    class: {
+      // Add this!
+      type: Schema.Types.ObjectId,
+      ref: "Class",
+    },
+  },
+  isVerified: { type: Boolean, default: false }, // Verified by school admin
+
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 userSchema.plugin(passportLocalMongoose);
 
-const User = mongoose.model("User" , userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

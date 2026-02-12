@@ -1,32 +1,201 @@
 <% layout("/layout/boilerplate.ejs") -%>
 
-<body>
-    <form action="/login" method="POST">
-<div class="field">
-          <p class="control has-icons-left has-icons-right">
-          <input name="username" class="input" type="username" placeholder="username">
-    <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-    <span class="icon is-small is-right">
-      <i class="fas fa-check"></i>
-    </span>
+  <title>ClassLoop.in | Login</title>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#9f1fef",
+            "background-light": "#f7f6f8",
+            "background-dark": "#1b1022",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .login-btn-outline {
+      border: 2px solid #9f1fef;
+      color: #9f1fef;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn-outline:hover {
+      background-color: #9f1fef;
+      color: white;
+    }
+  </style>
+
+  <main class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center font-display">
+    <div class="flex flex-col lg:flex-row w-full h-screen overflow-hidden">
+      <!-- Left Section: Vibrant Brand Panel -->
+      <div
+        class="hidden lg:flex lg:w-1/2 lg:h-[98vh] bg-primary relative flex-col items-center justify-center p-12 overflow-hidden">
+        <!-- Decorative shapes -->
+        <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-black/20 rounded-full blur-3xl"></div>
+        <div class="relative z-10 flex flex-col items-center text-center max-w-md">
+          <div
+            class="w-full aspect-square bg-white/5 backdrop-blur-md rounded-3xl mb-12 flex items-center justify-center p-8 shadow-2xl border border-white/10">
+            <div class="w-full h-full bg-center bg-no-repeat bg-contain"
+              data-alt="3D academic mascot character with graduate cap"
+              style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBWm0O-mdZ5iHVjq9TpsfF7t36YmAniiCCKYU_7hIfmV01woXT-X3dH2wLHMw8i154dzKFcDBbdeUwn-YUsI5qbdfqeFg4dgufws4TWs4CNDuyZ0wtffj61prJtyNdYZvsWRiUHFS7JM1YBnOMRbYNJsRMPdvWDBgJfvY_4tSIJYNpEER_ilV2QfQwD4Z70X2sI5HDvzRrbQ38PJPGlhVUBEchU-tH10XPSFxm5P8AiiOPRICs6F62uPlikS0ScXR_cAzpJvGPi4AVS");'>
+            </div>
+          </div>
+          <h1 class="text-white text-5xl font-black leading-tight tracking-[-0.033em] mb-4">
+            Connect Your Campus
+          </h1>
+          <p class="text-white/80 text-lg font-normal leading-relaxed">
+            The exclusive academic network for students to share, collaborate, and grow together.
           </p>
-</div>
-<div class="field">
-          <p class="control has-icons-left">
-          <input name="password" class="input" type="password" placeholder="Password">
-    <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
-    </span>
+        </div>
+        <!-- Branding Footer Left -->
+        <div class="absolute bottom-10 left-10 flex items-center gap-2 text-white/90">
+          <div class="size-6">
+            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"
+                fill-rule="evenodd"></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold">ClassLoop.in</span>
+        </div>
+      </div>
+      <!-- Right Section: Login Area -->
+      <div
+        class="w-full lg:w-1/2 lg:h-[98vh] flex flex-col bg-background-light dark:bg-background-dark p-5 lg:p-20 overflow-y-auto">
+        <!-- Mobile Header Only -->
+        <div class="lg:hidden flex items-center gap-4 text-primary mb-12">
+          <div class="size-8">
+            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"
+                fill-rule="evenodd"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight">ClassLoop.in</h2>
+        </div>
+        <div class="max-w-md w-full mx-auto my-auto">
+          <div class="flex flex-col gap-2 mb-10">
+            <h2 class="text-slate-900 dark:text-white text-4xl font-bold leading-tight tracking-tight">Welcome Back</h2>
+            <p class="text-slate-500 dark:text-[#b491ca] text-base font-normal">Please enter your details to sign in.
+            </p>
+          </div>
+          <form action="/user/login" method="POST" class="flex flex-col gap-6">
+            <!-- Email Field -->
+            <div class="flex flex-col gap-2">
+              <label class="text-slate-700 dark:text-white text-sm font-semibold">Username</label>
+              <div class="relative">
+                <input
+                  name="username"
+                  class="w-full rounded-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-[#533267] bg-white dark:bg-[#291934] h-14 placeholder:text-slate-400 dark:placeholder:text-[#b491ca] px-4 text-base font-normal transition-all"
+                  placeholder="name1234" type="username" required/>
+              </div>
+            </div>
+            <!-- Password Field -->
+            <div class="flex flex-col gap-2">
+              <label class="text-slate-700 dark:text-white text-sm font-semibold">Password</label>
+              <div
+                class="flex w-full items-stretch rounded-xl overflow-hidden border border-slate-200 dark:border-[#533267] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                <input
+                  id="passwordInput"
+                  name="password"
+                  class="flex-1 bg-white dark:bg-[#291934] text-slate-900 dark:text-white h-14 px-4 focus:outline-none placeholder:text-slate-400 dark:placeholder:text-[#b491ca] text-base font-normal"
+                  placeholder="••••••••" type="password" required />
+                <button
+                  id="toggleBtn"
+                  class="bg-white dark:bg-[#291934] px-4 flex items-center justify-center text-slate-400 dark:text-[#b491ca]"
+                  type="button">
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
+            </div>
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between py-2">
+              <label class="flex items-center gap-2 cursor-pointer group">
+                <input
+                  class="rounded border-slate-300 dark:border-[#533267] text-primary focus:ring-primary bg-white dark:bg-[#291934]"
+                  type="checkbox" />
+                <span
+                  class="text-sm text-slate-600 dark:text-[#b491ca] group-hover:text-primary transition-colors">Remember
+                  for 30 days</span>
+              </label>
+              <a class="text-sm font-semibold text-primary hover:underline" href="/user/forgetPassword">Forgot password?</a>
+              
+            </div>
+
+            <p class="text-center mt-2 text-slate-500 dark:text-[#b491ca] text-sm">
+            Don't have an account?
+            <a class="text-primary font-bold hover:underline ml-1" href="/user/signup">Sign Up</a>
           </p>
-</div>
-    <div class="field">
-    <p class="control">
-        <button class="button is-success">
-        Login
-        </button>
-    </p>
+
+            <!-- Login Button -->
+            <button
+              class="login-btn-outline w-full rounded-xl h-14 text-base font-bold tracking-wide flex items-center justify-center mt-4"
+              type="submit">
+              Login
+            </button>
+            <!-- Divider -->
+            <div class="flex items-center gap-2 py-4">
+              <div class="flex-1 h-px bg-slate-200 dark:bg-[#3a2348]"></div>
+              <span class="text-xs font-bold text-slate-400 dark:text-[#533267] uppercase tracking-widest">or</span>
+              <div class="flex-1 h-px bg-slate-200 dark:bg-[#3a2348]"></div>
+            </div>
+            <!-- Google Login -->
+            <button
+              class="w-full flex items-center justify-center gap-2 rounded-xl h-14 bg-white dark:bg-transparent border border-slate-200 dark:border-[#533267] text-slate-700 dark:text-white font-semibold hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+              type="button">
+              <svg class="w-5 h-5" viewbox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"></path>
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"></path>
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                  fill="#FBBC05"></path>
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"></path>
+              </svg>
+              Sign in with Google
+            </button>
+          </form>
+          
+        </div>
+        <!-- Footer Small Links -->
+        <div
+          class="mt-auto pt-10 flex flex-wrap justify-center gap-6 text-xs text-slate-400 dark:text-[#533267] font-medium uppercase tracking-wider">
+          <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+          <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+          <a class="hover:text-primary transition-colors" href="#">Help Center</a>
+        </div>
+      </div>
     </div>
-    </form>
-</body>
+  </main>
+
+<script>
+  const passwordInput = document.getElementById('passwordInput');
+const toggleBtn = document.getElementById('toggleBtn');
+const eyeIcon = document.getElementById('eyeIcon');
+
+toggleBtn.addEventListener('click', () => {
+  // 1. Check current type
+  const isPassword = passwordInput.getAttribute('type') === 'password';
+  
+  // 2. Toggle the input type
+  passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+  
+  // 3. Toggle the icon text
+  eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+});
+</script>

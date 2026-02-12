@@ -1,0 +1,415 @@
+
+    <!DOCTYPE html>
+
+    <html class="light" lang="en">
+
+    <head>
+        <title>ClassLoop Admin School Management</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#1e3b8a",
+                            "background-light": "#f6f6f8",
+                            "background-dark": "#121620",
+                        },
+                        fontFamily: {
+                            "display": ["Lexend", "sans-serif"]
+                        },
+                        borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                    },
+                },
+            }
+        </script>
+        <style>
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+
+            body {
+                font-family: 'Lexend', sans-serif;
+            }
+        </style>
+    </head>
+
+    <body class="bg-background-light dark:bg-background-dark min-h-screen">
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar Navigation -->
+            <aside class="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col">
+                <div class="p-6 flex flex-col gap-8 h-full">
+                    
+                    <!-- Brand Logo -->
+                    <div class="flex items-center gap-3">
+                        <div class="bg-primary p-2 rounded-lg flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined">school</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <h1 class="text-[#121317] dark:text-white text-base font-bold leading-tight">ClassLoop.in
+                            </h1>
+                            <p class="text-[#666e85] dark:text-gray-400 text-xs font-normal">Super-Admin Panel</p>
+                        </div>
+                    </div>
+                    <!-- Nav Links -->
+                    <nav class="flex flex-col gap-2 flex-1">
+                        <a class="flex items-center gap-3 px-4 py-3 text-[#666e85] dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">grid_view</span>
+                            <p class="text-sm font-medium">Dashboard</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl" href="#">
+                            <span class="material-symbols-outlined"
+                                style="font-variation-settings: 'FILL' 1">apartment</span>
+                            <p class="text-sm font-bold">Schools</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-4 py-3 text-[#666e85] dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">group</span>
+                            <p class="text-sm font-medium">Users</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-4 py-3 text-[#666e85] dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">settings</span>
+                            <p class="text-sm font-medium">Settings</p>
+                        </a>
+                    </nav>
+                    <!-- Logout -->
+                    <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
+                        <a class="flex items-center gap-3 px-4 py-3 text-[#666e85] dark:text-gray-400 hover:text-red-600 transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">logout</span>
+                            <p class="text-sm font-medium">Logout</p>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1 flex flex-col overflow-y-auto">
+                <!-- Top Navbar -->
+                <header
+                    class="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-8 flex-shrink-0">
+                    <div class="flex items-center gap-6 flex-1">
+                        <a href="/home" class="text-[#121317] dark:text-white text-lg font-bold tracking-tight">ClassLoop.in</a>
+                        <div class="max-w-md w-full relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
+                            <input
+                                class="w-full bg-gray-100 dark:bg-gray-800 border-none rounded-xl pl-11 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-gray-400 dark:text-white"
+                                placeholder="Search schools, IDs, or locations..." type="text" />
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button
+                            class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-600 dark:text-gray-300">
+                            <span class="material-symbols-outlined">notifications</span>
+                        </button>
+                        <div class="flex items-center gap-3 ml-2 pl-4 border-l border-gray-200 dark:border-gray-800">
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-[#121317] dark:text-white leading-tight">Admin User</p>
+                                <p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Super Admin
+                                </p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-center bg-cover border-2 border-primary/20"
+                                data-alt="Headshot of the super admin user"
+                                style="background-image: url('<%=currUser.profilePic.url%>')">
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="p-8 space-y-8">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div
+                            class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Schools</p>
+                                <h3 class="text-3xl font-bold text-[#121317] dark:text-white"><%=schools.length%></h3>
+                                <p class="text-xs font-medium text-emerald-600 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">trending_up</span> +12% this month
+                                </p>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl">apartment</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Teachers</p>
+                                <h3 class="text-3xl font-bold text-[#121317] dark:text-white">1,850</h3>
+                                <p class="text-xs font-medium text-emerald-600 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">trending_up</span> +5.2% this year
+                                </p>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl">group</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Students</p>
+                                <h3 class="text-3xl font-bold text-[#121317] dark:text-white">45,200</h3>
+                                <p class="text-xs font-medium text-emerald-600 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">trending_up</span> +8% increase
+                                </p>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl">face</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Table Section Header -->
+                    <div
+                        class="flex items-center justify-between bg-white dark:bg-gray-900 p-6 rounded-t-xl border-x border-t border-gray-200 dark:border-gray-800">
+                        <div>
+                            <h4 class="text-xl font-bold text-[#121317] dark:text-white">instituitional Directory</h4>
+                            <p class="text-sm text-gray-500">Manage and monitor all schools onboarded to the platform.
+                            </p>
+                        </div>
+                        <form action="/admin/addSchool" method="GET">
+                        <button
+                            class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                            Add New School
+                        </button>
+                        </form>
+                    </div>
+                    <!-- Data Table Container -->
+                    <div
+                        class="bg-white dark:bg-gray-900 rounded-b-xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        School Name</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Location</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Principal</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                                <!-- Row 1 -->
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 font-bold text-sm">
+                                                GA</div>
+                                            <div>
+                                                <p class="text-sm font-bold text-[#121317] dark:text-white">Global
+                                                    Academy</p>
+                                                <p class="text-xs text-gray-500">ID: SCH-2023-001</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">New York, NY</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Dr. Sarah
+                                            Jenkins</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                                                title="Edit">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                                title="Delete">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-600 font-bold text-sm">
+                                                LV</div>
+                                            <div>
+                                                <p class="text-sm font-bold text-[#121317] dark:text-white">Lake View
+                                                    High</p>
+                                                <p class="text-xs text-gray-500">ID: SCH-2023-042</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Chicago, IL</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Robert Miller
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-bold bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            Pending
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                                                SM</div>
+                                            <div>
+                                                <p class="text-sm font-bold text-[#121317] dark:text-white">St. Mary's
+                                                    Convent</p>
+                                                <p class="text-xs text-gray-500">ID: SCH-2023-089</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Austin, TX</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Sister Martha
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-600 font-bold text-sm">
+                                                PH</div>
+                                            <div>
+                                                <p class="text-sm font-bold text-[#121317] dark:text-white">Pine Hill
+                                                    Prep</p>
+                                                <p class="text-xs text-gray-500">ID: SCH-2023-112</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Seattle, WA</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Michael Stevens
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-bold bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                            Inactive
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Pagination Footer -->
+                        <div
+                            class="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/30 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+                            <p class="text-xs text-gray-500 font-medium tracking-wide">Showing 1 to 4 of 124 results</p>
+                            <div class="flex items-center gap-1">
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-400 bg-white dark:bg-gray-900 cursor-not-allowed">
+                                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                                </button>
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-xs">1</button>
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium text-xs">2</button>
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium text-xs">3</button>
+                                <span class="mx-1 text-gray-400">...</span>
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium text-xs">31</button>
+                                <button
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dashboard Footer -->
+                <footer class="mt-auto p-8 text-center">
+                    <p class="text-xs text-gray-400 font-medium">© 2024 ClassLoop.in School Management Platform. All
+                        rights reserved.</p>
+                </footer>
+            </main>
+        </div>
+    </body>
+
+    </html>

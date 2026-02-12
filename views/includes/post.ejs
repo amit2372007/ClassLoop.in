@@ -1,0 +1,300 @@
+<body>
+    <section class="md:col-span-6 space-y-4">
+        <article class="bg-card-dark border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <a href="/user/<%Post.owner._id%>" class="flex items-center gap-3">
+                        <div class="size-11 rounded-full bg-cover bg-center border-2 border-primary/20"
+                            style='background-image: url("<%=Post.owner.profilePic.url%>");'>
+                        </div>
+                        <div>
+                            <p class="text-base font-bold text-white"><%=Post.owner.name%></p>
+                            <p class="text-[12px] text-white/40"><%=Post.createdAt.toLocaleDateString()%> • IIT Delhi</p>
+                        </div>
+                    </a>
+                    <button class="text-white/40 hover:text-white"><span
+                            class="material-symbols-outlined">more_horiz</span></button>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[15px] text-white/90 leading-relaxed">
+                        <%=Post.description%>
+                    </p>
+                </div>
+                <div class="rounded-2xl aspect-video bg-cover bg-center overflow-hidden border border-white/5"
+                    style='background-image: url("<%=Post.image.url%>");'>
+                </div>
+            </div>
+            <div class="px-4 py-2 border-t border-white/5 flex items-center justify-between bg-white/5">
+                <div class="flex gap-4">
+                    <button class="post-like-btn flex items-center gap-2 transition-all active:scale-125" 
+        data-id="<%= Post._id %>">
+    <span class="material-symbols-outlined text-[22px] post-like-icon 
+        <%= Post.like.includes(currentUser._id) ? 'fill text-primary' : 'text-white/50' %>">
+        favorite
+    </span>
+    <span class="post-like-count text-sm font-bold <%= Post.like.includes(currentUser._id) ? 'text-primary' : 'text-white/50' %>">
+        <%= Post.like.length %>
+    </span>
+</button>
+                    <button type="button" 
+        onclick="focusCommentInput()" 
+        class="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+    <span class="material-symbols-outlined text-[22px]">chat_bubble</span>
+    <span class="text-sm font-bold"><%=Post.comments.length%></span>
+</button>
+                    <button class="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[22px]">share</span>
+                        <span class="text-sm font-bold">1</span>
+                    </button>
+                </div>
+               
+            </div>
+        </article>
+        <div class="bg-card-dark border border-white/10 rounded-3xl p-4 shadow-xl">
+            <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider opacity-60">Comments</h3>
+            <div class="flex items-start gap-3 mb-8">
+                <div class="size-10 rounded-full bg-cover bg-center shrink-0"
+                    style='background-image: url("<%=currentUser.profilePic.url%>");'>
+                </div>
+                <div class="flex-1 flex gap-2">
+                    
+                    <div class="flex-1 relative">
+                        <form action="/post/comment/<%=Post._id%>" method="POST">
+                        <textarea
+    id="main-comment-input"
+    name="content"
+    class="w-full glass-card border-white/10 focus:ring-primary focus:border-primary rounded-2xl py-2.5 px-4 text-sm placeholder:text-white/30 text-white resize-none"
+    placeholder="Write a comment..." 
+    rows="1" 
+    required></textarea>
+                    </div>
+                    <button
+                        class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-2xl text-sm font-bold transition-all shadow-lg shadow-primary/20">
+                        Post
+                    </button>
+                    </form>
+                </div>
+            </div>
+            <div class="space-y-6">
+    <% for(let comment of Comment) { %>
+    <div class="relative">
+        <div class="flex gap-4 group">
+            <div class="size-10 rounded-full bg-cover bg-center shrink-0"
+                 style='background-image: url("<%=comment.author.profilePic.url%>");'>
+            </div>
+            
+            <div class="flex-1">
+                <div class="bg-white/5 p-4 rounded-3xl border border-white/5">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-sm font-bold text-white"><%=comment.author.name%></span>
+                        <span class="text-[10px] text-white/40"><%=comment.createdAt.toLocaleTimeString()%></span>
+                    </div>
+                    <p class="text-sm text-white/80 leading-snug"><%=comment.content%></p>
+                </div>
+                
+                <div class="flex gap-4 mt-2 px-2">
+                    <button type="button" class="comment-like-btn text-[11px] font-bold transition-colors flex items-center gap-1 <%= comment.likes.includes(currentUser._id) ? 'text-primary' : 'text-white/40' %>" data-id="<%= comment._id %>">
+                        <span class="material-symbols-outlined text-[14px] <%= comment.likes.includes(currentUser._id) ? 'fill' : '' %>">thumb_up</span> 
+                        <span class="comment-like-count"><%= comment.likes.length %></span>
+                    </button>
+
+                    <button type="button" onclick="toggleReplyField('<%= comment._id %>')" class="text-[11px] font-bold text-white/40 hover:text-primary transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">reply</span> Reply
+                    </button>
+
+                    <% if(comment.author._id.equals(currentUser._id)) { %>
+                    <form action="/comment/delete/<%=Post._id%>/<%=comment._id%>?_method=DELETE" method="POST" class="m-0">
+                        <button class="text-[11px] font-bold text-white/40 hover:text-red-500 transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">delete</span>
+                        </button>
+                    </form>
+                    <% } %>
+                </div>
+
+                <div id="reply-field-<%= comment._id %>" class="hidden mt-4 animate-in fade-in slide-in-from-top-2">
+                    <form onsubmit="submitReply(event, '<%= comment._id %>')" class="flex items-center gap-2">
+                        <input type="text" id="input-<%= comment._id %>" placeholder="Write a reply..." 
+                               class="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs text-white focus:outline-none focus:border-primary">
+                        <button type="submit" class="bg-primary/20 text-primary p-2 rounded-full hover:bg-primary hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-sm">send</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="mt-4 space-y-4">
+                    <% if(comment.reply && comment.reply.length > 0) { %>
+                        <% for(let rep of comment.reply) { %>
+                            <div class="flex gap-3 ml-4">
+                                <div class="size-8 rounded-full bg-cover bg-center shrink-0" 
+                                     style='background-image: url("<%= rep.author.profilePic.url %>");'></div>
+                                <div class="flex-1 bg-white/5 p-3 rounded-2xl border border-white/5">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-white"><%= rep.author.name %></span>
+                                    </div>
+                                    <p class="text-xs text-white/80"><%= rep.content %></p>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+            <button
+                class="w-full mt-8 py-3 text-xs font-bold text-primary/60 hover:text-primary transition-colors uppercase tracking-widest">
+                View more comments
+            </button>
+        </div>
+    </section>
+</body>
+
+<script>
+    function focusCommentInput() {
+    const commentInput = document.getElementById('main-comment-input');
+    
+    if (commentInput) {
+        // 1. Smooth scroll to the input field
+        commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // 2. Focus the input
+        commentInput.focus();
+        
+        // 3. Optional: Add a temporary highlight effect
+        commentInput.classList.add('ring-2', 'ring-primary');
+        setTimeout(() => {
+            commentInput.classList.remove('ring-2', 'ring-primary');
+        }, 1500);
+    }
+}
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.comment-like-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const commentId = this.getAttribute('data-id');
+            const icon = this.querySelector('.material-symbols-outlined');
+            const countSpan = this.querySelector('.comment-like-count');
+
+            try {
+                const response = await fetch(`/comment/${commentId}/like`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Toggle colors and icons
+                    if (data.isLiked) {
+                        this.classList.add('text-primary');
+                        this.classList.remove('text-white/40');
+                        icon.classList.add('fill');
+                    } else {
+                        this.classList.remove('text-primary');
+                        this.classList.add('text-white/40');
+                        icon.classList.remove('fill');
+                    }
+                    // Update the count
+                    countSpan.innerText = data.likeCount;
+                }
+            } catch (err) {
+                console.error("AJAX Error:", err);
+            }
+        });
+    });
+});
+
+
+///reply functionality
+    // 1. Show/Hide the input field
+function toggleReplyField(commentId) {
+    const field = document.getElementById(`reply-field-${commentId}`);
+    const input = document.getElementById(`input-${commentId}`);
+    
+    // Toggle visibility
+    field.classList.toggle('hidden');
+    
+    // Auto-focus the input when it appears
+    if (!field.classList.contains('hidden')) {
+        input.focus();
+    }
+}
+
+// 2. Submit the reply via AJAX
+async function submitReply(event, commentId) {
+    event.preventDefault();
+    
+    const input = document.getElementById(`input-${commentId}`);
+    const content = input.value;
+    const postId = "<%= Post._id %>"; // Post ID from EJS context
+
+    if (!content.trim()) return;
+
+    try {
+        const response = await fetch(`/comment/reply/${postId}/${commentId}`, { // Added leading slash
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content })
+});
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Option A: Refresh page to show new reply
+            location.reload();
+            
+            // Option B: Clear input and hide field (if using DOM manipulation to append)
+            // input.value = '';
+            // toggleReplyField(commentId);
+        }
+    } catch (err) {
+        console.error("Reply failed:", err);
+    }
+}
+
+
+//like button
+document.addEventListener('DOMContentLoaded', () => {
+    // --- POST LIKE AJAX ---
+    const postLikeBtn = document.querySelector('.post-like-btn');
+    
+    if (postLikeBtn) {
+        postLikeBtn.addEventListener('click', async function() {
+            const postId = this.getAttribute('data-id');
+            const icon = this.querySelector('.post-like-icon');
+            const countSpan = this.querySelector('.post-like-count');
+
+            try {
+                // Ensure this route matches your router (usually /post/:id/like)
+                const response = await fetch(`/post/${postId}/like`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.likeCount !== undefined) {
+                    // Toggle colors and icons
+                    if (data.isLiked) {
+                        icon.classList.add('fill', 'text-primary');
+                        icon.classList.remove('text-white/50');
+                        countSpan.classList.add('text-primary');
+                        countSpan.classList.remove('text-white/50');
+                    } else {
+                        icon.classList.remove('fill', 'text-primary');
+                        icon.classList.add('text-white/50');
+                        countSpan.classList.remove('text-primary');
+                        countSpan.classList.add('text-white/50');
+                    }
+                    // Update the count number
+                    countSpan.innerText = data.likeCount;
+                }
+            } catch (err) {
+                console.error("Post Like AJAX Error:", err);
+            }
+        });
+    }
+});
+</script>

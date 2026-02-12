@@ -1,0 +1,214 @@
+<% layout("/layout/boilerplate2.ejs") -%>
+
+<main class="flex-1 flex flex-col overflow-hidden bg-slate-50/50 dark:bg-slate-950">
+    <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2 text-sm font-medium text-slate-500">
+            <a href="/teacher?tab=Overview" class="hover:text-primary">Dashboard</a>
+            <span class="material-symbols-outlined text-xs">chevron_right</span>
+            <span>Grade <%= currClass.className %></span>
+            <span class="material-symbols-outlined text-xs">chevron_right</span>
+            <span class="text-slate-900 dark:text-white font-bold">History</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined text-lg">download</span> Download Report
+            </button>
+            <div class="h-10 w-10 rounded-full border-2 border-white shadow-sm overflow-hidden">
+                <img src="<%= currUser.profilePic.url %>" alt="Profile">
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 overflow-hidden flex">
+        <aside class="w-80 border-r border-slate-200 dark:border-slate-800 p-6 space-y-8 overflow-y-auto hidden xl:block bg-white dark:bg-slate-900">
+            <div class="space-y-4">
+    <div class="flex items-center justify-between">
+        <h4 class="font-bold text-slate-900 dark:text-white">
+            <%= selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' }) %>
+        </h4>
+        <div class="flex gap-1">
+            <% 
+                // Logic to jump 5 days back and forward
+                const prevDate = new Date(selectedDate);
+                prevDate.setDate(prevDate.getDate() - 5);
+                
+                const nextDate = new Date(selectedDate);
+                nextDate.setDate(nextDate.getDate() + 5);
+            %>
+            <a href="/teacher/Attendance-Insights?date=<%= prevDate.toISOString().split('T')[0] %>" 
+               class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary decoration-none">
+                chevron_left
+            </a>
+            <a href="/teacher/Attendance-Insights?date=<%= nextDate.toISOString().split('T')[0] %>" 
+               class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary decoration-none">
+                chevron_right
+            </a>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-5 gap-2">
+        <% 
+            for(let i = -2; i <= 2; i++) { 
+                let d = new Date(selectedDate);
+                d.setDate(d.getDate() + i);
+                
+                // Compare only YYYY-MM-DD to check if it's today's live date
+                const today = new Date().toISOString().split('T')[0];
+                const loopDate = d.toISOString().split('T')[0];
+                const isSelected = i === 0;
+                const isToday = today === loopDate;
+        %>
+            <a href="/teacher/Attendance-Insights?date=<%= loopDate %>" 
+               class="flex flex-col items-center p-2 rounded-xl transition-all relative
+               <%= isSelected ? 'bg-primary text-white shadow-md' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
+                
+                <span class="text-[10px] uppercase font-bold"><%= d.toLocaleString('default', { weekday: 'short' }) %></span>
+                <span class="text-sm font-bold"><%= d.getDate() %></span>
+                
+                <% if(isToday && !isSelected) { %>
+                    <span class="absolute -top-1 -right-1 flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </span>
+                <% } %>
+            </a>
+        <% } %>
+    </div>
+</div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
+                <h4 class="text-sm font-bold mb-4">Monthly Attendance Trends</h4>
+                <div class="h-32 flex items-end gap-1 px-1">
+                    <div class="w-full h-1/2 bg-primary/20 rounded-t-sm"></div>
+                    <div class="w-full h-3/4 bg-primary/20 rounded-t-sm"></div>
+                    <div class="w-full h-2/3 bg-primary/40 rounded-t-sm"></div>
+                    <div class="w-full h-full bg-primary rounded-t-sm"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-[10px] font-bold text-slate-400 uppercase">
+                    <span>Sep 25</span>
+                    <span>Oct 23</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="flex-1 overflow-y-auto p-8 space-y-8">
+            <div class="flex items-end justify-between">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900 dark:text-white">Attendance Insights - Class <%= currClass.className %>-<%= currClass.section %></h2>
+                    <p class="text-slate-500 font-medium mt-1">Detailed review for <%= selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) %></p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-6 py-2 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/25">View Insights</button>
+                    <button class="px-6 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl font-bold text-sm">Edit Mode</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-6 shadow-sm">
+                    <div class="relative size-24 shrink-0">
+                        <svg class="size-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-slate-100 dark:stroke-slate-800" stroke-width="3"></circle>
+                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-primary" stroke-width="3" stroke-dasharray="<%= stats.percentage %>, 100"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black"><%= stats.percentage %>%</span>
+                            <span class="text-[8px] uppercase font-bold text-slate-400">Attendance</span>
+                        </div>
+                    </div>
+                    <div class="h-12 w-px bg-slate-100 dark:bg-slate-800"></div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Performance</p>
+                        <p class="text-sm font-bold text-emerald-500 flex items-center gap-1">Above Average <span class="material-symbols-outlined text-sm">trending_up</span></p>
+                    </div>
+                </div>
+
+                <% const cardItems = [
+                    { label: 'Present', val: stats.present, color: 'text-emerald-500', bg: 'bg-emerald-500' },
+                    { label: 'Absent', val: stats.absent, color: 'text-rose-500', bg: 'bg-rose-500' },
+                    { label: 'Late / Leave', val: stats.lateLeave, color: 'text-amber-500', bg: 'bg-amber-500' }
+                ] %>
+                <% cardItems.forEach(item => { %>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest"><%= item.label %></p>
+                        <h3 class="text-4xl font-black <%= item.color %>"><%= item.val %></h3>
+                        <div class="w-full h-1.5 <%= item.bg %>/10 rounded-full mt-4 overflow-hidden">
+                            <div class="h-full <%= item.bg %>" style="width: <%= (item.val/records.length)*100 %>%"></div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <h3 class="font-bold text-lg">Student Records</h3>
+                    <div class="flex gap-4">
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                            <input type="text" placeholder="Search by name or roll no..." class="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm w-64 focus:ring-2 focus:ring-primary/20">
+                        </div>
+                        <button class="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+                            <span class="material-symbols-outlined">filter_list</span>
+                        </button>
+                    </div>
+                </div>
+
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 dark:border-slate-800">
+                            <th class="px-8 py-4">Student</th>
+                            <th class="px-8 py-4 text-center">Roll No.</th>
+                            <th class="px-8 py-4 text-center">Status</th>
+                            <th class="px-8 py-4">Remarks</th>
+                            <th class="px-8 py-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                        <% if (records.length === 0) { %>
+                            <tr>
+                                <td colspan="5" class="py-20 text-center text-slate-400 font-medium italic">No attendance records found for this date.</td>
+                            </tr>
+                        <% } else { %>
+                            <%records.forEach(record => {%>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-8 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <img src="<%= record.student.profilePic.url %>" class="size-9 rounded-full object-cover border border-slate-200">
+                                            <span class="text-sm font-bold text-slate-700 dark:text-slate-200"><%= record.student.name %></span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-4 text-center text-sm font-bold text-slate-500"><%= record.student.rollNumber %></td>
+                                    <td class="px-8 py-4">
+                                        <div class="flex justify-center">
+                                            <% 
+                                                const statusStyles = {
+                                                    'Present': 'bg-emerald-100 text-emerald-600',
+                                                    'Absent': 'bg-rose-100 text-rose-600',
+                                                    'Late': 'bg-amber-100 text-amber-600',
+                                                    'Leave': 'bg-blue-100 text-blue-600'
+                                                };
+                                            %>
+                                            <span class="px-3 py-1 <%= statusStyles[record.status] %> text-[10px] font-bold rounded-full flex items-center gap-1 uppercase tracking-tighter">
+                                                <span class="size-1 rounded-full bg-current"></span>
+                                                <%= record.status %>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-4">
+                                        <span class="text-xs <%= record.remarks ? 'text-slate-600 dark:text-slate-400 italic' : 'text-slate-300' %>">
+                                            <%= record.remarks || '-' %>
+                                        </span>
+                                    </td>
+                                    <td class="px-8 py-4 text-right">
+                                        <button class="text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                                            <span class="material-symbols-outlined">more_vert</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>

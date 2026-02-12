@@ -1,0 +1,112 @@
+<main class="max-w-[1280px] mx-auto px-6 py-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div class="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800/50 rounded-full w-fit">
+            <button onclick="filterResources('all')" class="filter-btn px-6 py-2 rounded-full text-sm font-semibold bg-primary text-white shadow-md">All</button>
+            <button onclick="filterResources('Notes')" class="filter-btn px-6 py-2 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors">Notes</button>
+            <button onclick="filterResources('PYQs')" class="filter-btn px-6 py-2 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors">PYQs</button>
+            <button onclick="filterResources('Video')" class="filter-btn px-6 py-2 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors">Video Lectures</button>
+        </div>
+        <div class="flex items-center gap-4 text-sm text-slate-500 font-medium">
+            <span class="material-symbols-outlined text-[20px]">filter_list</span>
+            <span>Sort by: <button class="text-primary hover:underline">Recent First</button></span>
+        </div>
+    </div>
+
+    <div class="mb-8">
+        <h2 class="text-2xl text-white font-bold tracking-tight mb-2">Academic Resources</h2>
+        <p class="text-slate-500">Access high-quality study materials shared for your class.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="resource-container">
+        
+        
+
+        <% if (resources && resources.length > 0) { %>
+            <% for (let res of resources) { %>
+                <div class="resource-card glass-card bg-white dark:bg-card-dark rounded-xl overflow-hidden flex flex-col group hover:translate-y-[-4px] transition-all duration-300" data-type="<%= res.resourceType %>">
+                    
+                    <div class="relative h-48 w-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center overflow-hidden">
+                        <% if (res.resourceType === 'Video') { %>
+                            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
+                            <span class="material-symbols-outlined text-white text-[60px] z-10">play_circle</span>
+                        <% } else { %>
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+                            <span class="material-symbols-outlined text-primary text-[80px] opacity-20">
+                                <%= res.resourceType === 'Notes' ? 'description' : 'link' %>
+                            </span>
+                        <% } %>
+
+                        <div class="absolute top-4 right-4 bg-white/10 backdrop-blur-md text-white size-10 rounded-full flex items-center justify-center border border-white/20">
+                            <span class="material-symbols-outlined">
+                                <%= res.resourceType === 'Video' ? 'play_arrow' : (res.resourceType === 'Notes' ? 'picture_as_pdf' : 'link') %>
+                            </span>
+                        </div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-md tracking-wider uppercase">
+                                <%= res.subject %>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 flex flex-col flex-1">
+                        <h3 class="text-lg font-bold mb-2 text-white group-hover:text-primary transition-colors line-clamp-1"><%= res.title %></h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 line-clamp-2"><%= res.description %></p>
+                        
+                        <div class="mt-auto">
+                            <div class="flex items-center justify-between mb-4 border-t border-slate-200 dark:border-slate-800 pt-4">
+                                <div class="flex items-center gap-2">
+                                    <img src="<%= res.uploadedBy.profilePic.url %>" class="size-6 rounded-full object-cover border border-slate-700" alt="User">
+                                    <span class="text-xs text-slate-400">By <span class="text-slate-200"><%= res.uploadedBy.name %></span></span>
+                                </div>
+                                <span class="text-[11px] text-slate-500"><%= res.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+                            </div>
+
+                            <% 
+                                // Logic to handle direct download conversion for GDrive
+                                let finalLink = res.externalLink;
+                                if (finalLink.includes('drive.google.com')) {
+                                    finalLink = finalLink.replace('/file/d/', '/uc?export=download&id=').split('/view')[0];
+                                }
+                            %>
+
+                            <% if (res.resourceType === 'Video') { %>
+                                <a href="<%= res.externalLink %>" target="_blank" class="w-full bg-primary py-3 rounded-full font-bold text-sm text-white flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                    Watch Video
+                                </a>
+                            <% } else { %>
+                                <a href="<%= finalLink %>" target="_blank" class="w-full bg-primary/20 hover:bg-primary/30 py-3 rounded-full font-bold text-sm text-primary flex items-center justify-center gap-2 transition-all border border-primary/30">
+                                    <span class="material-symbols-outlined text-[18px]">download</span>
+                                    Download <%= res.resourceType %>
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        <% } %>
+    </div>
+</main>
+
+<script>
+    function filterResources(type) {
+        const cards = document.querySelectorAll('.resource-card');
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        // Update Button UI
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-primary', 'text-white', 'shadow-md');
+            btn.classList.add('text-slate-600', 'dark:text-slate-400');
+        });
+        event.currentTarget.classList.add('bg-primary', 'text-white', 'shadow-md');
+
+        // Filter cards
+        cards.forEach(card => {
+            if (type === 'all' || card.dataset.type === type) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>

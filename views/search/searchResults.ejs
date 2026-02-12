@@ -1,0 +1,94 @@
+<% layout("/layout/boilerplate.ejs") -%>
+
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <h1 class="text-2xl font-bold text-white mb-6">Search Results for "<span class="text-primary"><%= query %></span>"</h1>
+
+    <% if(users.length > 0) { %>
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-slate-400 mb-3">People</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <% for(let user of users) { %>
+                    <a href="/user/<%= user._id %>" class="glass-card p-4 rounded-xl flex items-center gap-4 hover:bg-white/5 transition-all">
+                        <img src="<%= user.profilePic.url %>" class="size-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="text-white font-bold"><%= user.name %></h4>
+                            <p class="text-xs text-slate-400">@<%= user.username %></p>
+                        </div>
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+
+    <% if(spaces.length > 0) { %>
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-slate-400 mb-3">LoopSpaces</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <% for(let space of spaces) { %>
+                    <a href="/loopSpace/<%= space._id %>" target="_blank" class="glass-card p-4 rounded-xl block hover:border-primary/50 transition-all">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="text-white font-bold"><%= space.name %></h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">groups</span>
+                        </div>
+                        <p class="text-sm text-slate-400"><%= space.category %></p>
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+
+    <% if(posts.length > 0) { %>
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-slate-400 mb-3">Posts</h3>
+            <div class="space-y-4">
+                <% for(let post of posts) { %>
+                    <div class="glass-card p-4 rounded-xl hover:bg-white/5 transition-all">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="<%= post.owner.profilePic.url %>" class="size-8 rounded-full object-cover">
+                            <div>
+                                <p class="text-sm font-bold text-white"><%= post.owner.name %></p>
+                                <p class="text-[10px] text-slate-400"><%= post.createdAt.toLocaleDateString() %></p>
+                            </div>
+                        </div>
+                        <p class="text-slate-200 text-sm line-clamp-2 mb-2"><%= post.description %></p>
+                        
+                        <a href="/post/<%=post._id%>" target="_blank" class="text-xs text-primary hover:underline flex items-center gap-1">
+                            View in Context <span class="material-symbols-outlined text-[12px]">open_in_new</span>
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+
+    <% if(doubts.length > 0) { %>
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-slate-400 mb-3">Doubts & QnA</h3>
+            <div class="space-y-3">
+                <% for(let doubt of doubts) { %>
+                    <a href="/doubtBin/<%= doubt._id %>" target="_blank" class="glass-card p-4 rounded-xl flex items-start gap-3 hover:border-amber-500/50 transition-all group">
+                        <div class="mt-1 p-1.5 rounded-lg bg-amber-500/10 text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-lg block">help</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-white font-bold group-hover:text-amber-400 transition-colors line-clamp-1"><%= doubt.title %></h4>
+                            <p class="text-xs text-slate-400 mt-1">Asked by <%= doubt.author.name %></p>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-600 group-hover:text-white transition-colors">chevron_right</span>
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+
+    <% if(users.length === 0 && spaces.length === 0 && posts.length === 0 && doubts.length === 0) { %>
+        <div class="text-center py-20">
+            <div class="inline-flex items-center justify-center size-20 rounded-full bg-slate-800/50 mb-4">
+                <span class="material-symbols-outlined text-4xl text-slate-600">search_off</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">No results found</h3>
+            <p class="text-slate-400">We couldn't find anything matching "<%= query %>"</p>
+        </div>
+    <% } %>
+
+</div>

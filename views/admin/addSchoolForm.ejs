@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Add School Admin Modal - ClassLoop</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0b50da",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display overflow-hidden">
+    <div class="relative flex h-screen w-full flex-col filter blur-[2px] opacity-50 pointer-events-none">
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7ebf4] dark:border-white/10 bg-white dark:bg-background-dark px-10 py-3">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-4 text-[#0d121c] dark:text-white">
+                    <div class="size-6 text-primary">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
+                                d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-[#0d121c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                        ClassLoop Admin</h2>
+                </div>
+                <label class="flex flex-col min-w-40 h-10 max-w-64">
+                    <div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-[#e7ebf4] dark:bg-white/5">
+                        <div class="text-[#49659c] flex items-center justify-center pl-4">
+                            <span class="material-symbols-outlined">search</span>
+                        </div>
+                        <input
+                            class="form-input flex w-full border-none bg-transparent focus:outline-0 focus:ring-0 text-[#0d121c] dark:text-white placeholder:text-[#49659c] px-4 text-base font-normal"
+                            placeholder="Search" value="" />
+                    </div>
+                </label>
+            </div>
+            <div class="flex flex-1 justify-end gap-8">
+                <div class="flex items-center gap-9">
+                    <a class="text-[#0d121c] dark:text-white text-sm font-medium" href="#">Dashboard</a>
+                    <a class="text-primary text-sm font-medium border-b-2 border-primary py-4" href="#">Schools</a>
+                    <a class="text-[#0d121c] dark:text-white text-sm font-medium" href="#">Teachers</a>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="flex items-center justify-center rounded-xl size-10 bg-[#e7ebf4] dark:bg-white/5 text-[#0d121c] dark:text-white">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center rounded-xl size-10 bg-[#e7ebf4] dark:bg-white/5 text-[#0d121c] dark:text-white">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20"
+                    data-alt="User profile avatar"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAxXt6SOWokTUfGWaRwOi2hEMB0ie4865mObYXttO-fll9UYJpw__3M-3QieTWD6f1IOlnRoiIJELEfb_76CX8eB-HxhOmk38qsx3nv2u0BZC_vUgio5eT5lckgf2owZT1w2zpWpkpYHVfSaGovtMBL4beERjXLppSMIar0_zOWGeqB6Jze0XNtt_X5ZGLiFbobDGbjoomlt9VR_Vi0zi3QnJxCZHtTD6XWu_JCjRuV0j7N42IEo_cexkH3R0j-jT65Yi4qwG6N9dxt");'>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 px-40 py-10 flex flex-col gap-6">
+            <div class="flex flex-wrap justify-between items-end gap-3 px-4">
+                <div class="flex min-w-72 flex-col gap-3">
+                    <p class="text-[#0d121c] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                        Schools Directory</p>
+                    <p class="text-[#49659c] text-base font-normal">Manage and onboard educational instituitions.</p>
+                </div>
+                <button
+                    class="flex min-w-[140px] cursor-pointer items-center justify-center rounded-xl h-11 px-6 bg-primary text-white text-sm font-bold tracking-[0.015em] shadow-lg shadow-primary/20">
+                    <span>Add New School</span>
+                </button>
+            </div>
+            <div class="px-4 py-3">
+                <div
+                    class="flex overflow-hidden rounded-xl border border-[#ced7e8] dark:border-white/10 bg-white dark:bg-background-dark/50">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-white/5 border-b border-[#ced7e8] dark:border-white/10">
+                                <th class="px-6 py-4 text-[#0d121c] dark:text-white text-sm font-semibold">School Name
+                                </th>
+                                <th class="px-6 py-4 text-[#0d121c] dark:text-white text-sm font-semibold">Location</th>
+                                <th class="px-6 py-4 text-[#0d121c] dark:text-white text-sm font-semibold">Principal
+                                </th>
+                                <th class="px-6 py-4 text-[#0d121c] dark:text-white text-sm font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#ced7e8] dark:divide-white/10">
+                            <tr>
+                                <td class="px-6 py-6 text-[#0d121c] dark:text-white text-sm">Greenwood High</td>
+                                <td class="px-6 py-6 text-[#49659c] text-sm">Bangalore</td>
+                                <td class="px-6 py-6 text-[#49659c] text-sm">Dr. Aris</td>
+                                <td class="px-6 py-6">
+                                    <span
+                                        class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Active</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-6 text-[#0d121c] dark:text-white text-sm">St. Xavier's</td>
+                                <td class="px-6 py-6 text-[#49659c] text-sm">Mumbai</td>
+                                <td class="px-6 py-6 text-[#49659c] text-sm">Rev. Fr. Thomas</td>
+                                <td class="px-6 py-6">
+                                    <span
+                                        class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Active</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div
+            class="w-full max-w-[600px] bg-white dark:bg-background-dark rounded-xl shadow-2xl border border-[#ced7e8] dark:border-white/10 overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b border-[#e7ebf4] dark:border-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">domain_add</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#0d121c] dark:text-white">Add New School</h3>
+                        <p class="text-sm text-[#49659c]">Enter details to register a new instituition.</p>
+                    </div>
+                </div>
+                <a href="/admin"
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-[#49659c] transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </a>
+            </div>
+            <form action="/admin/addSchool" method="POST" class="p-8 space-y-5">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold text-[#0d121c] dark:text-white" for="school-name">School
+                        Name</label>
+                    <input
+                        name="name"
+                        class="w-full h-12 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                        id="school-name" placeholder="e.g. Oakridge International School" type="text" />
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold text-[#0d121c] dark:text-white" for="city">City</label>
+                        <input
+                            name="address[city]"
+                            class="w-full h-12 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary"
+                            id="city" placeholder="Bangalore" type="text" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold text-[#0d121c] dark:text-white" for="state">State</label>
+                        <input
+                            name="address[state]"
+                            class="w-full h-12 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary"
+                            id="state" placeholder="Karnataka" type="text" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold text-[#0d121c] dark:text-white"
+                            for="pincode">Pincode</label>
+                        <input
+                            name="address[pincode]"
+                            class="w-full h-12 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary"
+                            id="pincode" placeholder="560001" type="text" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold text-[#0d121c] dark:text-white" for="email">Admin
+                            Email</label>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49659c] text-xl">mail</span>
+                            <input
+                                name="email"
+                                class="w-full h-12 pl-10 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary"
+                                id="email" placeholder="admin@school.edu" type="email" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold text-[#0d121c] dark:text-white" for="phone">Phone
+                            Number</label>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49659c] text-xl">call</span>
+                            <input
+                                name="phone"
+                                class="w-full h-12 pl-10 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary"
+                                id="phone" placeholder="+91 98765 43210" type="tel" />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold text-[#0d121c] dark:text-white" for="principal-name">Principal
+                        id</label>
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49659c] text-xl">person</span>
+                        <input
+                            name="id"
+                            class="w-full h-12 pl-10 rounded-lg border-[#ced7e8] dark:border-white/10 dark:bg-white/5 text-[#0d121c] dark:text-white placeholder:text-[#49659c] focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                            id="principal-name" placeholder="Enter principal's id" type="text" />
+                    </div>
+                </div>
+           
+            <div
+                class="p-6 bg-gray-50 dark:bg-white/5 flex items-center justify-end gap-3 rounded-b-xl border-t border-[#e7ebf4] dark:border-white/5">
+                <a href="/admin"
+                    class="px-6 h-11 rounded-lg text-sm font-bold text-[#0d121c] dark:text-white hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
+                    Cancel
+                </a>
+                <button
+                    class="px-8 h-11 rounded-lg text-sm font-bold text-white bg-primary shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95">
+                    Create School
+                </button>
+            </div>
+        </div>
+         </form>
+    </div>
+
+</body>
+
+</html>

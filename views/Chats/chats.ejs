@@ -1,0 +1,449 @@
+<% layout("/layout/boilerplate.ejs") -%>
+    <title>ClassLoop Direct Messages</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9f1fef",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0b0b0b",
+                        "surface-dark": "#1a1a1a",
+                        "glass-purple": "rgba(159, 31, 239, 0.2)",
+                        "glass-gray": "rgba(255, 255, 255, 0.05)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-purple {
+                background: rgba(159, 31, 239, 0.25);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .glass-neutral {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 4px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #3a2348;
+                border-radius: 10px;
+            }
+        }
+        .tick{
+          position: relative;
+          top: 8px;
+        }
+    </style>
+    </head>
+
+    <body class="bg-background-light dark:bg-background-dark font-display text-white antialiased">
+        <div class="flex h-screen w-full flex-col overflow-hidden">
+
+            <main class="flex flex-1 overflow-hidden bg-background-dark p-4 gap-4">
+                <aside class="h-[87vh] flex w-full max-w-[360px] flex-col rounded-2xl bg-surface-dark overflow-hidden">
+                    <div class="p-4 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-white text-xl font-bold">Messages</h1>
+                            <button
+                                class="size-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center hover:bg-primary/30 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">edit_square</span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-[20px]">search</span>
+                            <input
+                                class="w-full rounded-xl bg-white/5 border-none py-2.5 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary placeholder:text-white/30 text-white"
+                                placeholder="Search conversations..." type="text" />
+                        </div>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto custom-scrollbar px-2 pb-4">
+                        <% for(let User of currentUser.synced) { %>
+                                <a href="/chat?chatId=<%= User._id %>" 
+                                class="flex items-center gap-3 rounded-xl p-3 mb-1 cursor-pointer transition-colors <%= (isChatting && Receiver && Receiver._id.equals(User._id)) ? 'bg-primary/20 border border-primary/30' : 'hover:bg-white/5' %>">
+                                    
+                                    <div class="relative shrink-0">
+                                        <div class="size-12 rounded-full bg-cover bg-center"
+                                            style="background-image: url('<%= User.profilePic.url || "/images/default-avatar.png" %>');">
+                                        </div>
+                                        <% if(User.isActive) { %>
+                                        <div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-surface-dark bg-green-500"></div>
+                                        <% } else{ %>
+                                        <div style="background: grey;" class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-surface-dark"></div>
+                                        <% }  %>
+                                    </div>
+
+                                    <div class="flex flex-1 flex-col overflow-hidden">
+                                        <div class="flex items-center justify-between">
+                                            <p class="truncate text-sm font-semibold text-white/90"><%= User.name %></p>
+                                            <% if(unreadCounts[User._id] > 0) { %>
+                                                <span class="bg-primary text-[10px] px-1.5 py-0.5 rounded-full text-white animate-pulse">
+                                                    <%= unreadCounts[User._id] %>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <p class="truncate text-xs text-white/50"><%= lastMessages[User._id] %></p>
+                                    </div>
+                                </a>
+                            <% } %>
+                             </div>
+                </aside>
+                <% if(isChatting==false) { %>
+                    <section
+                        class="flex flex-1 flex-col rounded-2xl bg-surface-dark overflow-hidden relative items-center justify-center p-8">
+                        <div class="flex flex-col items-center max-w-sm text-center">
+                            <div class="relative mb-8 flex items-center justify-center">
+                                <div class="absolute inset-0 bg-primary/20 blur-[60px] rounded-full scale-150"></div>
+                                <div
+                                    class="relative size-32 rounded-3xl glass-purple flex items-center justify-center shadow-2xl border border-white/10">
+                                    <svg class="size-16 text-primary drop-shadow-[0_0_12px_rgba(159,31,239,0.8)]"
+                                        fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z">
+                                        </path>
+                                    </svg>
+                                    <div
+                                        class="absolute -bottom-2 -right-2 size-12 rounded-xl glass-neutral flex items-center justify-center border border-white/10 shadow-lg translate-y-2">
+                                        <span class="material-symbols-outlined text-primary text-2xl">forum</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="text-2xl font-bold text-white/90 mb-3">Select a conversation to start chatting
+                            </h2>
+                            <p class="text-white/40 text-sm leading-relaxed">
+                                Or click the <span
+                                    class="text-primary font-medium inline-flex items-center gap-1 mx-1"><span
+                                        class="material-symbols-outlined text-[16px]">edit_square</span> new
+                                    message</span>
+                                icon to start a new loop.
+                            </p>
+                            <div
+                                class="mt-10 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] text-[11px] text-white/20 uppercase tracking-widest font-semibold">
+                                ClassLoop Messaging v2.0
+                            </div>
+                        </div>
+                    </section>
+                <% } else { %>
+                        <!-- Right Pane: Chat Window -->
+                    <section class="h-[87vh] flex flex-1 flex-col rounded-2xl bg-surface-dark overflow-hidden relative">
+                        
+                            <header class="flex h-16 items-center justify-between border-b border-white/5 px-6 shrink-0">
+    <div class="flex items-center gap-3">
+        <div class="size-10 rounded-full bg-cover bg-center"
+             style="background-image: url('<%= Receiver.profilePic.url %>');">
+        </div>
+        <div>
+            <h3 class="text-white text-base font-bold leading-none"><%= Receiver.name %></h3>
+            <p class="text-[11px] text-green-500 mt-1 font-medium"><%if(Receiver.isActive == true) { %>
+                Active Now 
+            <%} else { %> 
+            <p class="text-[11px] text-white mt-1 font-medium">Offline</p>
+            <% } %>
+            </p>
+        </div>
+    </div>
+</header>
+
+            <div id="chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+                <% for(let msg of messages) { %>
+                    <% if(msg.sender.equals(currentUser._id)) { %>
+    <div class="flex flex-col items-end mb-4 group" id="msg-<%= msg._id %>">
+        <div class="relative flex items-center gap-2 max-w-[80%]">
+            
+            <div class="opacity-0  group-hover:opacity-100 transition-opacity">
+                <button onclick="toggleMessageMenu('<%= msg._id %>')" class="text-slate-500 hover:text-white flex items-center">
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                </button>
+                
+                <div id="menu-<%= msg._id %>" class="hidden absolute left-0 bottom-full mb-2 w-28 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                    <button onclick="editMessage('<%= msg._id %>', '<%= msg.content %>')" class="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">edit</span> Edit
+                    </button>
+                    <button onclick="deleteMessage('<%= msg._id %>')" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-slate-700 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">delete</span> Delete
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-purple rounded-2xl rounded-br-none px-4 py-3 shadow-lg">
+                <% if(msg.image && msg.image.url) { %>
+                    <div class="relative overflow-hidden rounded-xl mb-2">
+                        <img class="w-full h-auto max-h-60 object-cover" src="<%= msg.image.url %>" />
+                    </div>
+                <% } %>
+                
+                <p class="text-sm text-white leading-relaxed msg-content">
+                    <%= msg.content %>
+                </p>
+                
+                <div class="flex items-center justify-end gap-1 mt-1">
+                    <span class="text-[10px] text-white/40">
+                        <%= msg.createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                    </span>
+                    <span class="tick material-symbols-outlined text-[14px] <%= msg.isRead ? 'text-blue-400' : 'text-white/40' %>">
+                        <%= msg.isRead ? 'done_all' : 'check' %>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    <% } else { %>
+                        <div class="flex items-end gap-3 max-w-[80%]">
+                            <div class="size-8 rounded-full bg-cover bg-center shrink-0 mb-1"
+                                style="background-image: url('<%= Receiver.profilePic.url %>');">
+                            </div>
+                            <div class="glass-neutral rounded-2xl rounded-bl-none px-4 py-3">
+                                <% if(msg.image.url) { %>
+                                <div class="relative overflow-hidden rounded-xl">
+<img alt="Textbook page with shell scripting notes" class="w-full h-auto aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGelrDzmunH1FpVwEjTFuB9CWuQKTogyYYwKOCfVUg3CqjIF4Bop-0_FizdPNjy04GTEKcyOVj2ZYdVo3djd-JnVP_RgYnr4kB3SPRgpHhDkPnrGvho99b1SYZ43DEYj38bbKIra9EdBLXxMqPAtrPEJBgvXgCYOjyROdQ54rh-28mdJq_-qpV_pzlvon0dELkUFKvCzHoWVFyI0_mCWIt0q7QIypQkblKi3DOM_WxpXmaBlsg2oEPURDweF02Ca_WlzeG7Dt61ZnH"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<div class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/10">
+<span class="material-symbols-outlined text-[18px]">zoom_in</span>
+<span class="text-[11px] font-medium">Click to expand</span>
+</div>
+</div>
+</div>
+<% } %>
+                                <p class="text-sm leading-relaxed text-white/90"><%= msg.content %></p>
+                                <span class="mt-1 block text-[10px] text-white/30 text-right">
+                                    <%= msg.createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                </span>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+
+            <div id="edit-preview" class="hidden bg-primary/10 border-l-4 border-primary p-2 px-4 flex justify-between items-center transition-all mb-1 rounded-t-xl">
+    <div class="flex flex-col">
+        <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Editing Message</span>
+        <p id="editing-text-display" class="text-xs text-white/60 line-clamp-1"></p>
+    </div>
+    <button type="button" onclick="cancelEdit()" class="text-white/40 hover:text-white">
+        <span class="material-symbols-outlined text-sm">close</span>
+    </button>
+</div>
+                            <!-- Message Input Area -->
+    <form id="chat-form" class="p-4 bg-surface-dark border-t border-white/5" enctype="multipart/form-data">
+    <input type="hidden" id="edit-msg-id" value="">
+    
+    <div class="flex items-center gap-3 bg-white/5 rounded-2xl p-2 pl-4 border border-white/5 focus-within:border-primary/50 transition-all">
+        <div class="flex items-center">
+            <input type="file" id="file-upload" class="hidden" accept="image/*, .pdf, .doc, .docx" />
+            <button type="button" onclick="document.getElementById('file-upload').click()" class="flex size-9 items-center justify-center text-white/40 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">add_circle</span>
+            </button>
+        </div>
+        
+        <input id="message-input" name="content" required autocomplete="off"
+            class="flex-1 border-none bg-transparent py-2 text-sm focus:ring-0 text-white placeholder:text-white/20"
+            placeholder="Write to <%= Receiver.username %>..." type="text" />
+        
+        <div class="flex items-center gap-1">
+            <button type="submit" class="flex size-9 items-center justify-center rounded-xl bg-primary text-white shadow-[0_0_15px_rgba(159,31,239,0.4)] hover:brightness-110 transition-all">
+                <span class="material-symbols-outlined text-[20px]">send</span>
+            </button>
+        </div>
+    </div>
+</form>
+                    </section>
+                <% } %>
+            </main>
+        </div>
+
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let isEditing = false;
+    // --- YOUR EXISTING SCRIPT (Do not change) ---
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    const socket = io();
+    const chatForm = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message-input');
+    const messageFeed = document.getElementById('chat-messages');
+
+    const currentUserId = "<%= currentUser._id %>";
+    const receiverId = "<%= Receiver ? Receiver._id : '' %>";
+    
+    socket.emit('register', currentUserId);
+
+    chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const content = messageInput.value.trim();
+    const msgId = document.getElementById('edit-msg-id').value; // Get the hidden ID
+
+    if (content && receiverId) {
+        if (isEditing && msgId) {
+            // LOGIC: If editing, emit 'editMessage' instead of 'user-message'
+            socket.emit('editMessage', { 
+                msgId: msgId, 
+                newContent: content 
+            });
+            cancelEdit(); // Reset the UI after editing
+        } else {
+            // LOGIC: Regular new message
+            socket.emit('user-message', {
+                content: content,
+                senderId: currentUserId,
+                receiverId: receiverId
+            });
+            messageInput.value = ''; 
+        }
+    }
+});
+
+    socket.on('receive-message', (data) => {
+        if (data.sender === receiverId || data.sender === currentUserId) {
+            appendMessage(data);
+        }
+    });
+
+    function appendMessage(data) {
+    const isMe = data.sender === currentUserId;
+    
+    // We use the same 'flex items-center gap-2' logic here
+    const msgHtml = `
+        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-4 group" id="msg-${data._id || Date.now()}">
+            <div class="relative flex items-center gap-2 max-w-[80%]">
+                
+                ${isMe ? `
+                <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="toggleMessageMenu('${data._id}')" class="text-slate-500 hover:text-white flex items-center">
+                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                    </button>
+                    <div id="menu-${data._id}" class="hidden absolute left-0 bottom-full mb-2 w-28 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                        <button onclick="editMessage('${data._id}', '${data.content}')" class="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">edit</span> Edit
+                        </button>
+                        <button onclick="deleteMessage('${data._id}')" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">delete</span> Delete
+                        </button>
+                    </div>
+                </div>` : ''}
+
+                ${!isMe ? `<div class="size-8 rounded-full bg-cover bg-center shrink-0 mb-1" style="background-image: url('<%= Receiver ? Receiver.profilePic.url : '' %>');"></div>` : ''}
+                
+                <div class="${isMe ? 'glass-purple rounded-br-none' : 'glass-neutral rounded-bl-none'} rounded-2xl px-4 py-3 shadow-lg">
+                    <p class="text-sm leading-relaxed ${!isMe ? 'text-white/90' : 'text-white'} msg-content">${data.content}</p>
+                    <div class="flex items-center justify-end gap-1 mt-1">
+                        <span class="text-[10px] text-white/40 text-right">Just now</span>
+                        ${isMe ? `<span class="tick material-symbols-outlined text-[14px] text-white/40">check</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    messageFeed.insertAdjacentHTML('beforeend', msgHtml);
+    messageFeed.scrollTop = messageFeed.scrollHeight; 
+}
+    // --- NEW ADDED FUNCTIONALITY ---
+
+    // 1. Toggle the Edit/Delete Menu
+    function toggleMessageMenu(msgId) {
+        // Close all other open menus first
+        document.querySelectorAll('[id^="menu-"]').forEach(menu => {
+            if (menu.id !== `menu-${msgId}`) menu.classList.add('hidden');
+        });
+        const menu = document.getElementById(`menu-${msgId}`);
+        if (menu) menu.classList.toggle('hidden');
+    }
+
+    // 2. Delete Message Handler
+    function deleteMessage(msgId) {
+        if (confirm("Delete this message for everyone?")) {
+            socket.emit("deleteMessage", msgId);
+        }
+    }
+
+    // 3. Edit Message Handler
+    function editMessage(msgId, currentText) {
+    isEditing = true;
+    document.getElementById('edit-msg-id').value = msgId;
+    document.getElementById('message-input').value = currentText;
+    
+    // Show the preview bar
+    document.getElementById('editing-text-display').innerText = currentText;
+    document.getElementById('edit-preview').classList.remove('hidden');
+    
+    document.getElementById('message-input').focus();
+    // Close the dropdown menu
+    toggleMessageMenu(msgId);
+}
+
+// NEW: Function to clear edit mode
+function cancelEdit() {
+    isEditing = false;
+    document.getElementById('edit-msg-id').value = "";
+    document.getElementById('message-input').value = "";
+    document.getElementById('edit-preview').classList.add('hidden');
+}
+
+    // 4. Socket Listener for Real-time Deletion
+    socket.on("messageDeleted", (msgId) => {
+        const msgElement = document.getElementById(`msg-${msgId}`);
+        if (msgElement) {
+            msgElement.style.transition = "all 0.3s ease";
+            msgElement.style.transform = "scale(0)";
+            msgElement.style.opacity = "0";
+            setTimeout(() => {
+                msgElement.remove();
+            }, 300);
+        }
+    });
+
+    // 5. Socket Listener for Real-time Editing
+    socket.on("messageEdited", (data) => {
+        const msgElement = document.getElementById(`msg-${data.msgId}`);
+        if (msgElement) {
+            const contentPara = msgElement.querySelector('.msg-content');
+            if (contentPara) {
+                contentPara.innerText = data.newContent;
+                // Highlight briefly to show change
+                contentPara.style.color = "#b954f8"; 
+                setTimeout(() => { contentPara.style.color = ""; }, 2000);
+            }
+        }
+    });
+
+    // Close menus when clicking anywhere else
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.group')) {
+            document.querySelectorAll('[id^="menu-"]').forEach(menu => menu.classList.add('hidden'));
+        }
+    });
+
+</script>

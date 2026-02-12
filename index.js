@@ -1,9 +1,16 @@
-if(process.env.NODE_ENV != "production") {
-    require('dotenv').config();
-};
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+}
 
+const http = require("http");
 const express = require("express");
 const app = express();
+const { Server } = require("socket.io");
+
+const server = http.createServer(app);
+const ImageKit = require("imagekit");
+const multer = require("multer");
+
 const ejsMate = require("ejs-mate");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -12,41 +19,94 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const flash = require("connect-flash");
 const session = require("express-session");
+const axios = require("axios");
 const ExpressError = require("./utils/ExpressError");
 const wrapAsync = require("./utils/wrapAsync.js");
 
-const {isLoggedIn} = require("./middleware.js");
+const {
+  isLoggedIn,
+  countNotification,
+  formatDistanceToNow,
+} = require("./middleware.js");
 
-const  port = 3000;
+const port = 3000;
 const dbUrl = "mongodb://127.0.0.1:27017/bfgiSpot";
+//loopSpace
+const LoopSpace = require("./model/loopSpace/loopSpace.js");
+const SpaceMessage = require("./model/loopSpace/spaceMessage.js");
+//models
 const Posts = require("./model/post");
 const Users = require("./model/User");
 const Comments = require("./model/comment");
-const { error } = require('console');
+const Message = require("./model/message.js");
+const Notification = require("./model/notification/notification.js");
+//DoubtBin models
+const Doubts = require("./model/DoubtBin/doubt.js");
+const Answers = require("./model/DoubtBin/answer.js");
+// School model
+const Schools = require("./model/school/school.js");
+const Class = require("./model/school/classes.js");
+const Notice = require("./model/school/notice.js");
+const Attendance = require("./model/school/attendance.js");
+const Form = require("./model/school/form.js");
+const FormResponse = require("./model/school/formResponse.js");
+const Assignment = require("./model/school/assignment.js");
+const Resources = require("./model/school/resourse.js");
+// Connection model
+
+let Connection = require("./model/connection/connection.js");
+// All routes
+const home = require("./routes/home.js");
+const doubtBin = require("./routes/doubtBin.js");
+const post = require("./routes/post.js");
+const user = require("./routes/user.js");
+const comment = require("./routes/comment.js");
+const chat = require("./routes/chat.js");
+//school routes
+const school = require("./routes/school.js");
+const teacher = require("./routes/teacher.js");
+const { error } = require("console");
+//loopSpace Routes
+const loopSpace = require("./routes/loopSpace.js");
+//notifications routes
+const notification = require("./routes/notifications.js");
+//Socket Routes
+const socketRouter = require("./routes/socketRouter.js");
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+});
+
+const OTP_Key = process.env.OTP_API_KEY;
 
 let sessionOption = {
-        secret: process.env.SECRET,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-            maxAge:   7 * 24 * 60 * 60 * 1000,
-            httpOnly: true
-        },
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
 };
 
-app.set("views" , path.join(__dirname , "views"));
-app.set("view engine" , "ejs");
-app.use(express.static(path.join(__dirname , "public")));
-app.use(express.urlencoded({extended : true}));
-app.use(methodOverride('_method'));
-app.engine('ejs' , ejsMate);
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+app.engine("ejs", ejsMate);
 
 main()
-    .then((res)=>{
-        console.log("connection succesfull");
-    })
-    .catch(err => console.log(err));
+  .then((res) => {
+    console.log("connection succesfull");
+  })
+  .catch((err) => console.log(err));
 
 async function main() {
   await mongoose.connect(dbUrl);
@@ -57,256 +117,119 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
- 
 
 passport.use(new LocalStrategy(Users.authenticate()));
 passport.serializeUser(Users.serializeUser());
 passport.deserializeUser(Users.deserializeUser());
 
-app.use((req,res,next)=>{
-   res.locals.success = req.flash("success");
-   res.locals.error = req.flash("error");
-   res.locals.currUser = req.user;
-   next();
+app.use(async (req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
+  res.locals.formatDistanceToNow = formatDistanceToNow;
+  res.locals.currPath = req.path;
+  next();
 });
 
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+socketRouter(io);
 
-app.get("/home" ,async (req,res)=>{
-    const allPosts = await Posts.find({}).sort({ createdAt: -1 }).populate("owner");
-    res.render("./webpage/home.ejs" ,{allPosts});
+app.use(countNotification);
+
+app.use("/home", home);
+app.use("/doubtBin", doubtBin);
+app.use("/post", post);
+app.use("/user", user);
+app.use("/comment", comment);
+app.use("/chat", chat);
+app.use("/teacher", teacher);
+app.use("/loopSpace", loopSpace);
+app.use("/notifications", notification);
+app.use("/school", school);
+
+app.get("/", (req, res) => {
+  res.render("./webpage/info.ejs");
 });
 
-app.get("/new-post",isLoggedIn , (req,res)=>{
-    res.render("./webpage/createPost.ejs")
+app.get("/admin", isLoggedIn, async (req, res) => {
+  if (!req.user.designation === "admin") {
+    req.flash("error", "Authorization Failed!");
+    req.redirect("/home");
+  }
+  let schools = await Schools.find({});
+  res.render("./admin/adminDashboard.ejs", { schools });
 });
 
-//createPost
-app.post("/createPost" , async(req,res)=>{
-    let newPost = new Posts(req.body.post);
-    newPost.owner = req.user._id;
-    req.user.post.push(newPost._id);
-    await newPost.save();
-    await req.user.save();
-    req.flash("success" , "Uploaded a new Post");
-    res.redirect("/home");
-});
-//delete post route 
-app.delete("/post/:id/delete",isLoggedIn , async(req,res)=>{
-    let currUserId = req.user._id;
-    const Post = await Posts.findById(req.params.id);
-    if(!Post.owner.equals(currUserId)){
-        req.flash("error" , "You do not have permission to delete this post");
-        return res.redirect("/home");
-    }
-    
-    try{
-        await Comments.deleteMany({postId: req.params.id});
-        await Users.findByIdAndUpdate(currUserId, { $pull: { post: Post._id } });
-        await Posts.findByIdAndDelete(req.params.id);
-        req.flash("success" , "Post Deleted Successfully");
-        res.redirect("/home");
-    } catch(err){
-        console.log("unable to find Post");
-        res.redirect("/");
-    }
+app.get("/admin/addschool", isLoggedIn, async (req, res) => {
+  if (!req.user.designation === "admin") {
+    req.flash("error", "Authorization Failed!");
+    req.redirect("/home");
+  }
+  res.render("./admin/addSchoolForm.ejs");
 });
 
-app.get("/post/:id/edit" ,async (req,res)=>{
-    let {id} = req.params;
-    try{
-      const Post = await Posts.findById(id);
-      res.render("./webpage/editPost.ejs" , {Post});
-    } catch(err) {
-      res.send("Can'nt find Post");
-    }
-});
+app.post("/admin/addSchool", async (req, res) => {
+  try {
+    // 1. Extract data from the form
+    const { name, email, phone, address, id: principalId } = req.body;
 
-// //edit route
-app.put("/post/:id/edit" , async(req,res)=>{
-    try{
-        let {id} = req.params;
-        let updatedPost = await Posts.findByIdAndUpdate(id , req.body.post);
-        req.flash("success" , "Post edited Successfully");
-        res.redirect("/home");
-    } catch(err){
-        console.log("unable to find Post");
-        res.redirect("/home");
-    }
-});
-
-
-//show post
-app.get("/post/:id" , async(req,res)=>{
-    try{
-        let {id} = req.params;
-        let Post = await Posts.findById(id).populate({path: "comments" ,
-                                                         populate : {
-                                                          path: "author",
-                                                        }})
-                                                        .populate("owner");
-        req.flash("success" , "Post created Successfully");
-        res.render("./webpage/post.ejs" , {Post});
-    } catch(err){
-        console.log("unable to find Post");
-        res.redirect("/");
-    }
-});
-
-//comment save 
-app.post("/post/:id/comment" , async (req,res)=>{
-    let {id} = req.params;
-    let Post = await Posts.findById(id);
-
-    let newCommentText = req.body.comments.comment;
-    let newComment = new Comments({comment: newCommentText});
-   
-    newComment.author = req.user._id;
-    newComment.postId = Post._id;
-    Post.comments.push(newComment);
-
-    await newComment.save();
-    await Post.save();
-    
-    req.flash("success" , "Comment added successfully!");
-    res.redirect(`/post/${id}`);
-});
-
-//signup page render
-app.get("/signup" , (req,res)=>{
-     res.render("./user/createId.ejs");
-});
-
-//signup
-app.post("/signup" ,async (req,res)=>{
-   try{
-        let {username ,name , phone , password , bio , profilePic} = req.body;
-        const newUser = new Users({username ,name , phone , bio , profilePic});
-        const newRegister = await Users.register(newUser , password);
-        req.login(newRegister ,(err)=>{
-        req.flash("success" , `Hey! ${req.user.name} your Account created Successfully`);
-        res.redirect("/home");
-        });   
-    } catch(e){
-        res.send(e)
-        res.redirect("/signup");
-    };
-});
-
-//login page render
-app.get("/login" , (req,res)=>{
-       res.render("./user/login.ejs");
-});
-
-//login
-app.post(
-    "/login",
-    passport.authenticate("local" , {failureRedirect: "/login", failureFlash: true}),
-    async(req,res)=>{
-
-    req.flash("success" , `Welcome Back! ${req.user.username}`);
-    // let redirectUrl =  res.locals.redirectUrl || "/listings";
-    res.redirect("/home");
-});
-
-//logout
-app.get("/logout" , 
-(req,res,next)=>{
-       req.logout((err)=>{
-       if(err) {
-        return next(err);
-       };
-    req.flash("success" , "Logged Out Successfully");
-    res.redirect("/home");
+    // 2. Create the new school in the database
+    const newSchool = new Schools({
+      name: name,
+      email: email,
+      phone: phone, // This matches the field we added to the School model earlier
+      location: `${address.city}, ${address.state}`, // Combining for your location string
+      address: {
+        city: address.city,
+        state: address.state,
+        pincode: address.pincode,
+      },
+      principle: principalId, // Linking the Principal's User ID
     });
+
+    await newSchool.save();
+
+    // 3. Update the Principal's user record
+    // We link this school to the user and change their designation
+    await Users.findByIdAndUpdate(principalId, {
+      "instituition.school": newSchool._id,
+      designation: "principle",
+    });
+
+    req.flash("success", "Created a new School");
+    res.redirect("/admin");
+  } catch (err) {
+    req.flash("error", `error : ${err}`);
+    console.error("Error creating school:", err);
+    res.status(500).send("Server Error: Could not create school.");
+  }
 });
 
-//Post Like
-app.post("/post/:id/like" ,isLoggedIn, async(req,res)=>{
-    try{
-       let {id} = req.params;
-       let userId = req.user._id;
-       let Post = await Posts.findById(id);
-
-       if(!Post) {
-         req.flash("error" , "Post Not Found");
-         res.redirect("/home");
-       }
-
-       let hasLiked = Post.like.includes(userId);
-       if(hasLiked) {
-         await Posts.findByIdAndUpdate(id, { $pull: { like: userId } });
-       } else{
-        await Posts.findByIdAndUpdate(id, { $addToSet: { like: userId } });
-       }
-
-    res.redirect(`/post/${id}`);
-    } catch(err){
-        req.flash("error", "Something went wrong.");
-        res.redirect(`/post/${id}`);
-    }
+app.get("/beta-version", (req, res) => {
+  req.flash("error", "Page under Maintenance!");
+  const backURL = req.header("Referer") || "/";
+  res.redirect(backURL);
 });
-
-//render user interface
-
-app.get("/profile", isLoggedIn ,async(req,res)=>{
-    let User = await req.user.populate("post");
-    res.render("./user/profile.ejs" , {User});
-});
-
-//all users route
-app.get("/users",isLoggedIn , async(req,res)=>{
-     let allUsers = await Users.find({});
-     res.render("./user/findUsers.ejs" , {allUsers});
-});
-
-//Follw a user route
-app.get("/follow/:id", isLoggedIn, async(req,res)=>{
-     let {id} = req.params;
-     let User = await Users.findById(id);
-     let currUser = req.user;
-     let currUserId = req.user._id;
-     const referrerUrl = req.get('Referer');
-     console.log(referrerUrl);
-
-     if(!User) {
-        req.flash("error" , "User not Found" );
-        res.render("/home");
-     }
-
-     let hasFollowed = User.followers.includes(currUserId);
-
-     if(hasFollowed) {
-        await Users.findByIdAndUpdate(id, { $pull: { followers: currUserId } });
-        await Users.findByIdAndUpdate(currUserId, { $pull: { following: User._id } });
-        res.redirect(`${referrerUrl}`);
-     } else{
-        User.followers.push(currUserId);
-        currUser.following.push(User._id);
-        await currUser.save();
-        await User.save();
-        res.redirect(`${referrerUrl}`);
-     }
-});
-
-//find User-->
-app.get("/user/:id" , async(req,res)=>{
-    let {id} = req.params;
-    let User = await Users.findById(id).populate("post");
-    res.render("./user/userProfile.ejs" , {User});
-});
-
 
 // ExpressError Class-->
-app.use((req , res , next)=>{
-    next(new ExpressError(404 , "Page not Found!"));
+app.use((req, res, next) => {
+  next(new ExpressError(404, "Page not Found!"));
 });
 
 // Custom Error Handling
-app.use((err , req , res, next)=>{
-    let {statusCode=500 , message="something went wrong"} = err;
-    res.render("error.ejs" , {err});
+// app.js (or your middleware file)
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Something went wrong";
+  // Set the status on the response so the browser knows it's an error
+  res.status(statusCode).render("error.ejs", { err, statusCode, message });
 });
 
-app.listen(port , ()=>{
-   console.log(`App is listning to port: ${port}`);
+server.listen(port, () => {
+  console.log(`🚀 Server (HTTP + Socket.IO) running on port: ${port}`);
 });

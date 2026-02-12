@@ -1,128 +1,424 @@
 <% layout("/layout/boilerplate.ejs") -%>
-<style>
-    .container{
-      padding: 10px 0px;
-      max-width: 100% !important;
-      background-color: #b2bac7;
-    }
-    .user{
-      color: black;
-      background: aliceblue;
-      width: 50%; 
-      min-height: 100vh;  
-      max-height: 100%;
-      margin: auto;
-      padding: 7px ;
-      border-radius: 10px;
-    }
-    .user-info{
-      background: aliceblue;
-      width: 80%;
-      margin: 15px auto;  
-      padding: 6px; 
-      border-radius: 10px;
-      /* border: 2px solid black; */
-     
-    }
-    .bghk{
-       display: flex;
-       flex-direction: row;
-    }
-    #profile-pic{
-        width: 125px;
-        height: 125px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-    .shdbf{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 7px 30px;
-    }
-    .post-container {
-       padding: 0px 6px;
-       display: grid;
-       grid-template-columns: repeat(3, 1fr); 
-       gap: 10px; 
-    }
-    .indiv-post img{
-       width: 100%;
-       height: 250px;
-       object-fit: cover; /* This is key for uniform look */
-       display: block; 
-       border-radius: 10px;
-    }
-    .indiv-post img:hover{
-        box-shadow: 0 0 20px black;
-    }
-    .frnd-req{
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       margin: 0px auto;
-    }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ClassLoop | Profile View</title>
     
-</style>
-<body>
-    <div class="container">
-       <div class="user">
-        <div class="user-info">
-          <div class="bghk">
-             <div class="user-info-image">
-               <img id="profile-pic" 
-               src= "<%= currUser.profilePic %>"
-               alt="profile pic" 
-               />
-             </div>
-             <div style="padding: 4px 0px 4px 30px;">
-              <h5>Username:&nbsp<%=currUser.username%></h5>
-              <p><%=currUser.name%></p>
-              <p><%=currUser.bio%></p>
-              <p>Created At:&nbsp;<%=currUser.createdAt.toDateString()%></p> 
-             </div>
-             <!-- <div class="frnd-req">
-                <form action="">
-                    <button class="button is-success is-rounded">Follow</button>
-                </form>
-             </div> -->
-             </div>
-               <div class="shdbf">
-                <div class="posts-count">
-                  <h3><b>Posts</b></h3>
-                  <h3 style="text-align: center;"><%=currUser.post.length%></h3>
-                </div>
-                 <div class="followers">
-                  <h3 ><b>Followers</b></h3>
-                  <h3 style="text-align: center;"><%=currUser.followers.length%></h3>
-                 </div>
-                 <div class="followings">
-                  <h3><b>Followings</b></h3>
-                  <h3 style="text-align: center;"><%=currUser.following.length%></h3>
-                 </div>
-               </div>
-             </div>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#8a2ce2",
+              "text" : "#ffffff",
+              "background-light": "#f7f6f8",
+              "background-dark": "#0B0E14",
+              "card-dark": "#161B22",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem",
+              "lg": "1rem",
+              "xl": "1.5rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0B0E14;
+      }
 
-        <hr />
+      .glass-card {
+        background: rgba(22, 27, 34, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
 
-        <div class="post-container">
-        <% for(let Post of User.post) { %>    
-            <div class="indiv-post">
-                <div>
-                  <form action="/post/<%=Post._id%>">
-                    <button style="width: 100%; display: block;">
-                       <img class="post-image" 
-                          src="<%= Post.image%>" 
-                          alt="post-image" 
-                      />
-                    </button>
-                  </form>
-                   
+      .sticky-sidebar {
+        position: sticky;
+        top: 5rem;
+        height: fit-content;
+      }
+      .white {
+        color: white;
+      }
+      @keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1.1); }
+}
+
+.liked {
+  color: #8a2ce2 !important;
+  font-variation-settings: 'FILL' 1; /* This fills the Material Symbol */
+  filter: drop-shadow(0 0 5px rgba(138, 44, 226, 0.5));
+  animation: heart-pop 0.3s ease-out;
+}
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-white font-display antialiased">
+
+  <% if(currentUser._id.equals(currUser._id)) { %>
+    <div id="update-preview-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="glass-card w-full max-w-lg rounded-xl overflow-hidden shadow-2xl bg-card-dark border border-white/10">
+            <div class="relative w-full aspect-video bg-gradient-to-r from-primary/20 to-primary/10">
+                <img id="preview-cover-img" class="w-full h-full object-cover" src="<%= currentUser.coverPic?.url %>" />
+                <div class="absolute -bottom-10 left-6">
+                    <div class="size-24 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark shadow-xl">
+                        <img id="preview-profile-img" class="w-full h-full object-cover" src="<%= currentUser.profilePic?.url || '/images/default-avatar.png' %>" />
+                    </div>
                 </div>
             </div>
-        <% } %>
-        </div>     
-          </div>
-       </div>
+            <div class="pt-14 pb-8 px-8">
+                <h3 class="text-xl font-bold mb-2 white">Update Preview</h3>
+                <p class="text-gray-400 text-sm mb-8">Review your changes before saving to ClassLoop.</p>
+                <div class="flex items-center justify-end gap-3">
+                    <button onclick="closePreview()" class="px-6 py-2.5 text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all">Cancel</button>
+                    <button id="confirm-upload-btn" class="px-8 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg transition-all shadow-lg shadow-primary/20">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <% } %>
+    
+    <main class="pt-8 pb-12 px-4 max-w-[1440px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <aside class="lg:col-span-3 space-y-6 hidden lg:block">
+          <div class="sticky-sidebar space-y-6">
+            <% if(currentUser.instituition?.class) { %>
+            <div class="glass-card rounded-xl p-5">
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Institution</h3>
+              <div class="flex flex-col gap-4">
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-primary">account_balance</span>
+                  <div>
+                    <p class="text-sm white font-medium"><%= currentUser.instituition.class.school?.name || 'Institution Linked' %></p>
+                    <p class="text-xs text-gray-500">Associated class: <%= currentUser.instituition.class.className %> - 
+                      <%= currentUser.instituition.class.section %></p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-primary">location_on</span>
+                  <div>
+                    <p class="text-sm white font-medium">
+                        <%= currentUser.instituition.class.school?.address?.city || 'Bokaro' %>, 
+                        <%= currentUser.instituition.class.school?.address?.state || 'Jharkhand' %>
+                    </p>
+                    <p class="text-xs text-gray-500">India</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } else{ %>
+             <div class="glass-card rounded-xl p-4">
+<h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Institution</h3>
+<div class="flex flex-col items-center justify-center py-4 text-center">
+<div class="size-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-gray-500 text-2xl">school</span>
+</div>
+<p class="text-sm text-gray-400 mb-2">No institution linked yet</p>
+<a class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors" href="#">Add Institution</a>
+</div>
+</div>
+            <% } %>
+
+            <div class="glass-card rounded-xl p-5">
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Profile Link</h3>
+              <div class="bg-black/40 rounded-lg p-3 flex items-center justify-between border border-white/5">
+                <span class="text-xs text-gray-400 truncate pr-2" id="profileUrl">classloop.in/user/<%= currentUser._id %></span>
+                <button onclick="copyToClipboard()" class="text-primary hover:text-primary/80 transition-colors">
+                  <span class="material-symbols-outlined text-lg">content_copy</span>
+                </button>
+              </div>
+            </div>
+            <% const loginUserId = currUser._id
+               const profileId = currentUser.id
+              if(loginUserId.equals(profileId)) { %>
+            <div class="pt-2">
+<button class="group w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/30 transition-all text-sm font-medium">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Delete Profile
+                        </button>
+</div>
+<% } %>
+          </div>
+        </aside>
+
+        <div class="lg:col-span-6 space-y-6">
+          <div class="glass-card rounded-xl overflow-hidden relative">
+            <div class="h-48 w-full relative group overflow-hidden">
+                        <img class="w-full h-full object-cover opacity-60" src="<%= currentUser.coverPic?.url %>" />
+                        <% if(currentUser._id.equals(currUser._id)) { %>
+                            <label class="absolute top-4 right-4 bg-black/50 hover:bg-primary p-2 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
+                                <span class="material-symbols-outlined text-white text-sm">edit</span>
+                                <input type="file" class="hidden" onchange="previewImage(event, 'cover')">
+                            </label>
+                        <% } %>
+                    </div>
+
+            <div class="px-8 pb-8">
+              <div class="relative flex justify-between items-end -mt-16 mb-3">
+                <div class="relative group">
+                                <div class="size-32 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark relative">
+                                    <img id="profile-img" class="w-full h-full object-cover" src="<%= currentUser.profilePic?.url || '/images/default-avatar.png' %>" />
+                                    <% if(currentUser._id.equals(currUser._id)) { %>
+                                        <label class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                                            <span class="material-symbols-outlined text-white text-2xl">photo_camera</span>
+                                            <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="previewImage(event, 'profile')">
+                                        </label>
+                                    <% } %>
+                                </div>
+                                <div class="absolute bottom-1 right-1 size-6 <%= currentUser.isActive ? 'bg-green-500' : 'bg-gray-500' %> border-2 border-background-dark rounded-full"></div>
+                            </div>
+                <% const id = currentUser._id 
+                   if(!id.equals(currUser._id)) { %>
+                <div class="flex gap-3">
+                  <button id="connectBtn" onclick="handleConnect('<%= currentUser._id %>')"
+                    class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-8 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg">person_add</span>
+                    <span>Connect</span>
+                  </button>
+                  <button class="bg-white/5 hover:bg-white/10 text-white p-2.5 rounded-xl border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined">mail</span>
+                  </button>
+                </div>
+                <% } %>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                  <h2 class="text-3xl white font-bold"><%= currentUser.name %></h2>
+                  <span class="material-symbols-outlined text-blue-400 text-xl" title="Verified">verified</span>
+                </div>
+                <p class="text-primary font-medium capitalize"><%= currentUser.designation %></p>
+                <p class="text-gray-400 max-w-2xl leading-relaxed mt-4">
+                  <%= currentUser.bio || "No bio available." %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div class="flex border-b border-white/10 px-2 gap-8">
+              <button class="pb-4 text-primary border-b-2 border-primary font-semibold text-sm">Activity</button>
+              <button class="pb-4 text-gray-500 hover:text-gray-300 transition-colors font-medium text-sm">Media</button>
+            </div>
+
+            <% if(allPosts && allPosts.length > 0) { %>
+              <% for(let post of allPosts) { %>
+                <div class="glass-card rounded-xl p-4 space-y-4" id="post-<%= post._id %>">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="size-10 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="<%= currentUser.profilePic.url %>" />
+                      </div>
+                      <div>
+                        <p class="text-sm white font-bold"><%= currentUser.name %></p>
+                        <p class="text-xs text-gray-500"><%= post.createdAt.toDateString() %></p>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="text-sm leading-relaxed text-gray-200"><%= post.content %></p>
+                  
+                  <% if(post.image && post.image.url) { %>
+                  <div class="rounded-xl overflow-hidden border border-white/5 aspect-video bg-black/20">
+                    <img class="w-full h-full object-cover" src="<%= post.image.url %>" />
+                  </div>
+                  <% } %>
+
+                  <div class="pt-4 flex items-center justify-between border-t border-white/5">
+                    <div class="flex items-center gap-6">
+                      <button onclick="likePost('<%= post._id %>')" class="flex items-center gap-2 transition-colors group">
+                        <span class="material-symbols-outlined text-xl transition-all duration-200 <%= (post.like && post.like.includes(currentUser._id)) ? 'liked' : 'text-gray-400' %>" 
+      id="heart-<%= post._id %>">
+  favorite
+</span>
+                        <span class="text-sm font-medium text-gray-400" id="likes-count-<%= post._id %>">
+                            <%= post.like?.length || 0 %>
+                        </span>
+                      </button>
+                      <button class="flex items-center gap-2 text-gray-400 hover:text-white">
+                        <span class="material-symbols-outlined text-xl">chat_bubble</span>
+                        <span class="text-sm font-medium">0</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            <% } else { %>
+                <div class="text-center py-10 text-gray-500">No posts yet.</div>
+            <% } %>
+          </div>
+        </div>
+
+        <aside class="lg:col-span-3 space-y-6">
+          <div class="sticky-sidebar space-y-6">
+            <% if(currUser.synced.length > 0 ){ %> 
+            <div class="glass-card rounded-xl p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-lg white font-bold">Connections</h3>
+                  <p class="text-xs text-primary font-semibold"><%= currentUser.synced?.length || 0 %> total</p>
+                </div>
+                <a class="text-xs text-gray-400 hover:text-white underline underline-offset-4" href="#">View All</a>
+              </div>
+              <div class="grid grid-cols-4 gap-3">
+                <% if(currentUser.synced && currentUser.synced.length > 0) { %>
+                    <% currentUser.synced.slice(0, 7).forEach(friend => { %>
+                        <a href="/user/<%=friend._id%>" class="aspect-square rounded-lg overflow-hidden border border-white/10 hover:border-primary cursor-pointer">
+                            <img class="w-full h-full object-cover" src="<%= friend.profilePic.url %>" title="<%= friend.name %>" />
+                        </a>
+                    <% }) %>
+                    <% if(currentUser.synced.length > 7) { %>
+                        <div class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-xs font-bold text-gray-500 border border-white/5">
+                            +<%= currentUser.synced.length - 7 %>
+                        </div>
+                    <% } %>
+                <% } %>
+              </div>
+            </div>
+            <% } else { %>
+              <div class="glass-card rounded-xl p-3">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="text-lg white font-bold">Connections</h3>
+<p class="text-xs text-gray-500 font-semibold">0 total</p>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center py-3 text-center border border-dashed border-white/10 rounded-xl bg-white/5">
+<div class="size-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-gray-500 text-2xl">people_outline</span>
+</div>
+<p class="text-sm font-medium text-gray-300 mb-6">Expand your network</p>
+<button class="px-6 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg transition-all shadow-lg shadow-primary/20">
+                                Suggest Connections
+                            </button>
+</div>
+</div>
+<% } %>
+
+<div class="glass-card rounded-xl p-5">
+<h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Interests</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-xs font-semibold rounded-full">Quantum Mechanics</span>
+<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">AI Ethics</span>
+<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">Python</span>
+<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">Data Viz</span>
+<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">C++</span>
+</div>
+</div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      function likePost(postId) {
+        socket.emit('like_post', { postId, userId: '<%= currentUser._id %>' });
+        
+        const heartIcon = document.getElementById(`heart-${postId}`);
+        heartIcon.classList.toggle('text-primary');
+        heartIcon.classList.toggle('fill-current');
+        heartIcon.classList.toggle('text-gray-400');
+      }
+
+      socket.on('update_likes', (data) => {
+        const countSpan = document.getElementById(`likes-count-${data.postId}`);
+        if(countSpan) countSpan.innerText = data.newCount;
+      });
+
+      function handleConnect(targetId) {
+        const btn = document.getElementById('connectBtn');
+        const span = btn.querySelector('span:last-child');
+        const icon = btn.querySelector('span:first-child');
+
+        if(span.innerText === "Connect") {
+            socket.emit('send_sync_request', { targetId });
+            span.innerText = "Requested";
+            btn.classList.add('opacity-50');
+            icon.innerText = "hourglass_empty";
+        }
+      }
+
+      function copyToClipboard() {
+        const text = document.getElementById('profileUrl').innerText;
+        navigator.clipboard.writeText(text);
+        alert('Profile link copied to clipboard!');
+      }
+
+      function confirmDelete() {
+        if(confirm("Are you sure you want to delete your ClassLoop profile?")) {
+            window.location.href = "/user/delete/<%= currentUser._id %>";
+        }
+      }
+
+      function likePost(postId) {
+  socket.emit('like_post', { postId, userId: '<%= currentUser._id %>' });
+  
+  const heartIcon = document.getElementById(`heart-${postId}`);
+  
+  // Toggle the custom 'liked' class for fill/animation
+  heartIcon.classList.toggle('liked');
+  
+  // Toggle the default gray color when unliked
+  heartIcon.classList.toggle('text-gray-400');
+}
+
+
+
+let stagedFile = null;
+        let stagedType = '';
+
+        function previewImage(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+            stagedFile = file;
+            stagedType = type;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(type === 'profile' ? 'preview-profile-img' : 'preview-cover-img').src = e.target.result;
+                document.getElementById('update-preview-modal').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closePreview() {
+            document.getElementById('update-preview-modal').classList.add('hidden');
+            stagedFile = null;
+            document.getElementById('imageInput').value = '';
+        }
+
+        document.getElementById('confirm-upload-btn').onclick = async function() {
+            if (!stagedFile || !stagedType) return;
+            const formData = new FormData();
+            formData.append('image', stagedFile);
+            formData.append('uploadType', stagedType);
+
+            this.innerText = "Saving...";
+            this.disabled = true;
+
+            try {
+                const response = await fetch('/user/update-photo', { method: 'POST', body: formData });
+                window.location.href = response.redirected ? response.url : window.location.reload();
+            } catch (err) {
+                alert("Update failed.");
+                this.innerText = "Confirm";
+                this.disabled = false;
+            }
+        };
+
+    </script>
 </body>
+</html>

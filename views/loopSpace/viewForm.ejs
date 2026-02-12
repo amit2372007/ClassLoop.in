@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Student Form Submission | ClassLoop.in</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5248e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f0e1a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glow-indigo:hover {
+            box-shadow: 0 0 15px rgba(82, 72, 229, 0.3);
+        }
+
+        .option-selected {
+            border-color: #5248e5;
+            background: rgba(82, 72, 229, 0.1);
+            box-shadow: 0 0 20px rgba(82, 72, 229, 0.2);
+        }
+
+        /* Hide default radio but keep accessible */
+        .custom-radio input[type="radio"] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-white min-h-screen">
+    <nav class="sticky top-0 z-50 glass border-b border-white/10 px-4 md:px-10 py-3 mb-8">
+        <div class="max-w-[1100px] mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="p-2 bg-primary/20 rounded-lg text-primary">
+                    <span class="material-symbols-outlined block">history_edu</span>
+                </div>
+                <div>
+                    <h1 class="text-white text-lg font-bold leading-tight tracking-tight"><%= form.title %></h1>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <div class="size-5 rounded-full bg-cover bg-center" 
+                             style='background-image: url("<%= form.creator.profilePic.url %>");'>
+                        </div>
+                        <span class="text-[#9895c6] text-xs font-medium">Instructor: <%= form.creator.name %></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[840px] mx-auto px-4 pb-32">
+        <section class="mb-10">
+            <div class="glass rounded-2xl p-6">
+                <div class="flex items-center gap-2 text-primary mb-2">
+                    <span class="material-symbols-outlined text-sm">info</span>
+                    <p class="text-white text-base font-bold">Form Instructions</p>
+                </div>
+                <p class="text-[#9895c6] text-sm font-normal leading-relaxed">
+                    <%= form.description %>
+                </p>
+            </div>
+        </section>
+
+        <form id="submissionForm" action="/loopSpace/form/<%= form._id %>/submit" method="POST" class="space-y-8">
+            <% form.questions.forEach((Question, index) => { %>
+                <div class="bg-white/[0.02] border border-white/10 rounded-2xl p-8 transition-all hover:bg-white/[0.04]">
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-white text-xl font-semibold leading-tight tracking-tight">
+                            <%= index + 1 %>. <%= Question.questionText %>
+                            <% if(Question.isRequired) { %><span class="text-red-500 ml-1">*</span><% } %>
+                        </h2>
+                    </div>
+
+                    <div class="grid gap-3">
+                        <% if(Question.questionType === "multiple_choice") { %>
+                            <div class="grid gap-3">
+                                <% Question.options.forEach((option, i) => { %>
+                                    <label class="relative flex items-center gap-4 p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer transition-all hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:shadow-[0_0_15px_rgba(82,72,229,0.2)]">
+                                        <input name="answers[<%= Question._id %>]" 
+                                               type="radio" 
+                                               value="<%= option %>"
+                                               class="peer hidden" 
+                                               <%= Question.isRequired ? 'required' : '' %> />
+
+                                        <div class="size-5 rounded-full border-2 border-white/20 flex items-center justify-center peer-checked:border-primary">
+                                            <div class="size-2.5 rounded-full bg-primary scale-0 transition-transform peer-checked:scale-100"></div>
+                                        </div>
+
+                                        <span class="text-white/80 peer-checked:text-white font-medium">
+                                            <%= option %>
+                                        </span>
+                                    </label>
+                                <% }) %>
+                            </div>
+
+                        <% } else if(Question.questionType === "checkbox") { %>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <% Question.options.forEach((option) => { %>
+                                    <label class="flex items-center gap-4 p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-primary/30 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                                        <input name="answers[<%= Question._id %>][]" 
+                                               value="<%= option %>"
+                                               class="size-5 rounded border-white/20 bg-white/5 text-primary focus:ring-primary/50 focus:ring-offset-0 transition-all"
+                                               type="checkbox" />
+                                        <span class="text-white/80 font-medium"><%= option %></span>
+                                    </label>
+                                <% }) %>
+                            </div>
+
+                        <% } else if(Question.questionType === "text") { %>
+                            <textarea name="answers[<%= Question._id %>]" 
+                                      <%= Question.isRequired ? 'required' : '' %>
+                                      class="w-full bg-white/5 border border-white/10 rounded-xl p-5 text-white placeholder:text-white/20 focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                                      placeholder="Type your answer here..." rows="4"></textarea>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </form>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 glass border-t border-white/10 py-5 px-6 z-50">
+        <div class="max-w-[1100px] mx-auto flex flex-col sm:flex-row items-center justify-end gap-4">
+            <div class="flex items-center gap-4 w-full sm:w-auto">
+                <button type="submit" form="submissionForm"
+                        class="flex-1 sm:flex-none px-10 py-3 rounded-xl text-white font-bold text-sm bg-primary hover:bg-primary/90 shadow-[0_0_20px_rgba(82,72,229,0.4)] transition-all flex items-center justify-center gap-2">
+                    Submit Response
+                    <span class="material-symbols-outlined text-base">send</span>
+                </button>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

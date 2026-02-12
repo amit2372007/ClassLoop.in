@@ -1,0 +1,212 @@
+<% 
+  const pendingCount = application.filter(app => app.status === 'Pending').length;
+  
+  // Filter for "Approved Today"
+  const today = new Date().setHours(0,0,0,0);
+  const approvedTodayCount = application.filter(app => 
+    app.status === 'Approved' && new Date(app.updatedAt).setHours(0,0,0,0) === today
+  ).length;
+  
+  const totalReviewed = application.filter(app => app.status !== 'Pending').length;
+%>
+
+<main class="flex-1 flex flex-col overflow-hidden h-full">
+  <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-6">
+      <h2 class="text-lg font-bold text-slate-800 dark:text-white">Student Applications</h2>
+      <div class="flex items-center gap-2 px-3 py-1 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-800">
+        <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
+        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
+          <%= currClass ? `${currClass.className}-${currClass.section}` : 'My Class' %>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+    
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-slate-500 text-sm font-medium">Pending Requests</span>
+          <div class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
+            <span class="material-symbols-outlined text-xl">pending_actions</span>
+          </div>
+        </div>
+        <h3 class="text-3xl font-bold text-orange-600 dark:text-orange-400"><%= pendingCount %></h3>
+        <p class="text-xs text-slate-400 mt-1">Requires your review</p>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-slate-500 text-sm font-medium">Approved Today</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <span class="material-symbols-outlined text-xl">check_circle</span>
+          </div>
+        </div>
+        <h3 class="text-3xl font-bold text-emerald-600 dark:text-emerald-400"><%= approvedTodayCount %></h3>
+        <p class="text-xs text-slate-400 mt-1">Processed successfully</p>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-slate-500 text-sm font-medium">Total Reviewed</span>
+          <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <span class="material-symbols-outlined text-xl">history</span>
+          </div>
+        </div>
+        <h3 class="text-3xl font-bold text-blue-600 dark:text-blue-400"><%= totalReviewed %></h3>
+        <p class="text-xs text-slate-400 mt-1">Lifetime count</p>
+      </div>
+    </section>
+
+    <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="relative w-full md:w-96">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+        <input class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" placeholder="Search student name..." type="text" />
+      </div>
+      <div class="flex gap-3 w-full md:w-auto">
+        <select class="flex-1 md:w-40 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-indigo-500 text-slate-700 dark:text-slate-300">
+          <option>All Types</option>
+          <option>Sick Leave</option>
+          <option>Bonafide</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="space-y-6 pb-12">
+      
+      <% if(application && application.length > 0) { %>
+        <% application.forEach(app => { %>
+          
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            
+            <div class="p-5 flex justify-between items-start">
+              <div class="flex gap-4">
+                <% if(app.student && app.student.profilePic && app.student.profilePic.url) { %>
+                  <img src="<%= app.student.profilePic.url %>" alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-slate-100">
+                <% } else { %>
+                  <div class="w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-lg">
+                    <%= app.student ? app.student.name.charAt(0) : '?' %>
+                  </div>
+                <% } %>
+                
+                <div>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-lg">
+                    <%= app.student ? app.student.name : 'Unknown Student' %>
+                  </h4>
+                  <p class="text-xs text-slate-500 font-medium">
+                    Roll No: <%= app.student ? (app.student.rollNumber || 'N/A') : 'N/A' %>
+                  </p>
+                </div>
+              </div>
+              
+              <div class="text-right">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Applied On</p>
+                <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <%= new Date(app.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-700/50 space-y-4">
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-[11px] font-bold uppercase tracking-wider border border-blue-100 dark:border-blue-800">
+                  <%= app.type %>
+                </span>
+                
+                <% let statusColor = 'bg-slate-100 text-slate-600'; 
+                   if(app.status === 'Approved') statusColor = 'bg-emerald-100 text-emerald-700';
+                   if(app.status === 'Rejected') statusColor = 'bg-rose-100 text-rose-700';
+                   if(app.status === 'Pending') statusColor = 'bg-orange-100 text-orange-700';
+                %>
+                <span class="px-2.5 py-1 rounded-full <%= statusColor %> text-[11px] font-bold uppercase tracking-wider">
+                  <%= app.status %>
+                </span>
+              </div>
+
+              <div>
+                <p class="font-bold text-slate-900 dark:text-white mb-1 text-base"><%= app.subject %></p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  <%= app.reason %>
+                </p>
+              </div>
+
+              <% if(app.dateRange && app.dateRange.from) { %>
+                <div class="flex items-center gap-6">
+                  <div class="flex items-center gap-2 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="material-symbols-outlined text-lg">calendar_month</span>
+                    <span class="text-sm font-medium">
+                      <%= new Date(app.dateRange.from).toLocaleDateString() %> - <%= new Date(app.dateRange.to).toLocaleDateString() %>
+                    </span>
+                  </div>
+                </div>
+              <% } %>
+              
+              <% if(app.attachments && app.attachments.length > 0) { %>
+                 <div class="flex gap-2">
+                   <% app.attachments.forEach(file => { %>
+                     <a href="<%= file.url %>" target="_blank" class="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 text-sm font-semibold hover:underline">
+                        <span class="material-symbols-outlined text-lg">attach_file</span>
+                        View Attachment
+                     </a>
+                   <% }) %>
+                 </div>
+              <% } %>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800/80 p-5 border-t border-slate-100 dark:border-slate-700">
+              
+              <form action="/teacher/application/<%= app._id %>" method="POST" class="flex flex-col md:flex-row gap-4 items-end md:items-center">
+                
+                <div class="flex-1 w-full">
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">Teacher Remarks</label>
+                  <input 
+                    name="teacherRemarks" 
+                    value="<%= app.teacherRemarks || '' %>" 
+                    <%= app.status !== 'Pending' ? 'disabled' : '' %>
+                    class="w-full bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 h-10 px-3 disabled:opacity-60 disabled:cursor-not-allowed" 
+                    placeholder="<%= app.status === 'Pending' ? 'Add a note for the student...' : 'Remarks locked' %>" 
+                    type="text" 
+                  />
+                </div>
+
+                <div class="flex gap-2 w-full md:w-auto shrink-0">
+                  <% if(app.status === 'Pending') { %>
+                    <button 
+                      type="submit" 
+                      name="status" 
+                      value="Approved"
+                      class="flex-1 md:flex-none px-6 h-10 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm shadow-emerald-200">
+                      <span class="material-symbols-outlined text-lg">check</span> Approve
+                    </button>
+                    
+                    <button 
+                      type="submit" 
+                      name="status" 
+                      value="Rejected"
+                      class="flex-1 md:flex-none px-6 h-10 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+                      <span class="material-symbols-outlined text-lg">close</span> Reject
+                    </button>
+                  <% } else { %>
+                    <div class="h-10 px-4 flex items-center text-sm font-bold text-slate-400 italic">
+                      Processed on <%= new Date(app.updatedAt).toLocaleDateString() %>
+                    </div>
+                  <% } %>
+                </div>
+                
+              </form>
+            </div>
+
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+          <span class="material-symbols-outlined text-6xl mb-4 text-slate-200">inbox</span>
+          <p class="text-lg font-medium">No applications found</p>
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+</main>

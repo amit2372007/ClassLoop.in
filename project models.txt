@@ -1,0 +1,8 @@
+Page : {
+1.Page Title
+2.Page Description
+3.Page Member --> { Object--> User }
+4.Page Admin { Object --> User }
+5.Page Posts { Object --> Post}
+6.createdAt: Date() 
+             

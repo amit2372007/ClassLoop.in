@@ -1,0 +1,364 @@
+<% layout("/layout/boilerplate.ejs") -%>
+    <html class="dark" lang="en">
+
+    <head>
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#8a2ce2",
+                            "background-light": "#f7f6f8",
+                            "background-dark": "#0d1117", // Overriding per specific prompt requirement
+                            "glass": "#161B22",
+                        },
+                        fontFamily: {
+                            "display": ["Inter", "sans-serif"]
+                        },
+                        borderRadius: {
+                            "DEFAULT": "0.5rem",
+                            "lg": "1rem",
+                            "xl": "1.5rem",
+                            "full": "9999px"
+                        },
+                    },
+                },
+            }
+        </script>
+
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+            rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    </head>
+
+    <body
+        class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+
+        <main class="max-w-7xl mx-auto px-6 py-8">
+            <div class="grid grid-cols-12 gap-8">
+                <!-- Left Sidebar (Col 2) -->
+                <aside class="col-span-2 hidden lg:block">
+                    <div class="sticky top-24 space-y-4">
+                        <a class="flex items-center gap-3 text-slate-400 hover:text-primary transition-colors group p-2 rounded-lg hover:bg-primary/5"
+                            href="/doubtBin">
+                            <span
+                                class="material-icons text-xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                            <span class="font-medium">Back to DoubtBin</span>
+                        </a>
+                        <nav class="space-y-1 mt-8">
+                            <a class="flex items-center gap-3 p-3 rounded-lg bg-primary/10 text-primary" href="#">
+                                <span class="material-icons">explore</span>
+                                <span class="font-medium text-sm">Feed</span>
+                            </a>
+                            <a class="flex items-center gap-3 p-3 rounded-lg text-slate-400 hover:bg-primary/5 transition-colors"
+                                href="#">
+                                <span class="material-icons">bookmark_border</span>
+                                <span class="font-medium text-sm">Bookmarks</span>
+                            </a>
+                            <a class="flex items-center gap-3 p-3 rounded-lg text-slate-400 hover:bg-primary/5 transition-colors"
+                                href="#">
+                                <span class="material-icons">trending_up</span>
+                                <span class="font-medium text-sm">Trending</span>
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+                <!-- Main Content (Col 7) -->
+                <section class="col-span-12 lg:col-span-7 space-y-6">
+                    <!-- Doubt Detail Card -->
+                    <div class="bg-glass border border-white/5 rounded-xl p-6 shadow-xl">
+                        <div class="flex items-start justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <img alt="Sarah" class="w-12 h-12 rounded-xl border-2 border-primary/30"
+                                    data-alt="Author profile avatar picture" src="<%=Doubt.author.profilePic.url%>" />
+                                <div>
+                                    <h3 class="font-semibold text-slate-100">
+                                        <%=Doubt.author.name%>
+                                    </h3>
+                                    <p class="text-xs text-slate-500">Asked <%=formatDistanceToNow(Doubt.createdAt)%> •
+                                            Grade 12</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                
+                                <button
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-700 text-slate-400 hover:text-primary hover:border-primary transition-all">
+                                    <span class="material-icons text-xl">bookmark_border</span>
+                                </button>
+                            </div>
+                        </div>
+                        <h1 class="text-2xl font-bold mb-4 leading-snug">
+                            <%=Doubt.title%>
+                        </h1>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <% if(Doubt.tags.length> 0 ) {
+                                for(let tag of Doubt.tags) { %>
+                                <span
+                                    class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20">
+                                    <%= tag %>
+                                </span>
+                                <% }} %>
+                        </div>
+                        <div class="prose prose-invert max-w-none text-slate-300 space-y-4">
+                            <p>
+                                <%=Doubt.description%>
+                            </p>
+
+                        </div>
+                        <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                            <div class="flex items-center bg-background-dark/50 rounded-lg p-1 border border-white/5">
+                                <button onclick="handleVote('up', 'doubt', '<%= Doubt._id %>')"
+                                    id="up-btn-<%= Doubt._id %>"
+                                    class="flex items-center gap-1 px-3 py-1.5 rounded hover:bg-primary/20 transition-all <%= Doubt.upvote.includes(currentUser._id) ? 'text-primary' : 'text-slate-300' %>">
+                                    <span class="material-icons text-xl">expand_less</span>
+                                    <span class="font-bold" id="up-count-<%= Doubt._id %>">
+                                        <%= Doubt.upvote.length %>
+                                    </span>
+                                </button>
+
+                                <div class="w-px h-6 bg-white/5 mx-1"></div>
+
+                                <button onclick="handleVote('down', 'doubt', '<%= Doubt._id %>')"
+                                    id="down-btn-<%= Doubt._id %>"
+                                    class="flex items-center gap-1 px-3 py-1.5 rounded hover:bg-red-500/20 transition-all <%= Doubt.downvote.includes(currentUser._id) ? 'text-red-400' : 'text-slate-300' %>">
+                                    <span class="material-icons text-xl">expand_more</span>
+                                    <span class="font-bold" id="down-count-<%= Doubt._id %>">
+                                        <%= Doubt.downvote.length %>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-4 text-slate-500 text-sm">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-icons text-base">visibility</span>
+                                    <%=Doubt.views.length%> views
+                                </span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-icons text-base">chat_bubble_outline</span>
+                                    <%=Doubt.answers.length%> answers
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Community Answers -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-bold px-1">Community Answers</h2>
+                        <% if(answers.length> 0 ) {
+                            for(let answer of answers ) { %>
+                            <!-- Answer Card 1 -->
+                            <div
+                                class="bg-glass border border-white/5 rounded-xl p-6 transition-all hover:border-primary/20">
+                                <div class="flex items-start gap-4">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <button onclick="handleVote('up', 'answer', '<%= answer._id %>')"
+                                            id="up-ans-<%= answer._id %>"
+                                            class="w-10 h-10 flex items-center justify-center rounded-lg transition-all 
+                    <%= answer.upvote.includes(currentUser._id) ? 'bg-primary text-white' : 'bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20' %>">
+                                            <span class="material-icons">expand_less</span>
+                                        </button>
+
+                                        <span class="font-bold text-slate-300" id="count-ans-<%= answer._id %>">
+                                            <%= answer.upvote.length - answer.downvote.length %>
+                                        </span>
+
+                                        <button onclick="handleVote('down', 'answer', '<%= answer._id %>')"
+                                            id="down-ans-<%= answer._id %>"
+                                            class="w-10 h-10 flex items-center justify-center rounded-lg transition-all
+                    <%= answer.downvote.includes(currentUser._id) ? 'bg-red-500 text-white' : 'hover:bg-slate-800 text-slate-500 border border-white/5' %>">
+                                            <span class="material-icons">expand_more</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-3">
+                                            <img alt="Marcus" class="w-8 h-8 rounded-lg border border-primary/30"
+                                                data-alt="Expert contributor profile avatar"
+                                                src="<%=answer.author.profilePic.url%>" />
+                                            <div>
+                                                <p class="text-sm font-semibold">
+                                                    <%=answer.author.name%><span
+                                                            class="text-primary ml-1 text-[10px] bg-primary/20 px-1.5 py-0.5 rounded"><%=answer.author.designation%></span>
+                                                </p>
+                                                <p class="text-[10px] text-slate-500">Answered <%=
+                                                        formatDistanceToNow(answer.createdAt) %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-slate-300 text-sm leading-relaxed space-y-3">
+                                            <p>
+                                                <%=answer.content%>
+                                            </p>
+                                        </div>
+                                        <div class="mt-4 flex items-center gap-4 text-xs text-slate-500 font-medium">
+                                            <button class="hover:text-primary">Reply</button>
+                                            <button class="hover:text-primary">Share</button>
+                                            <button class="hover:text-red-400">Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } } else{ %>
+                                <div class="bg-glass border border-dashed border-white/10 rounded-xl p-12 flex flex-col items-center justify-center text-center transition-all hover:bg-white/[0.02]">
+        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <span class="material-icons text-primary text-3xl opacity-60">Maps_ugc</span>
+        </div>
+        <h3 class="text-slate-100 font-bold text-lg mb-1">No solutions yet</h3>
+        <p class="text-slate-500 text-sm max-w-[280px]">
+            Be the first one to help <%= Doubt.author.name %> solve this doubt and earn contribution points!
+        </p>
+        
+        <div class="mt-6 animate-bounce">
+            <span class="material-icons text-primary/40">expand_more</span>
+        </div>
+    </div>
+                                <% } %>
+
+                    </div>
+                    <!-- Padding for Sticky Editor -->
+                    <div class="h-32"></div>
+                </section>
+                <!-- Right Sidebar (Col 3) -->
+                <aside class="col-span-12 lg:col-span-3 space-y-6">
+                    <!-- Author Stats Widget -->
+                    <div class="bg-glass border border-white/5 rounded-xl p-5 sticky top-24">
+                        <h4 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">About the Author</h4>
+                        <div class="flex items-center gap-3 mb-4">
+                            <img alt="Sarah" class="w-10 h-10 rounded-lg" data-alt="Author small profile image"
+                                src="<%=Doubt.author.profilePic.url%>" />
+                            <div>
+                                <p class="font-bold text-sm">
+                                    <%=Doubt.author.name%>
+                                </p>
+                                <p class="text-xs text-primary">
+                                    <%=Doubt.author.designation%>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-background-dark p-3 rounded-lg border border-white/5">
+                                <p class="text-xs text-slate-500 mb-1">Doubts</p>
+                                <p class="font-bold text-primary">
+                                    <%=Doubt.author.doubt.length%>
+                                </p>
+                            </div>
+                            <div class="bg-background-dark p-3 rounded-lg border border-white/5">
+                                <p class="text-xs text-slate-500 mb-1">Points</p>
+                                <p class="font-bold text-primary">1,240</p>
+                            </div>
+                        </div>
+                        <a href="/user/<%=Doubt.author._id%>">
+                            <button
+                                class="w-full py-2.5 rounded-lg border border-primary/40 text-primary text-xs font-bold hover:bg-primary/10 transition-all">View
+                                Profile</button>
+                        </a>
+                        <div class="mt-8">
+                            <h4 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">Related Doubts
+                            </h4>
+                            <ul class="space-y-4">
+                                <li>
+                                    <a class="group block" href="#">
+                                        <p
+                                            class="text-sm font-medium text-slate-300 group-hover:text-primary transition-colors line-clamp-2">
+                                            How to handle cycles in Depth First Search (DFS)?</p>
+                                        <p class="text-[10px] text-slate-500 mt-1">12 Answers • 342 views</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="group block" href="#">
+                                        <p
+                                            class="text-sm font-medium text-slate-300 group-hover:text-primary transition-colors line-clamp-2">
+                                            Dijkstra vs BFS for shortest path - which is faster?</p>
+                                        <p class="text-[10px] text-slate-500 mt-1">8 Answers • 1.1k views</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="group block" href="#">
+                                        <p
+                                            class="text-sm font-medium text-slate-300 group-hover:text-primary transition-colors line-clamp-2">
+                                            Real world application of Graph Coloring algorithm</p>
+                                        <p class="text-[10px] text-slate-500 mt-1">3 Answers • 89 views</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+        <!-- Sticky Rich Text Area -->
+        <div
+            class="fixed bottom-0 left-0 right-0 z-50 p-4 lg:p-6 bg-gradient-to-t from-background-dark via-background-dark to-transparent">
+            <div class="max-w-4xl mx-auto">
+                <form action="/doubtBin/answer/<%= Doubt._id %>" method="POST"
+                    class="bg-glass border border-primary/30 rounded-xl p-4 shadow-2xl backdrop-blur-xl">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <div class="flex gap-2 mb-2 text-slate-400">
+                                <span class="material-icons text-sm cursor-pointer hover:text-white">format_bold</span>
+                                <span class="material-icons text-sm cursor-pointer hover:text-white">code</span>
+                            </div>
+                            <textarea name="content" required
+                                class="w-full bg-background-dark/50 border-none focus:ring-0 text-sm resize-none h-12 text-white"
+                                placeholder="Type your solution here..."></textarea>
+                        </div>
+                        <div class="flex items-center">
+                            <button type="submit"
+                                class="w-full md:w-auto px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg flex items-center justify-center gap-2">
+                                <span>Submit Answer</span>
+                                <span class="material-icons text-sm">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+
+    </html>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const userId = "<%= currentUser._id %>";
+
+        function handleVote(type, targetType, id) {
+            // type: 'up' or 'down'
+            // targetType: 'doubt' or 'answer'
+            // id: the MongoDB _id
+            socket.emit('cast_vote', { type, targetType, id, userId: "<%= currentUser._id %>" });
+        }
+
+        socket.on('vote_confirmed', (data) => {
+            // Determine which ID prefix to use
+            const prefix = data.targetType === 'answer' ? '-ans-' : '-btn-';
+            const upBtn = document.getElementById(`up${prefix}${data.id}`);
+            const downBtn = document.getElementById(`down${prefix}${data.id}`);
+            const countLabel = document.getElementById(`count-ans-${data.id}`); // For answers
+            const mainUpCount = document.getElementById(`up-count-${data.id}`); // For main doubt
+
+            // 1. Update Counts
+            if (countLabel) {
+                countLabel.innerText = data.upvotes - data.downvotes;
+            } else if (mainUpCount) {
+                mainUpCount.innerText = data.upvotes;
+                document.getElementById(`down-count-${data.id}`).innerText = data.downvotes;
+            }
+
+            // 2. Visual feedback for the person who voted
+            if (data.voterId === "<%= currentUser._id %>") {
+                if (data.action === 'upvoted') {
+                    upBtn.classList.add(data.targetType === 'answer' ? 'bg-primary' : 'text-primary');
+                    upBtn.classList.add('text-white');
+                    downBtn.classList.remove('bg-red-500', 'text-white', 'text-red-400');
+                } else if (data.action === 'downvoted') {
+                    downBtn.classList.add(data.targetType === 'answer' ? 'bg-red-500' : 'text-red-400');
+                    downBtn.classList.add('text-white');
+                    upBtn.classList.remove('bg-primary', 'text-white', 'text-primary');
+                } else {
+                    // Reset both if removed
+                    upBtn.classList.remove('bg-primary', 'text-white', 'text-primary');
+                    downBtn.classList.remove('bg-red-500', 'text-white', 'text-red-400');
+                }
+            }
+        });
+    </script>

@@ -1,203 +1,405 @@
 <% layout("/layout/boilerplate.ejs") -%>
 
-<style>
-    .body-container{
-        display: flex;
-        flex-direction: row;
-    }
-    .body-container div{
-        background-color: #b2bac7;
-        color: black;
-        margin: 6px 4px;
-        /* border: 2px solid black; */
-        border-radius: 15px;
-        padding: 5px;
-    }
-   .features-container{
-    width: 25%;
-    height: 100%;
-   }
-   .post-container{
-    width:50%;
-    height: 100%;
-   }
-   .chats-container{
-    width: 25%;
-    height: 100%;
-   }
-   .post{
-     padding: 5px;
-     background-color: aliceblue !important;
-     /* border: 2px solid red ; */
-   }
-   .post div{
-    background-color: aliceblue !important;
-   }
-   .post-info{
-    padding: 0px !important;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    /* border-bottom: 2px solid black; */
-    margin: 3px 4px !important;
-    border-radius: 0px !important;
-    /* border: 2px solid yellow ; */
-   }
-   .post-info div{
-    padding: 0px !important;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-   }
-   .img{
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-    max-height: 500px;
-    border-radius: 15px;
-   }
-   .post-react{
-      display: flex;
-      flex-direction: row;
-      margin-top: 0px !important;
-      margin-bottom: 0px !important;
-      padding-top: 0px !important;
-      height: 65px;
-   }
-   .post-react i{
-      font-size: 25px;
-      margin-right: 5px;
-   }
-   .post-react div{
-      align-items: center;
-   }
-   .post-react p{
-      line-height: 1;
-   }
-   .likeBtn{
-      color: black;
-      background-color: aliceblue;
-      border: 0px solid;
-      padding: 5px !important;
-      margin-top: -5px !important;
-      margin-left: -3px !important;
-   }
-   .abc{
-     padding: 0px 5px;
-   }
-   #profile-pic{
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-</style>
-
-<body>
-<div class="body-container">
-    
-     <div class="features-container container">
-        features
-    </div>
-
-    <div class="post-container container">
-        <h1 class="title" style="margin-left: 10px; margin-bottom: 0px; color: black;">Posts</h1>
-        <% for (let Post of allPosts) { %>
-        <div class="post">
-            
-            <div class="post-info">
-                <div>
-                    <form action="/user/<%=Post.owner._id%>" method="get">
-                        <button>
-                           <img id="profile-pic" src="<%=Post.owner.profilePic%>" alt="dp">
-                        </button>    
-                    </form>
-                   <div class="post-info-user">
-                     <form action="/user/<%=Post.owner._id%>" method="get">
-                        <button>
-                          <p  style="line-height: 1; margin-left:6px; text-align: start;"><b><%=Post.owner.name%></b><br/><%=Post.createdAt.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' }).toLowerCase().replace(',', '')%></p>
-                        </button>
-                     </form>  
-                   </div>
-                </div>
-                <div>
-                   <div class="show-post">
-                    <form action="/post/<%=Post._id%>" method="GET">
-                        <button>Show Post</button>
-                    </form>
-                   </div>
-                   <% if(currUser && Post.owner._id.equals(currUser._id)) { %> 
-                   <div class="edit-btn">
-                    <form action="/post/<%=Post._id%>/edit" method="GET">
-                        <button>Edit</button>
-                    </form>
-                    </div>
-                   <div class="delete-btn">
-                     <form action="/post/<%=Post._id%>/delete?_method=DELETE" method="POST" >
-                        <button>Delete</button>
-                     </form>
-                   </div>
-                   <% } %>
-                </div>  
-            </div>
-
-            <post class="description">
-                <p style="margin-left: 17px;"><%=Post.description%></p>
-            </post>
-            
-            <div class="post-image">
-                <img class="img"
-                     src="<%=Post.image%>" 
-                     alt="This is image"
-                />
-            </div>
-
-            <div class="post-react">
-                <div class="love-react" style="width: 40px; height: 45px; box-shadow: 0px;">
-                    
-    <% if (currUser) { %>
-        <form action="/post/<%=Post._id%>/like" method="POST">
-            <button type="submit" class="button likeBtn">
-                
-                <% // Check if the current user's ID is in the Post's likes array
-                   const isLikedByUser = Post.like.some(likeId => likeId.equals(currUser._id));
-                %>
-
-                <p>
-                   <% if (isLikedByUser) { %>
-                        <i class="fa-solid fa-heart" style="color: red;"></i>
-                    <% } else { %>
-                        <i class="fa-regular fa-heart"></i>
-                    <% } %>
-                    <br>
-                    <%= Post.like.length %>
-                </p>
-            </button>
-        </form>
-    <% } else { %>
-        <p>
-            <i class="fa-regular fa-heart"></i><br><p class="abc"><%= Post.like.length %></p>
-        </p>
-    <% } %>
-    </div>
-
-                <div class="comment-react">
-                     <p><i class="fa-regular fa-comment"></i><br><p class="abc"><%=Post.comments.length%></p></p> 
-                </div>
-                <div class="share-react">
-                     <p><i class="fa-regular fa-share-from-square"></i><br><p class="abc"><%=Post.like.length%></p></p>
-                </div>
-     
-            </div>
+  <main class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 p-4 md:p-8">
+    <!-- Left Sidebar: Utility Column -->
+    <aside class="md:col-span-3 space-y-6 h-fit sticky top-24">
+      <div class="glass-card rounded-xl p-5 flex flex-col gap-4">
+        <div>
+          <h1 class="text-white text-lg font-bold">Utility</h1>
+          <p class="text-white/50 text-xs">Manage your campus life</p>
         </div>
-        <% } %>
-    </div>
+        <nav class="space-y-2">
+          <a href="/home"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 transition-transform active:scale-95">
+            <span class="material-symbols-outlined fill">amp_stories</span>
+            <span class="text-sm font-semibold">Feed</span>
+          </a>
+          <a href="/user/sync-requests"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-white/80 transition-colors">
+            <span class="material-symbols-outlined">person_add</span>
+            <span class="text-sm font-medium">Connection Requests</span>
+            <% if (connectionRequestCount> 0) { %>
+              <span class="ml-auto bg-primary text-[10px] px-2 py-0.5 rounded-full animate-pulse">
+                <%= connectionRequestCount %>
+              </span>
+              <% } %>
+          </a>
+          <button
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-white/80 transition-colors">
+            <span class="material-symbols-outlined">help_center</span>
+            <a href="/doubtBin" class="text-sm font-medium">DoubtBin</a>
+          </button>
+        </nav>
+      </div>
 
-    <div class="chats-container container">
-        chats
+      <!-- DoubtBin Widget -->
+      <% if(currentUser.doubt.length> 0) { %>
+        <div class="glass-card rounded-xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+              DoubtBin Q&amp;A
+            </h3>
+            <span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+          </div>
+          <div class="space-y-4">
+            <% for (let Doubt of currentUser.doubt) { %>
+              <div class="border-l-2 border-primary pl-3">
+                <p class="text-xs text-white/90 font-medium line-clamp-2">
+                  <%=Doubt.title%>
+                </p>
+                <p class="text-[10px] text-white/40 mt-1">
+                  <%=Doubt.answers.length%> Answers • <%=Doubt.createdAt.toDateString()%>
+                </p>
+              </div>
+              <% } %>
+          </div>
+        </div>
+        <% } else{ %>
+          <div class="glass-card rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">DoubtBin</h3>
+              <span class="material-symbols-outlined text-primary text-sm">help_outline</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-3 text-center space-y-4">
+              <div class="size-16 rounded-full bg-white/5 flex items-center justify-center">
+                <span class="material-symbols-outlined text-white/20 text-3xl">help_outline</span>
+              </div>
+              <div>
+                <p class="text-sm text-white/80 font-medium">Stuck somewhere?</p>
+                <p class="text-xs text-white/40">Ask your 1st doubt!</p>
+              </div>
+              <a href="/doubtBin/ask-doubt"
+                class="w-full py-2.5 bg-primary rounded-xl text-white text-sm font-bold shadow-lg shadow-primary/20 hover:brightness-110 transition-all">
+                Ask Doubt
+              </a>
+            </div>
+          </div>
+          <% } %>
+    </aside>
+    <!-- Center Feed: Social Cards -->
+    <% if(view==="feed" ) { %>
+      <section class="md:col-span-6 space-y-6">
+        <!-- Post Composer Placeholder -->
+        <div class="glass-card rounded-xl p-4 flex gap-4 items-center">
+          <div class="size-10 rounded-full bg-cover bg-center shrink-0" data-alt="User profile avatar"
+            style="background-image: url('<%=currUser.profilePic.url%>')"></div>
+          <form action="/post/new" method="POST" enctype="multipart/form-data" class="flex items-center gap-3 w-full">
+
+            <input name="post[description]"
+              class="flex-1 bg-white/5 rounded-xl px-4 py-2.5 text-white outline-none focus:ring-1 focus:ring-primary/50 text-sm"
+              placeholder="What's on your mind?" required />
+
+            <div class="flex items-center shrink-0">
+              <label for="file-upload"
+                class="cursor-pointer text-primary p-2 hover:bg-primary/10 rounded-full transition-colors">
+                <span class="material-symbols-outlined">image</span>
+                <input id="file-upload" type="file" name="image" class="hidden" accept="image/*" />
+              </label>
+
+              <button type="submit" class="text-primary p-2 hover:bg-primary/10 rounded-full transition-colors">
+                <span class="material-symbols-outlined">upload</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- Social Feed Card 1 -->
+        <% for (let Post of allPosts) { %>
+          <article class="glass-card rounded-xl overflow-hidden shadow-2xl transition-all hover:border-white/20">
+            <div class="p-4 flex items-center justify-between">
+
+              <a href="/user/<%=Post.owner._id%>" class="flex items-center gap-3">
+                <div class="size-10 rounded-full bg-cover bg-center" data-alt="Student Rahul Sharma profile image"
+                  style="background-image: url('<%=Post.owner.profilePic.url%>')"></div>
+                <div>
+                  <p class="text-sm font-bold text-white">
+                    <%=Post.owner.name%>
+                  </p>
+                  <p class="text-[11px] text-white/40">
+                    <%=Post.createdAt.toDateString()%> • IIT Delhi
+                  </p>
+                </div>
+              </a>
+
+              <% if(currentUser._id.equals(Post.owner._id)) { %>
+                <div class="relative post-menu-container">
+                  <button
+                    class="menu-button-toggle p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors outline-none">
+                    <span class="material-symbols-outlined text-slate-400">more_vert</span>
+                  </button>
+
+                  <div
+                    class="hidden post-dropdown absolute right-0 mt-1 w-40 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 z-10 py-2">
+                    <form action="/post/edit/<%=Post._id%>" method="GET">
+                      <button
+                        class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined text-lg">edit</span> Edit
+                        Post
+                      </button>
+                    </form>
+                    <form action="/post/delete/<%=Post._id%>?_method=DELETE" method="POST">
+                      <button
+                        class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                        Delete Post
+                      </button>
+                    </form>
+                  </div>
+
+                </div>
+                <% } %>
+            </div>
+            <div class="px-4 pb-3">
+              <p class="text-sm text-white/90 leading-relaxed">
+                <%=Post.description%>
+              </p>
+            </div>
+            <% if(Post.image.url) { %>
+              <div class="mx-4 mb-4 rounded-xl aspect-video bg-cover bg-center overflow-hidden"
+                data-alt="Hackathon group photo or poster" style="background-image: url('<%=Post.image.url%>')"></div>
+              <% } %>
+                <!-- Reaction Bar -->
+                <div class="px-4 py-3 border-t border-white/5 flex items-center justify-between">
+                  <div class="flex gap-4">
+                    <button class="like-btn flex items-center gap-1.5 transition-all active:scale-125"
+                      data-id="<%= Post._id %>">
+                      <span
+                        class="material-symbols-outlined text-[20px] icon-heart <%= Post.like.includes(currentUser._id) ? 'fill text-primary' : 'text-white/50' %>">
+                        favorite
+                      </span>
+                      <span
+                        class="like-count text-xs font-bold <%= Post.like.includes(currentUser._id) ? 'text-primary' : 'text-white/50' %>">
+                        <%= Post.like.length %>
+                      </span>
+                    </button>
+                    <button onclick="focusCommentInput('<%=Post._id%>')"
+                      class="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
+                      <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                      <span class="text-xs font-bold">
+                        <%=Post.comments.length%>
+                      </span>
+                    </button>
+                    <button class="flex items-center gap-1.5 text-white/50 hover:text-white">
+                      <span class="material-symbols-outlined text-[20px]">share</span>
+                      <span class="text-xs font-bold">
+                        <%=Post.comments.length%>
+                      </span>
+                    </button>
+                  </div>
+                  <a href="/post/<%=Post._id%>"
+                    class="bg-primary/20 hover:bg-primary/30 text-primary text-xs font-bold px-4 py-1.5 rounded-lg transition-colors">
+                    view
+                  </a>
+                </div>
+
+
+          </article>
+          <% } %>
+      </section>
+      <% } else { %>
+        <%- include("../includes/post.ejs") %>
+          <% } %>
+            <!-- Right Sidebar: All Chats -->
+           <aside class="md:col-span-3">
+    <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 custom-scrollbar space-y-4">
+        
+        <div class="glass-card rounded-xl p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-white text-lg font-bold">MY LOOPSPACES</h3>
+                <span class="material-symbols-outlined text-white/40 text-sm">groups</span>
+            </div>
+
+            <div class="space-y-4">
+                <% if(currentUser.loopSpace.length===0 ) { %>
+                    <p class="text-[11px] text-white/40 truncate">You Have'nt connect to any LoopSpace</p>
+                <% }else { %>
+                    <% for(let LoopSpace of currentUser.loopSpace) { %>
+                        <a href="/loopSpace/<%=LoopSpace._id%>"
+                            class="flex items-center gap-3 group cursor-pointer p-2 rounded-xl hover:bg-white/5 transition-all">
+                            <div class="size-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                                10A
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-white truncate">
+                                    <%= LoopSpace.name %>
+                                </p>
+                                <p class="text-[10px] text-white/40 group-hover:text-white/60 transition-colors">
+                                    <%= LoopSpace.members.length %> members • <%= LoopSpace.category %>
+                                </p>
+                            </div>
+                        </a>
+                    <% } }%>
+            </div>
+            <% if(currentUser.loopSpace.length> 3) { %>
+                <button class="w-full mt-4 py-2 text-[11px] font-bold text-white/40 hover:text-white transition-colors uppercase tracking-widest">
+                    View all LoopSpaces
+                </button>
+            <% } %>
+        </div>
+
+        <% if(currentUser.synced.length > 0) {%>
+            <div class="glass-card rounded-xl p-4 h-fit">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-white text-lg font-bold">All Chats</h3>
+                    <span class="size-6 bg-white/5 rounded flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[16px]">edit_square</span>
+                    </span>
+                </div>
+                <% if(currentUser) { %>
+                    <div class="space-y-5">
+                        <% if(currentUser.synced.length==0) { %>
+                            <h3>You have no connection for Chatting</h3>
+                        <% } else { for(let User of currentUser.synced) { %>
+
+                            <a href="/chat?chatId=<%=User._id%>"
+                                class="rounded-xl hover:bg-white/5 flex items-center gap-3 group cursor-pointer">
+                                <div class="relative">
+                                    <div class="size-11 rounded-full bg-cover bg-center" data-alt="Contact profile 1"
+                                        style="background-image: url('<%=User.profilePic.url%>')"></div>
+                                    <% if(User.isActive) { %>
+                                        <div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-surface-dark bg-green-500">
+                                        </div>
+                                    <% } else{ %>
+                                        <div style="background: grey;"
+                                            class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-surface-dark">
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="flex-1 overflow-hidden">
+                                    <p class="text-sm font-semibold text-white truncate">
+                                        <%=User.name%>
+                                    </p>
+                                    <% if(unreadCounts[User._id]> 0) { %>
+                                        <p class="text-[10px] text-green-500 font-medium truncate">
+                                            <%=unreadCounts[User._id] %> New Messages
+                                        </p>
+                                    <% } else{ %>
+                                        <p class="text-[11px] text-white/40 truncate">
+                                            <%= lastMessages[User._id] %>
+                                        </p>
+                                    <% } %>
+                                </div>
+
+                            </a>
+                        <% } %>
+                    </div>
+                <% }} %>
+                <a href="/chat"
+                    class="w-full mt-4 py-3 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-sm font-bold flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">forum</span>
+                    Start Chatting
+                </a>
+            </div>
+        <% } else{ %>
+            <div class="glass-card rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-white text-lg font-bold">All Chats</h3>
+                    <span class="size-6 bg-white/5 rounded flex items-center justify-center cursor-pointer hover:bg-white/10">
+                        <span class="material-symbols-outlined text-[16px]">edit_square</span>
+                    </span>
+                </div>
+                <div class="flex flex-col items-center justify-center py-3 text-center space-y-4">
+                    <div class="size-16 rounded-full bg-white/5 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white/20 text-3xl">chat_bubble_outline</span>
+                    </div>
+                    <p class="text-sm text-white/60 font-medium">No connections yet</p>
+                    <a href="/user/sync-requests"
+                        class="w-full py-2.5 border border-primary/40 text-primary rounded-xl text-sm font-bold hover:bg-primary/10 transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">person_search</span>
+                        Find Peers
+                    </a>
+                </div>
+            </div>
+        <% } %>
+        
     </div>
-    
-</div>
-</body>
+</aside>
+  </main>
+
+  <script>
+    function focusCommentInput(postId) {
+      // If you are on the individual post view (post.ejs)
+      const mainInput = document.getElementById('main-comment-input');
+      if (mainInput) {
+        mainInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        mainInput.focus();
+      } else {
+        // If you are on the feed (home.ejs), redirect to the post detail page
+        window.location.href = `/post/${postId}#main-comment-input`;
+      }
+    }
+
+    window.addEventListener("click", (e) => {
+      // 1. Find the closest menu container if a menu button was clicked
+      const button = e.target.closest(".menu-button-toggle");
+      const allDropdowns = document.querySelectorAll(".post-dropdown");
+
+      if (button) {
+        e.stopPropagation();
+        const currentDropdown = button.nextElementSibling; // The dropdown is right after the button
+
+        // Close all other dropdowns first
+        allDropdowns.forEach((menu) => {
+          if (menu !== currentDropdown) menu.classList.add("hidden");
+        });
+
+        // Toggle the current one
+        currentDropdown.classList.toggle("hidden");
+      } else {
+        // 2. If clicking anywhere else, close all open menus
+        allDropdowns.forEach((menu) => menu.classList.add("hidden"));
+      }
+    });
+
+    // Handle Esc key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".post-dropdown").forEach((m) => m.classList.add("hidden"));
+      }
+    });
+
+
+    document.addEventListener("click", async (e) => {
+      // 1. Check if the clicked element is the like button (or inside it)
+      const btn = e.target.closest(".like-btn");
+      if (!btn) return;
+
+      e.preventDefault();
+
+      const postId = btn.dataset.id;
+      const icon = btn.querySelector(".icon-heart");
+      const countText = btn.querySelector(".like-count");
+
+      try {
+        // 2. Send the AJAX POST request
+        const response = await fetch(`/post/${postId}/like`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // If you use CSRF protection, add the header here
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.likeCount !== undefined) {
+          // 3. Update the UI based on server response
+          if (data.isLiked) {
+            icon.classList.add("fill", "text-primary");
+            icon.classList.remove("text-white/50");
+            countText.classList.add("text-primary");
+            countText.classList.remove("text-white/50");
+          } else {
+            icon.classList.remove("fill", "text-primary");
+            icon.classList.add("text-white/50");
+            countText.classList.remove("text-primary");
+            countText.classList.add("text-white/50");
+          }
+
+          // Update the numbers
+          countText.innerText = data.likeCount;
+        }
+      } catch (err) {
+        console.error("AJAX Like Error:", err);
+      }
+    });
+  </script>

@@ -1,0 +1,112 @@
+<main class="flex-1 flex flex-col relative bg-slate-900/10 h-full">
+    <div class="flex items-center justify-between px-4 py-2 glass border-b border-white/5 shrink-0">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold">
+                <%=loopSpace.class.className%>-<%=loopSpace.class.section%>
+            </div>
+            <div>
+                <h3 class="font-bold text-white text-sm">Grade <%=loopSpace.class.className%>-<%=loopSpace.class.section%> Chat</h3>
+                <p class="text-[10px] text-accent-emerald flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-accent-emerald rounded-full"></span>
+                    <%=loopSpace.members.length%> Members • Online
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button class="p-2 rounded-xl hover:bg-white/5 text-primary transition-all"><span class="material-symbols-outlined">call</span></button>
+            <button class="p-2 rounded-xl hover:bg-white/5 text-slate-400 transition-all"><span class="material-symbols-outlined">more_vert</span></button>
+        </div>
+    </div>
+
+    <div id="chat-messages" class="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide no-scrollbar">
+        <% if (messages && messages.length > 0) { %>
+            <% messages.forEach(msg => { %>
+                <% const isMe = msg.sender._id.toString() === currUser._id.toString(); %>
+
+                <div class="flex <%= isMe ? 'flex-col items-end ml-auto' : 'items-end gap-3' %> max-w-[75%]">
+                    <% if (!isMe) { %>
+                        <img src="<%= msg.sender.profilePic.url %>" 
+                             class="w-8 h-8 rounded-full object-cover shrink-0 border border-white/10" />
+                    <% } %>
+
+                    <div class="flex flex-col <%= isMe ? 'items-end' : '' %> gap-1">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase"><%= isMe ? 'Me' : msg.sender.name %></span>
+                            <span class="text-[9px] text-slate-600 uppercase">
+                                <%= msg.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                            </span>
+                        </div>
+                        <div class="<%= isMe ? 'bg-primary text-white rounded-br-none shadow-lg shadow-primary/20' : 'glass text-slate-200 rounded-bl-none border-white/5' %> px-4 py-2.5 rounded-2xl text-sm leading-relaxed">
+                            <%= msg.content %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+
+    <div class="px-8 pb-8 pt-2 shrink-0">
+        <div class="glass rounded-2xl p-2 flex items-center gap-2 border border-white/10 shadow-2xl">
+            <button class="p-2 rounded-xl text-slate-400 hover:text-white transition-all"><span class="material-symbols-outlined">attach_file</span></button>
+            <input id="chat-input" autocomplete="off"
+                class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 px-2 text-slate-200 placeholder-slate-500"
+                placeholder="Type your message here..." type="text" />
+            <button id="send-btn" class="bg-primary hover:bg-primary/90 text-white w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined">send</span>
+            </button>
+        </div>
+    </div>
+</main>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const spaceId = "<%= loopSpace._id %>";
+    const senderId = "<%= currUser._id %>";
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const messageContainer = document.getElementById('chat-messages');
+
+    // Scroll to bottom on load
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+
+    socket.emit("join_space", spaceId);
+
+    function sendMessage() {
+        if(chatInput.value.trim() !== "") {
+            socket.emit("send_message", {
+                content: chatInput.value,
+                senderId,
+                spaceId
+            });
+            chatInput.value = "";
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    
+    // Send on Enter key
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    socket.on("receive_message", (msg) => {
+        const isMe = msg.sender._id === senderId;
+        const html = `
+            <div class="flex ${isMe ? 'flex-col items-end ml-auto' : 'items-end gap-3'} max-w-[75%]">
+                ${!isMe ? `<img src="${msg.sender.profilePic.url}" class="w-8 h-8 rounded-full border border-white/10 shrink-0 object-cover">` : ''}
+                <div class="flex flex-col ${isMe ? 'items-end' : ''} gap-1">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">${isMe ? 'Me' : msg.sender.name}</span>
+                        <span class="text-[9px] text-slate-600 uppercase">Just Now</span>
+                    </div>
+                    <div class="${isMe ? 'bg-primary text-white rounded-br-none shadow-lg shadow-primary/20' : 'glass text-slate-200 rounded-bl-none border-white/5'} px-4 py-2.5 rounded-2xl text-sm leading-relaxed">
+                        ${msg.content}
+                    </div>
+                </div>
+            </div>`;
+
+        messageContainer.insertAdjacentHTML('beforeend', html);
+        messageContainer.scrollTo({ top: messageContainer.scrollHeight, behavior: 'smooth' });
+    });
+</script>

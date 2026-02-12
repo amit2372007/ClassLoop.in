@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ClassLoop.in | Connect Your Campus</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9f1fef",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.25rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(159, 31, 239, 0.15) 0%, rgba(18, 18, 18, 0) 70%);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30">
+    <!-- TopNavBar -->
+    <nav class="fixed top-0 w-full z-50 px-4 md:px-10 py-4">
+        <div class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-xl">all_inclusive</span>
+                </div>
+                <h2 class="text-xl font-bold tracking-tight">ClassLoop.in</h2>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="#features">Features</a>
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="#loopspace">LoopSpace</a>
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Campus</a>
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Testimonials</a>
+            </div>
+            <form action="/user/login" method="get">
+                <button
+                    class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105">
+                    Log in
+                </button>
+            </form>
+        </div>
+    </nav>
+    <main class="pt-24">
+        <!-- Hero Section -->
+        <section class="relative px-6 py-12 md:py-24 overflow-hidden hero-gradient">
+            <div class="max-w-5xl mx-auto text-center">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6">
+                    <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                    NOW OPEN FOR UNIVERSITIES
+                </div>
+                <h1
+                    class="text-5xl md:text-7xl font-black leading-tight tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                    Connect Your <span class="text-primary">Campus</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    The social loop for the modern student. Bridge the gap between majors and social circles in one
+                    seamless digital space.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="/user/signup"
+                        class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all">
+                        Get Started Free
+                    </a>
+                    <button
+                        class="w-full sm:w-auto px-8 py-4 glass text-white rounded-xl font-bold text-lg hover:bg-white/5 transition-all">
+                        View Demo
+                    </button>
+                </div>
+                <!-- Hero Image/Dashboard Preview Mockup -->
+                <div class="mt-16 glass rounded-3xl p-4 max-w-4xl mx-auto shadow-2xl relative">
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-[100px]"></div>
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 blur-[100px]"></div>
+                    <div
+                        class="rounded-2xl overflow-hidden border border-white/10 aspect-video bg-neutral-900 flex items-center justify-center group">
+                        <div class="grid grid-cols-12 w-full h-full p-4 gap-4">
+                            <div class="col-span-3 glass rounded-xl p-4 flex flex-col gap-4">
+                                <div class="h-4 w-2/3 bg-white/10 rounded"></div>
+                                <div class="h-10 w-full bg-white/5 rounded-lg"></div>
+                                <div class="h-10 w-full bg-white/5 rounded-lg"></div>
+                                <div class="h-10 w-full bg-white/5 rounded-lg"></div>
+                            </div>
+                            <div class="col-span-9 flex flex-col gap-4">
+                                <div class="h-12 w-full glass rounded-xl"></div>
+                                <div class="grid grid-cols-3 gap-4 grow">
+                                    <div class="glass rounded-xl bg-center bg-cover"
+                                        data-alt="Student dashboard interface preview with cards"
+                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBsrv2zmywz1fzDgYBiKlg2Et_-gUNLHDHb7HzhJuNeRuNrbUzXrAY4FLkh4b8OKWuoOq0a_lUQtzyP1wPhh0FYJjxnHI71ORRVbHYSlW42TvDQIkEm4PEcftSm-RI_z7QmuNSkvHuVAwjGQTY5fqz1O5TcAgawXJIsr5i_Cm9C665XC0uhRiHMw3bl87lFBPfy806V8ypkhZLgVN0-SUcv2vGAgYy6dJyHhcpWjxUseE-glUW_zxolopOu3I-UGABLpoxMo_sNBwXh');">
+                                    </div>
+                                    <div class="glass rounded-xl bg-center bg-cover"
+                                        data-alt="University campus event feed mockup"
+                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBER991yhwfwr_sSYzIPjTYW9Bs0uvzIKy5phjvu1fn6JRy3Ov-OFzFJZClU8XT-9vx-VHTpnIAt9kn8-ApoUNP0F1Rh-L0uWEd0awCXo2vEpVOxwxmA0OGqg0xsXPp_9q8V3xf1-yjmZVlriE6TSkvRAsFvIVgC-M1TCtEx6RlvPHpdX6HNtx53mYF5_K6K6witu4ACRATxzJN7WM1RD1IhNab2397Er4bjy3ZIQVPkh3_VPBviMeuHNlT_b0vLrYl7K2IYWbwPjnV');">
+                                    </div>
+                                    <div class="glass rounded-xl bg-center bg-cover"
+                                        data-alt="Student social group networking interface"
+                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2On9GGV33JkMgNUI9CnB80A1qeMckmBvVtgTLV1Iwt7vT3a8x8GHvFssK2k4y5QViG2JXJvQbczAjsATtVb5mnlKTNAAw0gEkKJ5u8pzLohBWTnV3dl_cSVu2c3trPtRumq8m3DwTEtAgE63WfqDDO5UM-COs0wYDn5BI5RPND_LXXeyrsA8pW1ptomiMoQsWFzc4kyJzgLZizNtt2CJZnYt25ocy5wjh25-xySnarDIcmQ0WI8_KXUZKSXBaPrdA1icz1DrJHMxM');">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-white">play_circle</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- FeatureSection: LoopSpace -->
+        <section class="px-6 py-20" id="loopspace">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 px-4">
+                    <div class="max-w-2xl">
+                        <h2 class="text-4xl md:text-5xl font-black mb-6">Your niche, found.</h2>
+                        <p class="text-slate-400 text-lg">
+                            Introducing LoopSpace - the intelligent grouping system for your college life. Join loops
+                            based on your classes, hobbies, or campus events.
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="size-10 glass rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <button
+                            class="size-10 glass rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+                    <div class="glass p-6 rounded-2xl group hover:border-primary/50 transition-all">
+                        <div class="w-full h-48 rounded-xl overflow-hidden mb-6 bg-cover bg-center"
+                            data-alt="Students collaborating in a design loop"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBRdn0vIkeeVgtma1gCf__fDUv5zG1mI9X3HyIVfHOOO0TWn-cdyoMnK5ng_rOp7G7HBd1k7FXvKmZ_Kyc98WLMChBgdjNxe7MKyXyqM_DY6TqhD-VD3qaWgJua0vuUX91yNbTOEF7pmYQV9ZLd96oNVZ8B77ZP_99YMONEfzkZRA3hkumQrRa3fkhp4SehrVnsFzrwpnttggdrkHqHp8Y6mVDM0IwGUKa7kZe2DhF6fGd3AR9dE8LVZKYrVBhevU_DeTmw3dj5lnpR');">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">LoopSpace Groups</h3>
+                        <p class="text-slate-400">Niche communities for every interest and major. From CS study groups
+                            to intramural frisbee.</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl group hover:border-primary/50 transition-all">
+                        <div class="w-full h-48 rounded-xl overflow-hidden mb-6 bg-cover bg-center"
+                            data-alt="Classmates studying together in library"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDyBJWWK5D_FKo-KqKGQHKRuVKqBxzgBrotmUltTWfP4MKTrevrR0aJjDvO8RocTOXhZ4iLRSch5oMTfTKWCvLPPLGuQkvd_02iyh95D6FsqfSuqZSPfnpm1i8FZQdg9YFV4oU9CwxZZXXWjRKnuQY4OskGWtCaUpZ286pLh2Zzx14orGtH9AT4dfkgByAsHvlxsLfGzm6ys_e3-BhRJVSHxvpmEYfRcxY1lfSySFpmSfbg12zD5pF5KbaFEZiCI_mguh9Ms1wRV-3W');">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Academic Collaboration</h3>
+                        <p class="text-slate-400">Connect with classmates for study sessions and projects. Share notes
+                            and resources securely.</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl group hover:border-primary/50 transition-all">
+                        <div class="w-full h-48 rounded-xl overflow-hidden mb-6 bg-cover bg-center"
+                            data-alt="Campus concert event crowd"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXi7a4zrEjMLE8tWJW3jVkW7CIXfexcG7J1MoXKvuGh3CcQRy75dMmzq7SnS0HT4GC6EEmSEIBgyF8IM08SRPTvxWjFWkKFDlNoCqq4sYgwPbO6p6RxFi2ajwahu_1DkuOnTY3NhtQLBJ5Uf8m5gVIPxwFcfDnIrxH-aS7DULTuJ8RRLIUwohSnzhlaRkY8Ef0dth8sgZ_IHTvk3QMfj9QKTtEis_GACfbTdWt24MjUbo1TScIvHSwqGkGtd3OEWbMszGpmO3CYoOo');">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Event Tracking</h3>
+                        <p class="text-slate-400">Never miss a campus event with our integrated timeline. RSVP and see
+                            which loops are attending.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- SectionHeader & ImageGrid -->
+        <section class="px-6 py-20 bg-primary/5">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold px-4 mb-8">Experience the Loop</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+                    <div class="relative group rounded-2xl overflow-hidden aspect-[4/5] lg:col-span-2">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                            data-alt="Modern mobile app dashboard view"
+                            style="background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGarEATFo84rAWvzT5Q-BVju8NL1KVBBz9bYV8UIDs3iKzt1TET2J2j1tPqEElKg8bdBZ1zerTN8C3vHCg2LuTDv2zaAzr6r2tl1UMDoQdWo_K_Aab2ML7wrE94yLULc7OthPlb6fn68zunU6khtj4Bwa7UIJDvP3RM3MNGXgDDAjhSee5hYcO9esXPsLR8u_suikPwm7GxMyQhOg3Z4k4HWCIF7QHExHWTCSykj9LBWozviufhLUsoKccKsbrwy39EtBgYK_SjMKO');">
+                        </div>
+                        <div class="absolute bottom-0 left-0 p-8">
+                            <h3 class="text-2xl font-bold text-white mb-2">Student Dashboard</h3>
+                            <p class="text-slate-200">Everything you need in one centralized view.</p>
+                        </div>
+                    </div>
+                    <div class="relative group rounded-2xl overflow-hidden aspect-[4/5]">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                            data-alt="Mobile phone showing social feed"
+                            style="background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuC4Qm2nREdkxxAV72D1Ws0XvnA0r4wKvNQVq77RHpoU4-d7GZBepXgwJAE-J816ZhMdf3YqQX7YM6qUwmrvt9Ab7pbD0zg6Gs2jQej2yuD4kZhow4_n391ca2HH7Lt27Q1s3ihKvxbdbMRDD9FI3Tj_xQwQEtIWCjLLXIeMVuvfWyoNb4QFur6XsHWgRlXJ9XVhMbVPd5lyB5kg7w9SHwj38rNt-EPPyFD4k--QKZL3dlPu3dMxBtQG48B5LYK04rOqvfxp_hGeOVrk');">
+                        </div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <h3 class="text-lg font-bold text-white">Campus Feed</h3>
+                        </div>
+                    </div>
+                    <div class="relative group rounded-2xl overflow-hidden aspect-[4/5]">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                            data-alt="Digital calendar with school events"
+                            style="background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuA408I9GY77nF8Zt7_BAvSvGjnzSVIUrjMdTZSCyARvzmJQaWeJocmfBQCXzRDhCEzEE7KEV2oxcKFFIqtGv9_zcqWq93oB9SXvqu5PUnkmLtnuerqoqC9ucqrU5ObYXdjKYrFrejaak4HU4dFUuDUlk2VfY4iC73rYrtGhzSvGk5y0J-sXDgOz09PbiARrBipx42FrLp7wk2yCC5ZkmWYEidIWDt67lB_VB6Jzhe6WQLMSqC9GGjzgV-LOgMKlze5sA3Hu937N8tL5');">
+                        </div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <h3 class="text-lg font-bold text-white">Smart Planner</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- CTA Section -->
+        <section class="px-6 py-24">
+            <div class="max-w-4xl mx-auto glass p-12 rounded-[2rem] text-center relative overflow-hidden">
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[80px] -translate-y-1/2 translate-x-1/2">
+                </div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">Ready to join the loop?</h2>
+                <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+                    Be the first at your university to experience the new standard of campus connection.
+                </p>
+                <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault()">
+                    <input
+                        class="grow bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Your college email" type="email" />
+                    <button
+                        class="bg-primary text-white font-bold px-8 py-4 rounded-xl hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all">
+                        Join Waitlist
+                    </button>
+                </form>
+                <p class="mt-6 text-xs text-slate-500">Join 500+ students already waiting for the launch.</p>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-background-dark py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-2">
+                <div class="size-6 bg-primary/20 rounded flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-sm">all_inclusive</span>
+                </div>
+                <h2 class="text-lg font-bold">ClassLoop.in</h2>
+            </div>
+            <div class="flex gap-8 text-slate-500 text-sm">
+                <a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+                <a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+                <a class="hover:text-white transition-colors" href="#">Campus Ambassadors</a>
+                <a class="hover:text-white transition-colors" href="#">Contact</a>
+            </div>
+            <div class="flex gap-4">
+                <a class="size-10 glass rounded-full flex items-center justify-center hover:text-primary" href="#">
+                    <span class="material-symbols-outlined">share</span>
+                </a>
+                <a class="size-10 glass rounded-full flex items-center justify-center hover:text-primary" href="#">
+                    <span class="material-symbols-outlined">chat</span>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto text-center mt-12 text-slate-600 text-xs">
+            © 2024 ClassLoop Technologies. All rights reserved.
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+<% layout("/layout/boilerplate2.ejs") -%>
+
+<main class="flex-1 overflow-y-auto h-screen custom-scrollbar">
+    <header class="bg-white border-b border-slate-200 px-8 py-6 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/teacher?tab=Overview" class="text-slate-400 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900">My Forms</h1>
+                    <p class="text-sm text-slate-500 font-medium">Manage and monitor your classroom assessments</p>
+                </div>
+            </div>
+            <a href="/teacher?tab=Form"
+                class="px-5 py-2.5 bg-primary rounded-xl text-sm font-bold text-white shadow-lg shadow-indigo-100 hover:opacity-90 flex items-center gap-2 transition-all">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Create New Form
+            </a>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-8 py-8">
+        <div class="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+            <button class="px-5 py-2 bg-indigo-600 text-white rounded-full text-sm font-bold whitespace-nowrap">All Forms</button>
+            <button class="px-5 py-2 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-full text-sm font-semibold whitespace-nowrap transition-colors">Active</button>
+            <button class="px-5 py-2 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-full text-sm font-semibold whitespace-nowrap transition-colors">Drafts</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <% forms.forEach(form => { %>
+                <% 
+                    // Find the space associated with this form's class to get total member count
+                    const space = spaces.find(s => s.class.toString() === form.class._id.toString());
+                    const totalMembers = space ? space.members.length : 0;
+                    const responseCount = form.responses ? form.responses.length : 0;
+                %>
+                
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold tracking-wider uppercase">
+                                <%= form.class.className %>-<%= form.class.section %>
+                            </span>
+                            <div class="relative group">
+                                <button class="text-slate-400 hover:text-slate-600 transition-colors">
+                                    <span class="material-symbols-outlined">more_vert</span>
+                                </button>
+                                <div class="hidden group-focus-within:block absolute right-0 w-32 bg-white border border-slate-100 shadow-xl rounded-lg z-20">
+                                    <a href="/beta-version">
+                                    <button class="w-full text-left px-4 py-2 text-xs text-slate-600 hover:bg-slate-50">Edit</button>
+                                    </a>
+                                    <form action="/teacher/form/<%= form._id %>/delete?_method=DELETE" method="POST">
+                                    <button class="w-full text-left px-4 py-2 text-xs text-red-500 hover:bg-red-50">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-slate-900 mb-2 line-clamp-1"><%= form.title %></h3>
+                        
+                        <div class="flex items-center gap-1.5 mb-6">
+                            <span class="size-2 <%= form.isOpen ? 'bg-green-500' : 'bg-slate-400' %> rounded-full"></span>
+                            <span class="text-[11px] font-bold <%= form.isOpen ? 'text-green-600' : 'text-slate-500' %> uppercase tracking-tight">
+                                <%= form.isOpen ? 'Accepting Responses' : 'Closed' %>
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 mb-6">
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Responses</p>
+                                <p class="text-xl font-black text-slate-900">
+                                    <%= responseCount %><span class="text-xs font-medium text-slate-400">/<%= totalMembers %></span>
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Due Date</p>
+                                <p class="text-sm font-bold text-slate-700">
+                                    <%= form.expiresAt ? form.expiresAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'No Deadline' %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <a href="/teacher/form/<%= form._id %>/responses" 
+                           class="w-full py-3 bg-indigo-50 text-primary rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-100 transition-all flex items-center justify-center gap-2 text-center">
+                            View Responses
+                        </a>
+                    </div>
+                </div>
+            <% }) %>
+
+            <a href="/teacher?tab=Form"
+                class="rounded-2xl border-2 border-dashed border-slate-200 hover:border-primary hover:bg-indigo-50/30 transition-all group flex flex-col items-center justify-center p-8 gap-4 min-h-[300px]">
+                <div class="size-14 rounded-full bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-slate-400 group-hover:text-primary text-3xl">add</span>
+                </div>
+                <div class="text-center">
+                    <p class="font-bold text-slate-600 group-hover:text-primary">Create New Form</p>
+                    <p class="text-xs text-slate-400">Add a new quiz or survey</p>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</main>

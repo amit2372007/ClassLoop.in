@@ -1,0 +1,580 @@
+<% layout("/layout/boilerplate2.ejs") -%>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .active-nav {
+            background-color: rgba(99, 36, 235, 0.1);
+            border-left: 4px solid #6324eb;
+            color: #6324eb !important;
+        }
+    </style>
+    </head>
+
+    <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar -->
+            <aside
+                class="w-64 bg-white dark:bg-[#1e1b2e] border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
+                <div class="p-6 flex items-center gap-3">
+                    <div class="bg-primary p-1.5 rounded-lg">
+                        <span class="material-symbols-outlined text-white">school</span>
+                    </div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ClassLoop<span
+                            class="text-primary">.in</span></h1>
+                </div>
+                <nav class="flex-1 px-4 space-y-1 mt-4">
+                    <a href="/school?tab=Dashboard"
+                        class="<%= activeTab === 'Dashboard' ? 'active-nav' : '' %> flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer group">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span class="text-sm font-semibold">Dashboard</span>
+                    </a>
+                    <a href="/school?tab=ManageTeachers"
+                        class="<%= activeTab === 'ManageTeachers' ? 'active-nav' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50' %> flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined">person_add</span>
+                            <span class="text-sm font-medium">Manage Teacher</span>
+                        </div>
+                    </a>
+
+                    <a href="/school?tab=ManageClasses"
+                        class="<%= activeTab === 'ManageClasses' ? 'active-nav' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50' %> flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors">
+                        <span class="material-symbols-outlined">class</span>
+                        <span class="text-sm font-medium">Manage Classes</span>
+                    </a>
+
+                    <a href="/school?tab=Attendance"
+                        class="<%= activeTab === 'Attendance' ? 'active-nav' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50' %> flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        <span class="text-sm font-medium">Attendance</span>
+                    </a>
+
+                    <a href="/school?tab=Notice"
+                        class="<%= activeTab === 'Notice' ? 'active-nav' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50' %> flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors">
+                        <span class="material-symbols-outlined">campaign</span>
+                        <span class="text-sm font-medium">Notice Board</span>
+                    </a>
+                </nav>
+                <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+                    <form action="/user/logout" method="get">
+                        <button
+                            class="flex w-full items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-red-600 transition-colors">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span class="text-sm font-medium">Logout</span>
+                        </button>
+                    </form>
+                </div>
+            </aside>
+            <!-- Main Workspace -->
+            <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+                <!-- Header -->
+                <header
+                    class="h-16 bg-white dark:bg-[#1e1b2e] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+                                <%=School.name%>
+                            </h2>
+                            <div class="flex items-center gap-2">
+                                <span class="flex size-2 rounded-full bg-green-500"></span>
+                                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Session
+                                    2025-26</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="relative hidden md:block">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+                            <input
+                                class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary w-64"
+                                placeholder="Search operations..." type="text" />
+                        </div>
+                        <button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+                            <span class="material-symbols-outlined">notifications</span>
+                        </button>
+                        <div class="h-8 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                        <div class="flex items-center gap-3 cursor-pointer group">
+                            <div class="text-right hidden sm:block">
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">
+                                    <%=currUser.name%>
+                                </p>
+                                <p class="text-xs text-slate-500">Principal</p>
+                            </div>
+                            <div class="size-10 rounded-full bg-cover bg-center border-2 border-primary/20"
+                                data-alt="Portrait of a female school principal"
+                                style="background-image: url('<%=currUser.profilePic.url%>');">
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <% if(activeTab==="Dashboard" ) { %>
+                    <!-- Content Area -->
+                    <main class="flex-1 overflow-y-auto p-8 bg-background-light dark:bg-background-dark">
+                        <div class="max-w-[1400px] mx-auto">
+                            <!-- Stats Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                                <div
+                                    class="bg-white dark:bg-[#1e1b2e] p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
+                                        <span class="material-symbols-outlined">group</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-500">Total Students</p>
+                                        <p class="text-2xl font-bold text-slate-900 dark:text-white">1,240</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-white dark:bg-[#1e1b2e] p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600">
+                                        <span class="material-symbols-outlined">badge</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-500">Total Teachers</p>
+                                        <p class="text-2xl font-bold text-slate-900 dark:text-white">
+                                            <%=School.teachers.length%>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-white dark:bg-[#1e1b2e] p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600">
+                                        <span class="material-symbols-outlined">meeting_room</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-500">Active Classes</p>
+                                        <p class="text-2xl font-bold text-slate-900 dark:text-white">
+                                            <%=School.classes.length%>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-white dark:bg-[#1e1b2e] p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600">
+                                        <span class="material-symbols-outlined">done_all</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-500">Today's Attendance</p>
+                                        <p class="text-2xl font-bold text-slate-900 dark:text-white">94%</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Main Grid -->
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <!-- Center Section: Teacher Approvals -->
+                                <div class="lg:col-span-2 space-y-6">
+                                    <div
+                                        class="bg-white dark:bg-[#1e1b2e] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                                        <div
+                                            class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                            <h3 class="font-bold text-slate-900 dark:text-white text-lg">Pending Teacher
+                                                Approvals</h3>
+                                            <a class="text-primary text-sm font-semibold hover:underline" href="#">View
+                                                All
+                                                Requests</a>
+                                        </div>
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-left border-collapse">
+                                                <thead>
+                                                    <tr class="bg-slate-50 dark:bg-slate-800/50">
+                                                        <th
+                                                            class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                                            Teacher Details</th>
+                                                        <th
+                                                            class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                                            Subject Expertise</th>
+                                                        <th
+                                                            class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">
+                                                            Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                                    <tr
+                                                        class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                                                        <td class="px-6 py-4">
+                                                            <div class="flex items-center gap-3">
+                                                                <div class="size-10 rounded-full bg-cover bg-center"
+                                                                    data-alt="Avatar of Dr. Aris Thorne"
+                                                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZKBv15jeuyy7PCJgLNg1QIhqkhUkyH1d8YlK1_HDdmsehQ-QG1WjcWXjKcB7_BmQRogTdM_IZSbKCSrmDmlEs-eYrcazRJC4rw3FtYImQtjpei4e_TjkB4qQ62uFZ4fBy4hJO-ysWcGeitf4N_yFaq-nXMR6Rq-V1pPlmxn73VMxaMBlfGssKDV1QApHd1PHgqfvudEx-TC79IwXlPi4e7aShpskVP6TAiS_wHKq8RsrCOTCdbdOc2DDA7X1ibGZND-WTOeFtHgLM');">
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="text-sm font-semibold text-slate-900 dark:text-white">
+                                                                        Dr. Aris Thorne</p>
+                                                                    <p class="text-xs text-slate-500">PhD, Physics</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <span
+                                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                                                Advanced Physics
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 text-right">
+                                                            <div class="flex justify-end gap-2">
+                                                                <button
+                                                                    class="px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">Reject</button>
+                                                                <button
+                                                                    class="px-3 py-1.5 text-xs font-bold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">Approve</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr
+                                                        class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                                                        <td class="px-6 py-4">
+                                                            <div class="flex items-center gap-3">
+                                                                <div class="size-10 rounded-full bg-cover bg-center"
+                                                                    data-alt="Avatar of Sarah Jenkins"
+                                                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6hFp1kMfU_dKmRdfxJPV6jr53_b_99S64xtYIjHKmaT7ekzObgTezIwGbDzczzjcjqglGUmKp_4p9ew0DBb3wEX6AA92SFSVyS5ESfyU7NeoYns1aHY5rDvj7aVpVN81SAttsn0YYcUutZKCKvlGyzFDZmTtUxMrm7KHbFCvz6meClelOdU-BgShN00wte5-qbkKXLCc7gpxbldjSQ2zQA_I3uGNjG8ofhYExajJa1dgGHiRTr-R4D49hnrG51nnUgbd5z_zCsf4S');">
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="text-sm font-semibold text-slate-900 dark:text-white">
+                                                                        Sarah Jenkins</p>
+                                                                    <p class="text-xs text-slate-500">M.Sc. Mathematics
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <span
+                                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                                                                Calculus &amp; Algebra
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 text-right">
+                                                            <div class="flex justify-end gap-2">
+                                                                <button
+                                                                    class="px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">Reject</button>
+                                                                <button
+                                                                    class="px-3 py-1.5 text-xs font-bold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">Approve</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr
+                                                        class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                                                        <td class="px-6 py-4">
+                                                            <div class="flex items-center gap-3">
+                                                                <div class="size-10 rounded-full bg-cover bg-center"
+                                                                    data-alt="Avatar of Michael Chen"
+                                                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhCXOZRQ4yyzmiRqrjnmq0W3J-6uqYo_QuYeXS7wCiX0MdhuohdJFv-IlCOqn-gbFt-DB1ekVxYqJ0E55neVyQfpDeigVkMJD-9p6rxXum7eCtxiCdz1Ulg-RLmGPLZd6ryi6RG48E_4anPY_QgZclwtwrEFldvuuw0FBnArj7eA2fsL7rpNYpYfrv9us8RWGK-j4d22i_FUhRo5Co3VsVi9tFWjdIwhAKp95bbUFYNYz4YfAfzJFGs89EShnzPUz3oCTfsn96AbN2');">
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="text-sm font-semibold text-slate-900 dark:text-white">
+                                                                        Michael Chen</p>
+                                                                    <p class="text-xs text-slate-500">MA English Lit</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <span
+                                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                                                Literature &amp; Rhetoric
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 text-right">
+                                                            <div class="flex justify-end gap-2">
+                                                                <button
+                                                                    class="px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">Reject</button>
+                                                                <button
+                                                                    class="px-3 py-1.5 text-xs font-bold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">Approve</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Right Section: Notice Composer -->
+                                <div class="lg:col-span-1 space-y-6">
+                                    <div
+                                        class="bg-white dark:bg-[#1e1b2e] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                                        <h3
+                                            class="font-bold text-slate-900 dark:text-white text-lg mb-4 flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-primary">edit_note</span>
+                                            Notice Composer
+                                        </h3>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-bold text-slate-500 uppercase mb-2">Audience
+                                                    Selector</label>
+                                                <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                                                    <button
+                                                        class="flex-1 py-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 text-primary shadow-sm">All</button>
+                                                    <button
+                                                        class="flex-1 py-1.5 text-xs font-semibold rounded text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Teachers</button>
+                                                    <button
+                                                        class="flex-1 py-1.5 text-xs font-semibold rounded text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Students</button>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-bold text-slate-500 uppercase mb-2">Notice
+                                                    Title</label>
+                                                <input
+                                                    class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                                    placeholder="e.g. Annual Sports Meet 2025" type="text" />
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-bold text-slate-500 uppercase mb-2">Content</label>
+                                                <div
+                                                    class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                                                    <div
+                                                        class="flex items-center gap-1 p-2 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                                                        <button
+                                                            class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span
+                                                                class="material-symbols-outlined text-sm">format_bold</span></button>
+                                                        <button
+                                                            class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span
+                                                                class="material-symbols-outlined text-sm">format_italic</span></button>
+                                                        <button
+                                                            class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span
+                                                                class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+                                                        <button
+                                                            class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded"><span
+                                                                class="material-symbols-outlined text-sm">link</span></button>
+                                                    </div>
+                                                    <textarea
+                                                        class="w-full px-4 py-3 bg-white dark:bg-slate-900 border-none text-sm focus:ring-0 resize-none outline-none"
+                                                        placeholder="Type your announcement here..."
+                                                        rows="6"></textarea>
+                                                </div>
+                                            </div>
+                                            <button
+                                                class="w-full bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                                                <span class="material-symbols-outlined text-lg">send</span>
+                                                Publish to Board
+                                            </button>
+                                        </div>
+                                    </div>
+                    </main>
+                    <% } else if(activeTab==="ManageClasses" ) {%>
+                        <!-- manage classes -->
+                        <main class="flex-1 overflow-y-auto p-8">
+                            <div class="max-w-[1400px] mx-auto">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                                    <div>
+                                        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Manage Classes
+                                        </h1>
+                                        <p class="text-sm font-medium text-slate-500 mt-1">Total: 42 Active Classes</p>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <div class="relative">
+                                            <span
+                                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                                            <input
+                                                class="pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary w-full md:w-72 outline-none"
+                                                placeholder="Find class by name..." type="text" />
+                                        </div>
+                                        <form action="/school/createClass" method="GET">
+                                            <button
+                                                class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2 whitespace-nowrap">
+                                                <span class="material-symbols-outlined text-xl">add</span>
+                                                Create New Class
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                    <% for(let Class of School.classes) { %>
+                                        <div
+                                            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow group">
+
+                                            <div class="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Class
+                                                        <%=Class.className%>-<%=Class.section%>
+                                                    </h3>
+                                                    <p
+                                                        class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                                        Secondary Section</p>
+                                                </div>
+                                                <div class="bg-blue-50 dark:bg-blue-900/20 text-primary p-2 rounded-lg">
+                                                    <span class="material-symbols-outlined">groups</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="space-y-4">
+                                                <div
+                                                    class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                                    <div class="size-10 rounded-full bg-cover bg-center border border-white"
+                                                        style="background-image: url('<%=Class.classTeacher.profilePic.url%>');">
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-slate-500 font-medium">Class Teacher</p>
+                                                        <p class="text-sm font-semibold text-slate-900 dark:text-white">
+                                                            <%=Class.classTeacher.name%>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center justify-between px-1">
+                                                    <div class="flex items-center gap-2">
+                                                        <span
+                                                            class="material-symbols-outlined text-slate-400 text-sm">person</span>
+                                                        <span
+                                                            class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                                                            <%=Class.students.length%>
+                                                                Students
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex items-center gap-1">
+                                                        <span class="size-2 rounded-full bg-green-500"></span>
+                                                        <span
+                                                            class="text-[10px] font-bold text-slate-400 uppercase">Live</span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="pt-4 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
+                                                    <button
+                                                        class="flex items-center justify-center gap-2 py-2 px-3 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors">
+                                                        <span
+                                                            class="material-symbols-outlined text-base">visibility</span>
+                                                        Students
+                                                    </button>
+                                                    <button
+                                                        class="flex items-center justify-center gap-2 py-2 px-3 text-xs font-bold text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg border border-primary/20 transition-colors">
+                                                        <span class="material-symbols-outlined text-base">edit</span>
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+
+                                </div>
+                            </div>
+                        </main>
+                        <% } else if(activeTab==="ManageTeachers" ) { %>
+                            <main class="ml-5 flex-1">
+                                <div class="max-w-7xl mx-auto px-8 py-8">
+                                    <!-- Page Heading Section -->
+                                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                                        <div class="flex flex-col gap-2">
+                                            <h2
+                                                class="text-navy-custom dark:text-white text-4xl font-black tracking-tight">
+                                                Teacher Directory</h2>
+                                            <div class="flex items-center gap-2">
+                                                <span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
+                                                <p class="text-slate-custom dark:text-gray-400 text-base font-medium">
+                                                    Total: <%=School.teachers.length%> Teachers</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4 items-center">
+                                            <!-- Search Bar -->
+                                            <div class="min-w-[400px]">
+                                                <label
+                                                    class="flex items-center h-12 w-full bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 px-4 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                                                    <span
+                                                        class="material-symbols-outlined text-slate-custom mr-3">search</span>
+                                                    <input
+                                                        class="bg-transparent border-none focus:ring-0 w-full text-sm text-navy-custom dark:text-white placeholder:text-slate-custom"
+                                                        placeholder="Search by name, ID or subject..." type="text" />
+                                                </label>
+                                            </div>
+                                            <!-- Filter Dropdown -->
+                                            <div class="min-w-[200px]">
+                                                <select
+                                                    class="h-12 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 text-sm text-navy-custom dark:text-white focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%234d6599%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22/%3E%3C/svg%3E')] bg-[length:20px] bg-[right_12px_center] bg-no-repeat">
+                                                    <option>All Subjects</option>
+                                                    <option>Mathematics</option>
+                                                    <option>Science</option>
+                                                    <option>English Literature</option>
+                                                    <option>Physical Education</option>
+                                                </select>
+                                            </div>
+                                            <!-- Add Teacher Button -->
+                                            <button
+                                                class="h-12 px-6 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-blue-700 transition-colors shadow-lg shadow-primary/20">
+                                                <span class="material-symbols-outlined">add</span>
+                                                Add Teacher
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Teacher Grid -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                        <% for(let Teacher of School.teachers) { %>
+                                        <!-- Teacher -->
+                                        <div
+                                            class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-all group">
+                                            <div class="flex flex-col items-center text-center">
+                                                <div class="relative mb-4">
+                                                    <div class="w-24 h-24 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm"
+                                                        data-alt="Teacher portrait Sarah Jenkins"
+                                                        style="background-image: url('<%=Teacher.profilePic.url%>');">
+                                                    </div>
+                                                    <span
+                                                        class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full"></span>
+                                                </div>
+                                                <h3 class="text-navy-custom dark:text-white text-lg font-bold"><%=Teacher.name%></h3>
+                                                <p class="text-primary font-semibold text-sm">Mathematics</p>
+                                                <p class="text-slate-custom dark:text-gray-400 text-sm mb-4">Class
+                                                    Teacher: 10th-B</p>
+                                                <div class="flex items-center gap-2 mb-6">
+                                                    <span
+                                                        class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold rounded-full uppercase tracking-wider">Active</span>
+                                                    <span
+                                                        class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-slate-custom dark:text-gray-400 text-xs font-bold rounded-full uppercase tracking-wider">Full
+                                                        Time</span>
+                                                </div>
+                                                
+                                                <a href="/user/<%=Teacher._id%>"
+                                                    class="w-full py-3 px-4 bg-background-light dark:bg-gray-800 text-navy-custom dark:text-white rounded-lg font-bold text-sm hover:bg-primary hover:text-white dark:hover:bg-primary transition-all">
+                                                    View Profile
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                    <!-- Pagination Footer -->
+                                    <div
+                                        class="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-gray-800 pt-6">
+                                        <p class="text-sm text-slate-custom dark:text-gray-400">Showing <span
+                                                class="font-bold text-navy-custom dark:text-white">8</span> of <span
+                                                class="font-bold text-navy-custom dark:text-white">48</span> teachers
+                                        </p>
+                                        <div class="flex items-center gap-2">
+                                            <button
+                                                class="p-2 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-900 text-slate-custom disabled:opacity-50"
+                                                disabled="">
+                                                <span class="material-symbols-outlined">chevron_left</span>
+                                            </button>
+                                            <button
+                                                class="w-10 h-10 rounded-lg bg-primary text-white font-bold">1</button>
+                                            <button
+                                                class="w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-900 text-slate-custom">2</button>
+                                            <button
+                                                class="w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-900 text-slate-custom">3</button>
+                                            <span class="px-2 text-slate-custom">...</span>
+                                            <button
+                                                class="w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-900 text-slate-custom">6</button>
+                                            <button
+                                                class="p-2 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-900 text-slate-custom">
+                                                <span class="material-symbols-outlined">chevron_right</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </main>
+                            <% } %>
+
+
+            </div>
+        </div>
+    </body>
+
+    </html>

@@ -1,31 +1,145 @@
-<style>
-  div{
-    z-index: 2;
-  }
-</style>
+<style type="text/tailwindcss">
+    .glass-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .notification-dropdown {
+            display: none;
+        }
+        .notification-trigger:focus-within .notification-dropdown {
+            display: block;
+        }
+        @keyframes shrink {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .animate-progress {
+            animation: shrink 5s linear forwards;
+        }
+    </style>
+
 <body>
-    <% if(success && success.length) { %>
-  <div class="notification is-primary">
-    <button class="delete"></button>
-    <%= success %>
-  </div>
-  <% } %>
+    <% if(error && error.length) { %>
+        <div id="error-flash" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4">
+        <div class="glass-card border-red-500/30 rounded-xl shadow-2xl overflow-hidden relative">
+            <div class="p-4 flex items-center gap-3">
+                <div class="size-8 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 shrink-0">
+                    <span class="material-symbols-outlined text-xl font-bold">error</span>
+                </div>
+                
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-white">
+                        <%= error %>
+                    </p>
+                </div>
+                
+                <button onclick="dismissError()" class="text-white/40 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+            
+            <div class="h-1 bg-white/5 w-full">
+                <div class="h-full bg-red-500 animate-progress"></div>
+            </div>
+        </div>
+    </div>
+        <% } %>
 
-  <% if(error && error.length) { %>
-  <div class="notification is-danger">
-    <button class="delete"></button>
-    <%= error %>
-  </div>
-  <% } %> 
+            <% if(success && success.length) { %>
+                <div id="flash-message" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4">
+                    <div class="glass-card border-brand-purple/30 rounded-xl shadow-2xl overflow-hidden relative">
+                        <div class="p-4 flex items-center gap-3">
+                            <div
+                                class="size-8 bg-brand-purple/20 rounded-full flex items-center justify-center text-brand-purple shrink-0">
+                                <span class="material-symbols-outlined text-xl font-bold">check_circle</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-white">
+                                    <%=success%>
+                                </p>
+                            </div>
+                            <button onclick="dismissFlash()" class="text-white/40 hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-lg">close</span>
+                            </button>
+                        </div>
+                        <div class="h-1 bg-white/5 w-full">
+                            <div class="h-full bg-brand-purple animate-progress"></div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
 </body>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-  (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-    const $notification = $delete.parentNode;
 
-    $delete.addEventListener('click', () => {
-      $notification.parentNode.removeChild($notification);
-    });
-  });
-});
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#9f1fef",
+                    "brand-purple": "#A020F0",
+                    "background-light": "#f7f6f8",
+                    "background-dark": "#0f0f0f",
+                    "surface-dark": "#1a1a1a",
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.5rem",
+                    "lg": "1rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+    function dismissFlash() {
+        const flash = document.getElementById('flash-message');
+        if (flash) {
+            // Optional: Add a fade-out effect before removing
+            flash.style.opacity = '0';
+            flash.style.transition = 'opacity 0.5s ease';
+
+            setTimeout(() => {
+                flash.remove();
+            }, 500);
+        }
+    }
+
+    // Auto-dismiss after 5 seconds (matching your CSS animation duration)
+    const flashExists = document.getElementById('flash-message');
+    if (flashExists) {
+        setTimeout(() => {
+            dismissFlash();
+        }, 5000);
+    }
+
+
+    function dismissError() {
+    const errorFlash = document.getElementById('error-flash');
+    if (errorFlash) {
+        errorFlash.style.opacity = '0';
+        errorFlash.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => {
+            errorFlash.remove();
+        }, 500);
+    }
+}
+
+// Auto-dismiss logic for Error Flash
+const errorExists = document.getElementById('error-flash');
+if (errorExists) {
+    setTimeout(() => {
+        dismissError();
+    }, 5000); // Matches the 5s shrink animation
+}
 </script>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>New Exam Record - ClassLoop.in</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5248e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <!-- Dashboard Background (Blurred & Dimmed) -->
+    <div class="fixed inset-0 z-0 flex flex-col overflow-hidden filter blur-sm grayscale-[0.2] opacity-50">
+        <!-- Top Nav Bar -->
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#dcdce5] dark:border-gray-800 px-10 py-3 bg-white dark:bg-background-dark">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-4 text-primary">
+                    <div class="size-6 bg-primary rounded-lg flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined">school</span>
+                    </div>
+                    <h2 class="text-[#121117] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                        ClassLoop.in</h2>
+                </div>
+            </div>
+            <div class="flex flex-1 justify-end gap-8">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                    data-alt="Teacher profile picture"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAaisAtqV2KEjWre_kD-3_BQstmIAEatbq50eIbtcD-BUcM9BrzQ9ce9eZ-JvfS0m1xUkcogDUEGf3f6gJmKpTDIhSAPCPoS06VDneLICadEKOfvkQw4s9k4g9nQTfr-aOL4SBsxk2_ufhMZri4az_yQntj1iL4mAwoaiMLieq3guFo5xRmNoZD7ItIS_hQsuaz1w5TroUf93NePMCNAMPiYFpalLuqgS-5o3pbkHuMkgQ1JwLpXFufgm-u_QJihWlWY-Ox41EePNU4");'>
+                </div>
+            </div>
+        </header>
+        <div class="flex flex-1">
+            <!-- Side Nav Bar -->
+            <aside
+                class="w-64 border-r border-[#dcdce5] dark:border-gray-800 bg-white dark:bg-background-dark p-6 flex flex-col gap-6">
+                <div>
+                    <h1 class="text-[#121117] dark:text-white text-base font-bold">Teacher Portal</h1>
+                    <p class="text-[#666487] text-sm font-normal">Academic Year 2023-24</p>
+                </div>
+                <nav class="flex flex-col gap-2">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#666487]">
+                        <span class="material-symbols-outlined">grid_view</span>
+                        <p class="text-sm font-medium">Dashboard</p>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#666487]">
+                        <span class="material-symbols-outlined">groups</span>
+                        <p class="text-sm font-medium">Classes</p>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
+                        <span class="material-symbols-outlined">assignment</span>
+                        <p class="text-sm font-medium">Exams</p>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#666487]">
+                        <span class="material-symbols-outlined">event_available</span>
+                        <p class="text-sm font-medium">Attendance</p>
+                    </div>
+                </nav>
+            </aside>
+            <!-- Main Content Area -->
+            <main class="flex-1 p-10 overflow-auto">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex flex-col gap-4">
+                        <h2 class="text-3xl font-black text-[#121117] dark:text-white">Exam Management</h2>
+                        <div class="grid grid-cols-2 gap-6 mt-8">
+                            <div class="h-40 bg-white dark:bg-gray-800 rounded-xl shadow-sm"></div>
+                            <div class="h-40 bg-white dark:bg-gray-800 rounded-xl shadow-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Modal Overlay -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <!-- Modal Card -->
+        <div
+            class="bg-white dark:bg-[#1c1b2b] w-full max-w-[560px] rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+            <!-- Modal Header -->
+            <div class="px-8 pt-8 pb-4 flex justify-between items-start">
+                <div>
+                    <h2 class="text-[#121117] dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">New
+                        Exam Record</h2>
+                    <p class="text-[#666487] dark:text-gray-400 text-base font-normal mt-1">Fill in the details below to
+                        schedule a new examination.</p>
+                </div>
+                <a href="/teacher?tab=Exam" class="text-[#666487] hover:text-[#121117] dark:hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </a>
+            </div>
+            <!-- Form Content -->
+            <form class="px-8 py-4 space-y-6" action="/teacher/exams/initialize" method="POST">
+                <div
+                    class="flex items-center gap-3 p-4 bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    <div>
+                        <p class="text-[#666487] dark:text-gray-400 text-xs font-medium uppercase tracking-wider">Class
+                            & Section</p>
+                        <p class="text-[#121117] dark:text-white font-bold text-base">
+                            <%= currClass.className %> - <%= currClass.section %>
+                        </p>
+                        <input type="hidden" name="classId" value="<%= currClass._id %>">
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-[#121117] dark:text-white text-sm font-semibold">Exam Title</label>
+                    <input name="examName" required
+                        class="form-input w-full rounded-xl border-[#dcdce5] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#121117] dark:text-white h-12 px-4"
+                        placeholder="e.g., Final Semester Examination" type="text" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[#121117] dark:text-white text-sm font-semibold">Subject</label>
+                        <select name="subject" required class="form-select w-full rounded-xl border-[#dcdce5] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#121117] dark:text-white h-12 px-4 focus:ring-primary">
+                <option disabled selected value="">Select Subject</option>
+                <% if(currClass.subjects && currClass.subjects.length > 0) { %>
+                    <% for(let subject of currClass.subjects) { %>
+                        <option value="<%= subject.name %>"><%= subject.name %></option>
+                    <% } %>
+                <% } %>
+                    
+            </select>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[#121117] dark:text-white text-sm font-semibold">Maximum Marks</label>
+                        <input name="totalMarks" required
+                            class="form-input w-full rounded-xl border-[#dcdce5] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#121117] dark:text-white h-12 px-4"
+                            min="0" placeholder="100" type="number" />
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-[#121117] dark:text-white text-sm font-semibold">Examination Date</label>
+                    <div class="relative group">
+                        <input name="examDate" required
+                            class="form-input w-full rounded-xl border-[#dcdce5] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#121117] dark:text-white h-12 px-4"
+                            type="date" />
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-6 pt-6 pb-4">
+                    <a href="/teacher?tab=Exam"
+                        class="text-[#666487] hover:text-[#121117] dark:hover:text-white text-base font-bold transition-colors">Cancel</a>
+                    <button
+                        class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg shadow-primary/20 flex items-center gap-2 transition-all active:scale-95"
+                        type="submit">
+                        <span class="material-symbols-outlined text-[20px]">add_task</span>
+                        Create Exam
+                    </button>
+                </div>
+            </form>
+            <!-- Bottom Progress Line (Subtle Design Element) -->
+            <div class="h-1.5 w-full bg-primary/10">
+                <div class="h-full bg-primary w-2/3 rounded-r-full"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

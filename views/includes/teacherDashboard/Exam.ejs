@@ -1,0 +1,131 @@
+<main class="flex-1 flex flex-col overflow-hidden">
+    <header class="bg-white dark:bg-[#1a192b] border-b border-gray-200 dark:border-gray-800 px-8 py-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-[#121117] dark:text-white text-3xl font-black tracking-tight">Exam Marking Center</h2>
+                    <div class="flex h-7 items-center justify-center rounded-full bg-primary/10 px-3 border border-primary/20">
+                        <p class="text-primary text-xs font-bold"><%= currClass.className %>-<%= currClass.section %></p>
+                    </div>
+                </div>
+                <p class="text-[#666487] dark:text-gray-400 text-sm">Manage and record student performance for current semester</p>
+            </div>
+            <a href="/teacher/addExamPage" class="flex items-center gap-2 rounded-xl h-11 px-5 bg-primary text-white text-sm font-bold hover:shadow-lg transition-all">
+                <span class="material-symbols-outlined text-sm">add</span>
+                <span>New Exam Record</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <div class="w-80 bg-white dark:bg-[#1a192b] border-r border-gray-200 dark:border-gray-800 flex flex-col">
+            <div class="p-4">
+                <label class="flex items-center w-full bg-[#f1f0f4] dark:bg-gray-800 rounded-xl px-3 h-10 border border-transparent focus-within:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[#666487] text-xl">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-[#666487]" placeholder="Search past exams..." />
+                </label>
+            </div>
+            <div class="flex-1 overflow-y-auto px-4 pb-4 space-y-3 custom-scrollbar">
+                <% if(exams && exams.length > 0) { %>
+                    <% exams.forEach(exam => { %>
+                        <a href="?tab=Exam&examId=<%= exam._id %>" 
+                           class="block p-4 rounded-xl border-2 transition-all <%= selectedExamId == exam._id.toString() ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/50 hover:bg-gray-50' %>">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase <%= exam.results.length === currClass.students.length ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' %>">
+                                    <%= exam.results.length === currClass.students.length ? 'Completed' : 'Pending' %>
+                                </span>
+                                <span class="text-[10px] text-[#666487]"><%= new Date(exam.examDate).toLocaleDateString('en-IN', { month: 'short', day: '2-digit', year: 'numeric' }) %></span>
+                            </div>
+                            <p class="text-[#121117] dark:text-white text-sm font-bold mb-1"><%= exam.examName %> (<%= exam.subject %>)</p>
+                            <div class="flex items-center gap-2 text-[#666487] text-[11px]">
+                                <span class="material-symbols-outlined text-sm">assignment</span>
+                                <span><%= exam.totalMarks %> Marks Total</span>
+                            </div>
+                        </a>
+                    <% }) %>
+                <% } else { %>
+                    <p class="text-center text-xs text-slate-400 mt-10">No exams recorded yet.</p>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col bg-background-light dark:bg-background-dark p-6 overflow-hidden relative">
+            <% if (selectedExam) { %>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">edit_note</span>
+                        <h3 class="text-lg font-bold"><%= selectedExam.examName %> - Marks Entry</h3>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs">
+                        <div class="flex items-center gap-1 text-primary font-semibold">
+                            <span class="material-symbols-outlined text-sm">group</span>
+                            <span><%= currClass.students.length %> Students</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-[#1a192b] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col flex-1">
+                    <div class="overflow-x-auto overflow-y-auto custom-scrollbar">
+                        <form id="marks-form" action="/teacher/exams/save" method="POST">
+                            <input type="hidden" name="examId" value="<%= selectedExam._id %>">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-50 dark:bg-gray-800/50 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-6 py-4 text-xs font-bold text-[#666487] uppercase tracking-wider w-16">Roll</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-[#666487] uppercase tracking-wider">Student Name</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-[#666487] uppercase tracking-wider w-40">Marks (out of <%= selectedExam.totalMarks %>)</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-[#666487] uppercase tracking-wider">Remarks</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-[#666487] uppercase tracking-wider w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                                    <% currClass.students.forEach((student, index) => { 
+                                        const result = selectedExam.results.find(r => r.student._id.toString() === student._id.toString());
+                                    %>
+                                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                        <td class="px-6 py-4 text-sm font-medium text-[#666487]"><%= student.rollNumber || index + 1 %></td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <img src="<%= student.profilePic.url %>" class="size-8 rounded-full border-2 border-white shadow-sm" />
+                                                <p class="text-sm font-bold text-[#121117] dark:text-white"><%= student.name %></p>
+                                                <input type="hidden" name="results[<%= index %>][student]" value="<%= student._id %>">
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <input name="results[<%= index %>][marksObtained]" type="number" max="<%= selectedExam.totalMarks %>" 
+                                                   class="w-24 h-9 bg-[#f1f0f4] dark:bg-gray-800 border-none rounded-lg text-sm font-bold text-center focus:ring-2 focus:ring-primary/50"
+                                                   value="<%= result ? result.marksObtained : '' %>" required />
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <input name="results[<%= index %>][remarks]" type="text" placeholder="Add a comment..."
+                                                   class="w-full h-9 bg-transparent border-none rounded-lg text-sm italic text-[#666487] dark:text-gray-400 focus:bg-[#f1f0f4] dark:focus:bg-gray-800 focus:ring-0"
+                                                   value="<%= result ? result.remarks : '' %>" />
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <span class="material-symbols-outlined <%= result ? 'text-green-500' : 'text-amber-500' %>">
+                                                <%= result ? 'check_circle' : 'pending' %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-10 right-10">
+                    <button form="marks-form" type="submit" class="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-full shadow-2xl hover:scale-105 transition-transform active:scale-95 group">
+                        <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">save</span>
+                        <span class="font-bold tracking-wide">Save All Marks</span>
+                    </button>
+                </div>
+            <% } else { %>
+                <div class="flex-1 flex flex-col items-center justify-center text-slate-400">
+                    <span class="material-symbols-outlined text-6xl opacity-20 mb-4">quiz</span>
+                    <p>Select an exam from the sidebar to start marking</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</main>

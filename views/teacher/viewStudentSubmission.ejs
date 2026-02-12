@@ -1,0 +1,51 @@
+<div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+        <img src="<%= response.student.profilePic.url %>" class="size-12 rounded-full object-cover">
+        <div>
+            <h2 class="text-xl font-bold text-slate-900"><%= response.student.name %></h2>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Roll No: <%= response.student.rollNumber %></p>
+        </div>
+    </div>
+    <button onclick="closeSubmission()" class="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+<div class="flex-1 overflow-y-auto px-8 py-10 custom-scrollbar">
+    <div class="space-y-10">
+        <% response.form.questions.forEach((q, index) => { %>
+            <% 
+                const answerObj = response.answers.find(a => a.questionId.toString() === q._id.toString());
+                const studentValue = answerObj ? answerObj.value : "No answer provided";
+            %>
+            <div class="space-y-4">
+                <div class="flex items-start gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-md bg-indigo-50 text-primary text-[10px] font-bold flex items-center justify-center border border-indigo-100">
+                        <%= (index + 1).toString().padStart(2, '0') %>
+                    </span>
+                    <h4 class="text-[15px] font-semibold text-slate-800"><%= q.questionText %></h4>
+                </div>
+
+                <div class="ml-9">
+                    <% if (q.questionType === 'text') { %>
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-[14px] text-slate-600 leading-relaxed">
+                            <%= studentValue %>
+                        </div>
+                    <% } else { %>
+                        <div class="grid gap-2">
+                            <% q.options.forEach(opt => { %>
+                                <% const isSelected = Array.isArray(studentValue) ? studentValue.includes(opt) : studentValue === opt; %>
+                                <div class="flex items-center justify-between px-4 py-3 rounded-xl border <%= isSelected ? 'border-2 border-primary bg-indigo-50/50 text-primary font-semibold' : 'border-slate-100 text-slate-500' %> text-sm">
+                                    <span><%= opt %></span>
+                                    <% if (isSelected) { %>
+                                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                    <% } %>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>

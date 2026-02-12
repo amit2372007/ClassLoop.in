@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>project</title>
+    <title>ClassLoop – stay in the loop with classmates.</title>
     
     <link
      rel="stylesheet"
@@ -24,12 +24,46 @@
       crossorigin="anonymous" 
       referrerpolicy="no-referrer" 
     />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9f1fef",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.25rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
 </head>
 <body>
+    <% 
+        const hiddenPages = ['/user/login' , '/user/signup' , '/user/forgetPassword'];
+    %>
+    <% if(!hiddenPages.includes(currPath)) {  %>
     <%- include("../includes/navbar.ejs") %>
+    <% } %>
     <div class="is-fluid">
     <%- include("../includes/flash.ejs") %>
         <%- body %>
     </div>
 </body>
+<%- // include("../includes/footer.ejs") %>
 </html>

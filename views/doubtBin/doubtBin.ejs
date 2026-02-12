@@ -1,0 +1,210 @@
+<% layout("/layout/boilerplate.ejs") -%>
+
+<head>
+    <title>ClassLoop | DoubtBin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet" />
+
+    <style>
+        .glass-card { background: #161B22; border: 1px solid rgba(138, 44, 226, 0.15); backdrop-filter: blur(8px); }
+        .ai-gradient-border { position: relative; padding: 1px; background: linear-gradient(45deg, #8a2ce2, #4f46e5, #8a2ce2); border-radius: 1rem; }
+        .white { color: white !important; }
+        .vote-glow { box-shadow: 0 0 15px rgba(138, 44, 226, 0.4); }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-100 min-h-screen">
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-12 gap-6">
+
+            <aside class="col-span-12 lg:col-span-2 space-y-6">
+                <nav class="sticky top-24 space-y-2">
+                    <% const getTabClass=(tabName)=> {
+                        const base = "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ";
+                        const active = "bg-primary text-white shadow-lg shadow-primary/20";
+                        const inactive = "text-slate-400 hover:text-primary hover:bg-primary/5";
+                        return activeTab === tabName ? base + active : base + inactive;
+                    }; %>
+
+                    <a class="<%= getTabClass('DoubtBin') %>" href="/doubtBin?tab=DoubtBin">
+                        <span class="material-icons text-xl">forum</span><span>DoubtBin</span>
+                    </a>
+                    <a class="<%= getTabClass('myDoubt') %>" href="/doubtBin?tab=myDoubt">
+                        <span class="material-icons text-xl">person_pin</span><span>My Doubts</span>
+                    </a>
+                    <a class="<%= getTabClass('TopDoubts') %>" href="/doubtBin?tab=TopDoubts">
+                        <span class="material-icons text-xl">trending_up</span><span>Top Doubts</span>
+                    </a>
+                    
+                    <div class="pt-8">
+                        <div class="ai-gradient-border">
+                            <div class="bg-card-dark p-4 rounded-xl">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="material-icons text-primary animate-pulse">auto_awesome</span>
+                                    <span class="text-sm font-bold white">AI Helper</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mb-3">Stuck? Get instant hints from our AI.</p>
+                                <button class="w-full py-2 bg-primary/10 text-primary text-xs font-bold rounded-lg">Analyze</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+
+            <section class="col-span-12 lg:col-span-7 space-y-6">
+                
+                <% if(activeTab === 'DoubtBin' || activeTab === 'TopDoubts') { %>
+                    <div class="relative overflow-hidden glass-card rounded-xl p-6 border border-primary/20 flex items-center justify-between">
+                        <div class="relative z-10">
+                            <h1 class="white text-2xl font-bold mb-1">Unanswered Doubts</h1>
+                            <p class="text-slate-400 text-sm"><span class="w-2 h-2 inline-block rounded-full bg-red-500 animate-pulse mr-2"></span><%= totalDoubts %> Doubts shared</p>
+                        </div>
+                        <a href="/doubtBin/ask-doubt" class="relative z-10 px-6 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 transition-all active:scale-95">Ask Doubt</a>
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <% if (doubts && doubts.length > 0) { %>
+                            <% for (let doubt of doubts) { %>
+                                <div class="glass-card rounded-xl p-5 hover:border-primary/40 transition-all group">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div class="flex items-center gap-3">
+                                            <img class="w-10 h-10 rounded-full object-cover border border-white/10" 
+                                                 src="<%= doubt.author.profilePic?.url || '/images/default-avatar.png' %>">
+                                            <div>
+                                                <h4 class="white text-sm font-bold"><%= doubt.author.name %></h4>
+                                                <p class="text-[10px] text-slate-500 uppercase tracking-widest">
+                                                    <%= doubt.author.designation %> • <%= new Date(doubt.createdAt).toLocaleDateString() %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <span class="px-2 py-1 rounded-md bg-green-500/10 text-green-400 text-[10px] font-bold border border-green-500/20">OPEN</span>
+                                    </div>
+                                    <a href="/doubtBin/<%= doubt._id %>"><h3 class="white text-lg font-bold mb-2 group-hover:text-primary transition-colors"><%= doubt.title %></h3></a>
+                                    <p class="text-sm text-slate-400 mb-4 line-clamp-2"><%= doubt.description %></p>
+                                    
+                                    <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                                        <div class="flex items-center gap-4">
+                                            <button onclick="handleVote('up', 'doubt', '<%= doubt._id %>')" id="up-btn-<%= doubt._id %>" class="flex items-center gap-2 group/btn">
+                                                <div class="w-8 h-8 rounded-lg flex items-center justify-center transition-all <%= (currentUser && doubt.upvote.includes(currentUser._id)) ? 'bg-primary text-white' : 'bg-primary/10 text-primary group-hover/btn:bg-primary/20' %>">
+                                                    <span class="material-icons text-sm">expand_less</span>
+                                                </div>
+                                                <span class="text-sm font-bold <%= (currentUser && doubt.upvote.includes(currentUser._id)) ? 'text-primary' : 'text-slate-400' %>" id="up-count-<%= doubt._id %>"><%= doubt.upvote.length %></span>
+                                            </button>
+
+                                            <a href="/doubtBin/<%= doubt._id %>" class="flex items-center gap-2 group/btn">
+                                                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-800 text-slate-400 group-hover/btn:bg-slate-700">
+                                                    <span class="material-icons text-sm">question_answer</span>
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-400"><%= doubt.answers?.length || 0 %></span>
+                                            </a>
+
+                                            <% if(currentUser && doubt.author._id.toString() === currentUser._id.toString()) { %>
+                                                <form action="/doubtBin/deleteDoubt/<%=doubt._id%>?_method=DELETE" method="post" onsubmit="return confirm('Delete this doubt?')">
+                                                    <button type="submit" class="text-slate-500 hover:text-red-500 transition-colors mt-1">
+                                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                                    </button>
+                                                </form>
+                                            <% } %>
+                                        </div>
+                                        <a href="/doubtBin/<%= doubt._id %>" class="text-xs font-bold text-primary hover:underline">View Discussion</a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } %>
+                    </div>
+
+                <% } else if(activeTab === 'myDoubt') { %>
+                    <div class="space-y-4">
+                        <% const myDoubts = doubts.filter(d => d.author._id.toString() === currentUser._id.toString()); %>
+                        <% if (myDoubts.length > 0) { %>
+                            <% for (let doubt of myDoubts) { %>
+                                <div class="glass-card rounded-xl p-5 border-l-4 border-primary group">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-[10px] text-primary font-bold tracking-widest uppercase">Your Doubt</span>
+                                        <span class="text-[10px] text-slate-500"><%= new Date(doubt.createdAt).toLocaleDateString() %></span>
+                                    </div>
+                                    <a href="/doubtBin/<%= doubt._id %>"><h3 class="white text-lg font-bold mb-2 group-hover:text-primary"><%= doubt.title %></h3></a>
+                                    <p class="text-sm text-slate-400 mb-4 line-clamp-2"><%= doubt.description %></p>
+                                    <div class="flex gap-4 border-t border-white/5 pt-4">
+                                        <a href="/doubtBin/<%= doubt._id %>/edit" class="text-xs font-bold text-slate-400 hover:text-white">Edit</a>
+                                        <a href="/doubtBin/<%= doubt._id %>" class="text-xs font-bold text-primary ml-auto">View Details</a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <div class="text-center py-20 glass-card rounded-xl border border-dashed border-white/10">
+                                <span class="material-symbols-outlined text-5xl text-slate-700 mb-4">quiz</span>
+                                <h3 class="white font-bold">No doubts posted yet.</h3>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+            </section>
+
+            <aside class="col-span-12 lg:col-span-3 space-y-6">
+                <div class="glass-card rounded-xl p-5 border border-primary/10">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center justify-between">Top Solvers <span class="material-icons text-primary">emoji_events</span></h3>
+                    <div class="space-y-4">
+                        <% topAuthors.forEach((author, index) => { %>
+                            <div class="flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative">
+                                        <img class="w-10 h-10 rounded-full border-2 <%= index === 0 ? 'border-accent-gold' : index === 1 ? 'border-accent-silver' : 'border-accent-bronze' %>" 
+                                             src="<%= author.details.profilePic?.url || '/images/default-avatar.png' %>" />
+                                        <span class="absolute -bottom-1 -right-1 bg-primary text-white w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center"><%= index + 1 %></span>
+                                    </div>
+                                    <div>
+                                        <p class="white text-sm font-bold"><%= author.details.name %></p>
+                                        <p class="text-[10px] text-slate-500"><%= author.doubtCount %> Doubts</p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-5 border border-primary/10">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Trending Tags</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <% topTags.forEach(tag => { %>
+                            <a class="px-3 py-1.5 bg-slate-800 hover:bg-primary text-slate-300 text-[11px] font-bold rounded-lg transition-all" href="/doubtBin?tag=<%= tag._id %>">#<%= tag._id %></a>
+                        <% }) %>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const currentUserId = "<%= currentUser ? currentUser._id : '' %>";
+
+        function handleVote(type, targetType, id) {
+            if (!currentUserId) return alert("Please login to vote!");
+            socket.emit('cast_vote', { type, targetType, id, userId: currentUserId });
+        }
+
+        socket.on('vote_confirmed', (data) => {
+            const upCount = document.getElementById(`up-count-${data.id}`);
+            const upBtnDiv = document.getElementById(`up-btn-${data.id}`)?.querySelector('div');
+
+            if (upCount) upCount.innerText = data.upvotes;
+
+            if (data.voterId === currentUserId) {
+                if (data.action === 'upvoted') {
+                    upBtnDiv?.classList.add('bg-primary', 'text-white', 'vote-glow');
+                    upBtnDiv?.classList.remove('bg-primary/10', 'text-primary');
+                    upCount?.classList.add('text-primary');
+                } else {
+                    upBtnDiv?.classList.remove('bg-primary', 'text-white', 'vote-glow');
+                    upBtnDiv?.classList.add('bg-primary/10', 'text-primary');
+                    upCount?.classList.remove('text-primary');
+                }
+            }
+        });
+    </script>
+</body>

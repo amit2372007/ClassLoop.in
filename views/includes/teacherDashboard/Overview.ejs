@@ -1,0 +1,283 @@
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Navigation Bar -->
+    <header
+        class="h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-6">
+            <h2 class="text-lg font-bold">Welcome, <%= currUser.name%>
+            </h2>
+            <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span class="text-xs font-bold text-primary uppercase tracking-wide">Class <%= currClass.className%>-<%=
+                            currClass.section%></span>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+                <input
+                    class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary w-64"
+                    placeholder="Search students, notes..." type="text" />
+            </div>
+            <button
+                class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors relative">
+                <span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+                <span
+                    class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+            </button>
+            <div
+                class="h-10 w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800">
+                <img alt="Profile" data-alt="Teacher professional profile headshot avatar"
+                    src="<%= currUser.profilePic.url%>" />
+            </div>
+        </div>
+    </header>
+    <!-- Content Scrollable -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-8">
+        <!-- Stats / Metrics Section -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Today's Attendance</span>
+            <span class="material-symbols-outlined text-primary">groups</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <h3 class="text-3xl font-bold">
+                <%= isMarked ? `${attendancePercent}%` : '0%' %>
+            </h3>
+            <span class="text-xs font-bold <%= isMarked ? 'text-emerald-500' : 'text-slate-400' %> flex items-center">
+                <%= isMarked ? 'Completed' : 'Pending' %>
+                <span class="material-symbols-outlined text-xs ml-1">
+                    <%= isMarked ? 'check_circle' : 'pending' %>
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Class Assignments</span>
+            <span class="material-symbols-outlined text-amber-500">pending_actions</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <h3 class="text-3xl font-bold"><%= assignments.length %></h3>
+            <span class="text-sm text-slate-400">Total Active</span>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Current Status</span>
+            <span class="material-symbols-outlined text-primary">schedule</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <h3 class="text-3xl font-bold">
+                <%= new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+            </h3>
+            <span class="text-xs font-bold text-rose-500 flex items-center">Live Updates</span>
+        </div>
+    </div>
+</section>
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Middle Column: Feed -->
+            <div class="xl:col-span-2 space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold">Add a Notice</h3>
+                    <div class="flex gap-2">
+                        <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"><span
+                                class="material-symbols-outlined">filter_list</span></button>
+                    </div>
+                </div>
+                <form action="/teacher/addNotice" method="POST"
+                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm"
+                    method="POST">
+                    <div class="p-5 space-y-4">
+                        <div class="flex gap-4">
+                            <img class="w-10 h-10 rounded-full shrink-0" data-alt="Small circular teacher avatar icon"
+                                src="<%=currUser.profilePic.url%>" />
+                            <div class="flex-1 space-y-4">
+                                <div>
+                                    <input
+                                        class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400"
+                                        name="title" placeholder="Notice Title (e.g., Upcoming Field Trip)" required=""
+                                        type="text" />
+                                </div>
+                                <textarea
+                                    class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 resize-none p-4"
+                                    name="content" placeholder="Write the content of your notice here..." required=""
+                                    rows="3"></textarea>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="space-y-1.5">
+                                        <label
+                                            class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">groups</span> Audience
+                                        </label>
+                                        <select
+                                            class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium focus:ring-primary transition-all"
+                                            name="audience">
+                                            <option value="all">All Members</option>
+                                            <option value="teachers">Teachers Only</option>
+                                            <option value="students">Students Only</option>
+                                            <option value="specific_class">Specific Class (10-A)</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label
+                                            class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">priority_high</span>
+                                            Priority
+                                        </label>
+                                        <div class="relative">
+                                            <select
+                                                class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium focus:ring-primary transition-all appearance-none"
+                                                name="priority">
+                                                <option value="low">Low Priority</option>
+                                                <option value="medium">Medium Priority</option>
+                                                <option value="high">High Priority</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                    <div class="flex items-center gap-1">
+                                        <button
+                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
+                                            title="Attach Files" type="button"><span
+                                                class="material-symbols-outlined text-[20px]">attach_file</span></button>
+                                        <button
+                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
+                                            title="Add Image" type="button"><span
+                                                class="material-symbols-outlined text-[20px]">image</span></button>
+                                        <button
+                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
+                                            title="Schedule" type="button"><span
+                                                class="material-symbols-outlined text-[20px]">calendar_month</span></button>
+                                        <button
+                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
+                                            title="Add Poll" type="button"><span
+                                                class="material-symbols-outlined text-[20px]">poll</span></button>
+                                    </div>
+                                    <button
+                                        class="px-8 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md active:scale-95"
+                                        type="submit">Post Notice</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="space-y-4">
+                    <div
+                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-sm">assignment</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold">New Assignment Posted</p>
+                                    <p class="text-[10px] text-slate-400 uppercase font-semibold">2 hours ago</p>
+                                </div>
+                            </div>
+                            <button class="text-slate-400 hover:text-slate-600"><span
+                                    class="material-symbols-outlined">more_vert</span></button>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">The chapter "Industrial Revolution" quiz
+                            is now live. Please ensure all students complete it before Friday's seminar.</p>
+                        <div
+                            class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 p-3 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-rose-500">picture_as_pdf</span>
+                                <span class="text-sm font-medium">Assignment_Brief_v2.pdf</span>
+                            </div>
+                            <span class="text-xs text-slate-400">1.2 MB</span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-3">
+                                <img class="w-8 h-8 rounded-full" data-alt="Circular student avatar thumbnail"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDin4CUWCZicVmrCTMAgA6taPtUXwBs5bpgMk_D8bSxdxor9Zmq6vEUfh8Dzy0vHW0LRPYawI8Tdu8m7NhDSnKpEyiXFTYPHxyfLoHboFR8IunPN7y5kk0Oaj3VqBT-rTVYbdJDwl-6M6x4fcPkeFOKKbnILziSlCPvj-WEOBlo_pCo6s-9dAidEI7e_-ymuYfvdrWqPQx87zGCcZGpAGsU-ZJ0klMFFpaoJN4hUJBAV9fImtrUmV2Ex0qEWTDZ3c6_9os5e9BVLjLi" />
+                                <div>
+                                    <p class="text-sm font-bold">Aryan Sharma <span
+                                            class="font-normal text-slate-400">asked a question</span></p>
+                                    <p class="text-[10px] text-slate-400 uppercase font-semibold">4 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 italic">"Sir, will the upcoming History
+                            test include map work from Chapter 4 or is it just theoretical questions?"</p>
+                        <div class="flex gap-4">
+                            <button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline"><span
+                                    class="material-symbols-outlined text-sm">reply</span> Reply</button>
+                            <button class="text-xs font-bold text-slate-500 flex items-center gap-1"><span
+                                    class="material-symbols-outlined text-sm">favorite</span> 2 Likes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column: My Classes -->
+            <div class="space-y-6">
+                <div
+                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">add_circle</span>
+                        <h4 class="text-sm font-bold">Register New Subject</h4>
+                    </div>
+                    <form action="/teacher/addSubject" class="space-y-3" method="POST">
+                        <div>
+                            <input
+                                class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
+                                name="subjectName" placeholder="Subject Name" type="text" />
+                        </div>
+                        <div>
+                            <input
+                                class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
+                                name="teacherId" placeholder="Teacher to Assign" type="text" />
+                        </div>
+                        <button
+                            class="w-full py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                            type="submit">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                            Add Subject
+                        </button>
+                    </form>
+                </div>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold">My Assigned Classes</h3>
+                </div>
+                <div
+                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-sm">
+                    <% for(let Subject of currClass.subjects) { %>
+                        <div class="p-4 bg-primary/5 hover:bg-primary/10 transition-colors">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white">
+                                        <%=Subject.name %>
+                                    </h4>
+                                    <p class="text-xs text-primary font-semibold mt-0.5">Class <%=currClass.className%>-
+                                            <%=currClass.section%>
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded uppercase">Active</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-4">
+                                <img class="w-6 h-6 rounded-full border border-slate-200"
+                                    data-alt="Small teacher avatar" src="<%=Subject.teacher.profilePic.url%>" />
+                                <span class="text-xs text-slate-600 dark:text-slate-400 font-medium">Prof.
+                                    <%=Subject.teacher.name%>
+                                </span>
+                            </div>
+                        </div>
+                        <% } %>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>

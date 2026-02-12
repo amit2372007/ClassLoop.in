@@ -1,81 +1,525 @@
 <% layout("/layout/boilerplate.ejs") -%>
 
-<body>
-<form action="/signup" method="POST">
-<div class="field">
-  <label class="label">Name</label>
-  <div class="control">
-    <input name="name" class="input" type="text" placeholder="Text input">
-  </div>
-</div>
+  <title>ClassLoop.in Premium Signup Page</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#b954f8",
+            "background-light": "#f7f5f8",
+            "background-dark": "#1b1022",
+            "form-bg": "#1e1126",
+            "border-plum": "#533267"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          animation: {
+            'marquee': 'marquee 70s linear infinite',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(calc(-100% - 1.5rem))' },
+            }
+          },
 
-<div class="field">
-  <label class="label">Username</label>
-  <div class="control has-icons-left has-icons-right">
-    <input name="username"  class="input is-success" type="text" placeholder="Text input" value="bulma">
-    <span class="icon is-small is-left">
-      <i class="fas fa-user"></i>
-    </span>
-    <span class="icon is-small is-right">
-      <i class="fas fa-check"></i>
-    </span>
-  </div>
-  <p class="help is-success">This username is available</p>
-</div>
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
 
-<div class="field">
-  <p class="control has-icons-left">
-    <input name="password" class="input" type="password" placeholder="Password">
-    <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
-    </span>
-  </p>
-</div>
+    .node-grid {
+      background-image: radial-gradient(#b954f8 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.1;
+    }
 
-<div class="field is-horizontal">
-  <div class="field-label"></div>
-  <div class="field-body">
-    <div class="field is-expanded">
-      <div class="field has-addons">
-        <p class="control">
-          <a class="button is-static">
-            +91
-          </a>
+    .animate-marquee:hover {
+      animation-play-state: paused
+    }
+  </style>
+  </head>
+
+  <body class="bg-background-light dark:bg-background-dark font-display overflow-x-hidden min-h-screen">
+    <div class="flex flex-col md:flex-row min-h-screen w-full">
+      <!-- Left Side: Branding (60%) -->
+      <div
+        class="relative hidden md:flex md:fixed top-0 left-0 h-screen w-[60%] flex-col p-20 pt-15 bg-gradient-to-br from-[#1c1023] via-[#2a1834] to-[#1c1023] overflow-hidden">
+        <!-- Decorative Grid Pattern -->
+        <div class="absolute inset-0 node-grid pointer-events-none"></div>
+
+
+        <h1 class="text-white text-6xl font-black leading-tight tracking-[-0.033em] mb-3 mt-3">
+          Connect with your Campus
+        </h1>
+        <p class="mb-4 text-primary text-2xl font-medium leading-normal">
+          LoopSpace: Your student workspace
         </p>
-        <p class="control is-expanded">
-          <input name="phone" class="input" type="tel" placeholder="Your phone number">
-        </p>
+        <div class="relative w-[calc(100%+160px)] -ml-20 mb-10 overflow-hidden"
+          style="mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);">
+          <div class="flex w-max animate-marquee py-4">
+            <div class="flex gap-6 pr-6">
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">terminal</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">LoopSpace</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Unified dev workspace</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">help_center</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">DoubtBin</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Crowdsourced answers</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">group</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Campus-Exclusive Loops</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Closed college communities</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">folder</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Smart Resource Sharing</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Notes and study material</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">people</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Peer-to-Peer Networking</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Connect with seniors</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">badge</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Interactive Student Bio</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Dynamic portfolio builder</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">notifications</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Real-Time Notifications</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Never miss an update</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">shield</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Privacy-First Safe Mode</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Encrypted communications</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">devices</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Multi-Device Sync</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Seamless transitions</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">dark_mode</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Integrated Dark Mode</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Optimized for night study</p>
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-6 pr-6">
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">terminal</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">LoopSpace</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Unified dev workspace</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">help_center</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">DoubtBin</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Crowdsourced answers</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">group</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Campus-Exclusive Loops</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Closed college communities</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">folder</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Smart Resource Sharing</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Notes and study material</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">people</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Peer-to-Peer Networking</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Connect with seniors</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">badge</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Interactive Student Bio</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Dynamic portfolio builder</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">notifications</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Real-Time Notifications</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Never miss an update</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">shield</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Privacy-First Safe Mode</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Encrypted communications</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">devices</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Multi-Device Sync</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Seamless transitions</p>
+                </div>
+              </div>
+              <div
+                class="w-[280px] shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary">dark_mode</span>
+                <div>
+                  <h3 class="text-white font-bold text-sm">Integrated Dark Mode</h3>
+                  <p class="text-slate-400 text-xs whitespace-normal">Optimized for night study</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 flex gap-8">
+          <div class="flex flex-col">
+            <span class="text-white text-3xl font-bold">10k+</span>
+            <span class="text-[#b48fcc] text-sm">Students joined</span>
+          </div>
+          <div class="w-px h-12 bg-border-plum"></div>
+          <div class="flex flex-col">
+            <span class="text-white text-3xl font-bold">50+</span>
+            <span class="text-[#b48fcc] text-sm">Campuses active</span>
+          </div>
+        </div>
+
       </div>
-      <p class="help">Do not enter the first zero</p>
-    </div>
-  </div>
-</div>
+      <!-- Right Side: Signup Form (40%) -->
+      <div class="w-full md:w-[40%] md:ml-[60%] flex flex-col bg-form-bg min-h-screen border-l border-border-plum/30">
+        <!-- Mobile Header -->
+        <div class="md:hidden p-6 flex justify-between items-center border-b border-border-plum">
+          <div class="flex items-center gap-2 text-white">
+            <div class="size-6 text-primary">
+              <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"
+                  fill-rule="evenodd"></path>
+              </svg>
+            </div>
+            <span class="font-bold">ClassLoop.in</span>
+          </div>
+          <button class="text-primary text-sm font-bold">Log in</button>
+        </div>
+        <div class="flex-1 flex flex-col justify-center px-8 lg:px-16 py-12">
+          <div class="max-w-md w-full mx-auto">
+            <h2 class="text-white text-3xl font-bold mb-2">Create your account</h2>
+            <p class="text-[#b48fcc] mb-8">Join the professional network for students.</p>
+            <form action="/user/signup" method="POST" class="flex flex-col gap-4">
+              <!-- Full Name -->
+              <div class="flex flex-col gap-2">
+                <label class="text-white text-sm font-medium">Full Name</label>
+                <div
+                  class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                  <input name="name"
+                    class="flex-1 bg-transparent border-none text-white h-14 px-4 placeholder:text-[#b48fcc] focus:ring-0"
+                    placeholder="Enter your full name" type="text" required />
+                  <div class="flex items-center px-4 text-[#b48fcc]">
+                    <span class="material-symbols-outlined">person</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Username -->
+              <div class="flex flex-col gap-2">
+                <label class="text-white text-sm font-medium">Username</label>
+                <div
+                  class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                  <input name="username" id="usernameInput"
+                    class="flex-1 bg-transparent border-none text-white h-14 px-4 placeholder:text-[#b48fcc] focus:ring-0"
+                    placeholder="username" type="text" minlength="5" required />
+                  <div class="flex items-center px-4 text-[#b48fcc]">
+                    <span class="material-symbols-outlined" id="usernameIcon">alternate_email</span>
+                  </div>
+                </div>
+                <div id="usernameStatus" class="text-[11px] font-bold px-1 hidden transition-all duration-300"></div>
+              </div>
+              <!-- Phone Number -->
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2">
+                  <label class="text-white text-sm font-medium">Phone Number</label>
+                  <div
+                    class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                    <div class="flex items-center px-4 border-r border-border-plum bg-[#331e3f] rounded-l-xl">
+                      <span class="text-white text-sm font-bold">+91</span>
+                    </div>
+                    <input id="phoneInput" name="phone"
+                      class="flex-1 bg-transparent border-none text-white h-14 px-4 placeholder:text-[#b48fcc] focus:ring-0"
+                      placeholder="10 Digit Phone Number" type="tel" />
+                    <button type="button" id="getOtpBtn"
+                      class="px-4 text-primary text-xs font-bold uppercase hover:text-white transition-colors disabled:text-slate-500 disabled:cursor-not-allowed">
+                      Get OTP
+                    </button>
+                  </div>
+                </div>
 
-<div class="field">
-  <label class="label">Bio</label>
-  <div class="control">
-    <textarea name="bio" class="textarea" placeholder="Tell us About you"></textarea>
-  </div>
-</div>
-
-<div class="field">
-  <label class="label">Profile Picture</label>
-  <div class="control">
-    <input name="profilePic" class="input" type="text" placeholder="Input Profile Picture URL">
-  </div>
-</div>
-
-  <div class="field is-grouped">
-       <div class="control">
-       <button class="button is-link">Submit</button>
+                <div id="otpContainer"
+                  class="hidden flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <label class="text-white text-sm font-medium flex justify-between">
+                    <span>Enter OTP</span>
+                    <span id="timerText" class="text-primary text-xs">Resend in <span id="seconds">30</span>s</span>
+                  </label>
+                  <div
+                    class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                    <input id="otpInput" name="otp"
+                      class="flex-1 bg-transparent border-none text-white h-14 px-4 tracking-[1em] text-center placeholder:text-[#b48fcc] focus:ring-0"
+                      placeholder="••••••" type="number" maxlength="6" minlength="4" />
+                    <div class="flex items-center px-4 text-[#b48fcc]">
+                      <span class="material-symbols-outlined">verified_user</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Location -->
+              <div class="flex flex-col gap-2">
+                <label class="text-white text-sm font-medium">Address</label>
+                <div
+                  class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                  <input name="location"
+                    class="flex-1 bg-transparent border-none text-white h-14 px-4 placeholder:text-[#b48fcc] focus:ring-0"
+                    placeholder="Ex: Faridabad , Delhi" type="text" required />
+                  <div class="flex items-center px-4 text-[#b48fcc]">
+                    <span class="material-symbols-outlined">corporate_fare</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Bio -->
+              <div class="flex flex-col gap-2">
+                <label class="text-white text-sm font-medium">Bio</label>
+                <div
+                  class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                  <textarea name="bio"
+                    class="flex-1 bg-transparent border-none text-white min-h-[100px] p-4 placeholder:text-[#b48fcc] focus:ring-0 resize-none"
+                    placeholder="Tell us about your interests..." required></textarea>
+                </div>
+              </div>
+              <!-- Password -->
+              <div class="flex flex-col gap-2">
+                <label class="text-white text-sm font-medium">Password</label>
+                <div
+                  class="flex w-full items-stretch rounded-xl border border-border-plum bg-[#2a1834] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+                  <input id="passwordInput" name="password"
+                    class="flex-1 bg-transparent border-none text-white h-14 px-4 placeholder:text-[#b48fcc] focus:ring-0"
+                    placeholder="••••••••" type="password" required />
+                  <button id="toggleBtn"
+                    class="flex items-center px-4 text-[#b48fcc] cursor-pointer hover:text-primary transition-colors">
+                    <span id="eyeIcon" class="material-symbols-outlined">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Submit Button -->
+              <button
+                class="mt-4 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-gradient-to-r from-[#6366f1] to-[#b954f8] text-white text-lg font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-all shadow-lg shadow-primary/20"
+                type="submit">
+                Join classLoop
+              </button>
+            </form>
+            <div class="mt-8 text-center">
+              <p class="text-[#b48fcc] text-sm">
+                Already a member?
+                <a class="text-primary font-bold hover:underline ml-1" href="/user/login">Log in</a>
+              </p>
+            </div>
+            <div class="mt-8 flex items-center gap-4">
+              <div class="flex-1 h-px bg-border-plum"></div>
+              <span class="text-[#b48fcc] text-xs font-bold uppercase tracking-widest">or sign up with</span>
+              <div class="flex-1 h-px bg-border-plum"></div>
+            </div>
+            <div class="mt-6 flex gap-4">
+              <button
+                class="flex-1 flex items-center justify-center h-12 rounded-xl border border-border-plum bg-[#2a1834] hover:bg-[#331e3f] transition-colors">
+                <img alt="Google logo" class="w-5 h-5 mr-2"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiyX_5ji5CI5oNE2M0RSV2miVG3iQrTnMHJYhtDUPM8Fqflu0zKvzUQjY6-utLLKt3_FPvbLhR66pVjK8O8iYXWV3Neu8xN3tYt5XqJ4akR59Vpwo1C60wiM9bVnaku3X7UDquPqUXR_wx81wo-SzRxzL6eHGHImGz-6E59rvmlyk-crzP3bQziXXmNK7gy9IzVmVg7bqbHBatOuEX8-nQi1rtQqp_b8YrQxvXxGWY968VCaWH6TJhsH0wuKHMqG1mQivNhJ_mHTzP" />
+                <span class="text-white text-sm font-medium">Google</span>
+              </button>
+              <button
+                class="flex-1 flex items-center justify-center h-12 rounded-xl border border-border-plum bg-[#2a1834] hover:bg-[#331e3f] transition-colors">
+                <img alt="LinkedIn logo" class="w-5 h-5 mr-2"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7Glf-bPFe9sR68O35eRx-cj19k3OVtczl47qxd50OnexMTma2WtWqJtnntVD78Hza07GRnAvp37U4BQRBXQTwd-mUDukmci2Bot0qBqaTlvXVnd_c_J3rVhp4M8He_DRZ1_23meX0o9fG5hMa6z7kXWAPnvy7ajM-gxlHeyONyeiOBNTvjCaa-EdqVC9owBImT0ZjzD5MV4TPngEWbn4mhxhtSE2tVUl1JTxvtt6QaGDFsvevMMKYHHgGi7iCjwCtXZMUayRgVOu6" />
+                <span class="text-white text-sm font-medium">LinkedIn</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Terms Footer -->
+        <div class="p-8 text-center">
+          <p class="text-[#b48fcc] text-[10px] leading-relaxed uppercase tracking-widest">
+            By joining, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </div>
       </div>
-    <div class="control">
-       <button class="button is-link is-light">Cancel</button>
     </div>
-</div>
+  </body>
+
+  <script>
+    const passwordInput = document.getElementById('passwordInput');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    toggleBtn.addEventListener('click', () => {
+      // 1. Check current type
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+
+      // 2. Toggle the input type
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+
+      // 3. Toggle the icon text
+      eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+    });
+
+    const phoneInput = document.getElementById('phoneInput');
+    const getOtpBtn = document.getElementById('getOtpBtn');
+    const otpContainer = document.getElementById('otpContainer');
+    const secondsSpan = document.getElementById('seconds');
+    const timerText = document.getElementById('timerText');
+
+    let timerInterval;
+
+    getOtpBtn.addEventListener('click', async () => {
+      const phone = phoneInput.value.trim();
+      if (phone.length !== 10) return alert("Enter valid 10-digit number");
+
+      try {
+        const response = await fetch('/user/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          otpContainer.classList.remove('hidden');
+          startTimer(30); // Start your 30s countdown
+        } else {
+          alert("Error: " + data.message);
+        }
+      } catch (err) {
+        console.error("OTP Error:", err);
+      }
+    });
+
+    function startTimer(duration) {
+      let timer = duration;
+      getOtpBtn.disabled = true;
+      timerText.classList.remove('hidden');
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        secondsSpan.textContent = timer;
+
+        if (--timer < 0) {
+          clearInterval(timerInterval);
+          getOtpBtn.disabled = false;
+          getOtpBtn.textContent = "Resend OTP";
+          timerText.classList.add('hidden');
+        }
+      }, 1000);
+    }
 
 
+    const usernameInput = document.getElementById('usernameInput');
+    const usernameStatus = document.getElementById('usernameStatus');
+    const usernameIcon = document.getElementById('usernameIcon');
 
-</form>
-  
-</body>
+    let debounceTimer;
+
+    usernameInput.addEventListener('input', () => {
+      const username = usernameInput.value.trim();
+
+      // Clear previous status if input is too short
+      if (username.length < 3) {
+        usernameStatus.classList.add('hidden');
+        return;
+      }
+
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async () => {
+        try {
+          const response = await fetch(`/user/check-username?username=${username}`);
+          const data = await response.json();
+
+          usernameStatus.classList.remove('hidden');
+
+          if (data.exists) {
+            usernameStatus.textContent = "Username already taken";
+            usernameStatus.className = "text-red-500 text-[11px] font-bold px-1";
+            usernameIcon.textContent = "error";
+            usernameIcon.classList.add('text-red-500');
+          } else {
+            usernameStatus.textContent = "Username available!";
+            usernameStatus.className = "text-[#10b981] text-[11px] font-bold px-1";
+            usernameStatus.classList.remove('hidden');
+            usernameIcon.textContent = "check_circle";
+            usernameIcon.classList.remove('text-red-500', 'text-[#b48fcc]');
+            usernameIcon.classList.add('text-[#10b981]');
+          }
+        } catch (err) {
+          console.error("Username check failed:", err);
+        }
+      }, 500); // 500ms debounce delay
+    });
+  </script>

@@ -1,0 +1,160 @@
+<% layout("/layout/boilerplate2.ejs") -%>
+
+
+    <head>
+        <title>Teacher Educator Portal | ClassLoop.in</title>
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#4848e5",
+                            "background-light": "#f6f6f8",
+                            "background-dark": "#111121",
+                        },
+                        fontFamily: {
+                            "display": ["Inter", "sans-serif"]
+                        },
+                        borderRadius: {
+                            "DEFAULT": "0.5rem",
+                            "lg": "1rem",
+                            "xl": "1.5rem",
+                            "full": "9999px"
+                        },
+                    },
+                },
+            }
+        </script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+             .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #334155;
+    }
+        </style>
+    </head>
+
+    <body
+        class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar Navigation -->
+            <aside
+                class="w-64 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col hidden lg:flex">
+                <div class="p-6 flex items-center gap-3">
+                    <a href="/home" class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined">school</span>
+                    </a>
+                    <a href="/home">
+                        <h1 class="text-base font-bold leading-none">ClassLoop.in</h1>
+                        <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">Teacher Portal</p>
+                    </a>
+                </div>
+                <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Overview' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher?tab=Overview">
+                        <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                        <span class="text-sm font-semibold">Overview</span>
+                    </a>
+                    <a href="/teacher?tab=Attendance"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Attendance' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
+                        <span class="material-symbols-outlined text-[22px]">how_to_reg</span>
+                        <span class="text-sm font-medium">Attendance</span>
+                    </a>
+                    <a href="/teacher?tab=Students"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Students' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
+                        <span class="material-symbols-outlined text-[22px]">group</span>
+                        <span class="text-sm font-medium">Students</span>
+                    </a>
+                    <a href="/teacher?tab=Assignments"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Assignments' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
+                        <span class="material-symbols-outlined text-[22px]">assignment</span>
+                        <span class="text-sm font-medium">Assignments</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Resources' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher?tab=Resources">
+                        <span class="material-symbols-outlined text-[22px]">Topic</span>
+                        <span class="text-sm font-medium">Resources</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Timetable' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher?tab=Timetable">
+                        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
+                        <span class="text-sm font-medium">Timetable</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Form' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher?tab=Form">
+                        <span class="material-symbols-outlined text-[22px]">forms_add_on</span>
+                        <span class="text-sm font-medium">Form</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Exam' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher?tab=Exam">
+                        <span class="material-symbols-outlined text-[22px]">quiz</span>
+                        <span class="text-sm font-medium">Exam Marking</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Applications' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher?tab=Applications">
+                        <span class="material-symbols-outlined text-[22px]">quiz</span>
+                        <span class="text-sm font-medium">Applications</span>
+                    </a>
+                </nav>
+                <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        href="/teacher?activeTab=Settings">
+                        <span class="material-symbols-outlined text-[22px]">settings</span>
+                        <span class="text-sm font-medium">Settings</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        href="/teacher?tab=HelpCenter">
+                        <span class="material-symbols-outlined text-[22px]">help</span>
+                        <span class="text-sm font-medium">Help Center</span>
+                    </a>
+                </div>
+            </aside>
+            <% if(activeTab==='Overview' ) { %>
+
+                <%- include("../includes/teacherDashboard/Overview.ejs") %>
+
+            <% } else if(activeTab==='Attendance' ) {%>
+
+                <%- include("../includes/teacherDashboard/Attendance.ejs") %>
+
+            <% } else if(activeTab==='Students' ){%>
+
+                <%- include("../includes/teacherDashboard/Students.ejs") %>
+
+            <% } else if(activeTab==='Assignments' ) {%>
+
+                <%- include("../includes/teacherDashboard/Assignments.ejs") %>
+
+            <% } else if(activeTab==='Form' ) {%>
+
+                <%- include("../includes/teacherDashboard/Form.ejs") %>
+
+            <% } else if(activeTab==='Exam' ) {%>
+
+                <%- include("../includes/teacherDashboard/Exam.ejs") %>
+
+            <% } else if(activeTab==='Resources' ) { %>
+                <%- include("../includes/teacherDashboard/Resources.ejs") %>
+             <% } else if(activeTab === 'Applications') {  %>
+                <%- include("../includes/teacherDashboard/Applications.ejs") %>
+             <% } %>
+            </div>
+    </body>
+
+    </html>

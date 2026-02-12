@@ -1,0 +1,223 @@
+<%- layout("./layout/boilerplate2.ejs") %>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header
+            class="h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-6">
+                <h2 class="text-lg font-bold">Assignment Center</h2>
+                <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span class="text-xs font-bold text-primary uppercase tracking-wide">
+                        <%= currClass.className %>
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="/teacher/addAssignment"
+                    class="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-xl">add</span>
+                    New Assignment
+                </a>
+                <div
+                    class="h-10 w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800">
+                    <img alt="Profile" src="<%= currUser.profilePic.url %>" />
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <aside
+                class="w-80 border-r border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-background-dark/50 flex flex-col">
+                <div class="p-4 border-b border-slate-200 dark:border-slate-800">
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                        <input
+                            class="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary"
+                            placeholder="Search assignments..." type="text" />
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest px-1 mb-2">Active Assignments
+                    </h3>
+
+                    <% if(assignments && assignments.length> 0) { %>
+                        <% for(let assignment of assignments) { %>
+                            <div class="relative group"> <button onclick="showAssignmentDetails(this)"
+                                    data-info='<%= JSON.stringify(assignment) %>'
+                                    class="assignment-card w-full text-left p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/50 transition-all shadow-sm">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span
+                                            class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase">
+                                            <%= assignment.subject %>
+                                        </span>
+                                        <span class="text-[10px] font-bold text-slate-500">
+                                            <%= assignment.submissions.length %>/<%= currClass.students.length %>
+                                        </span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-1 truncate pr-8">
+                                        <%= assignment.title %>
+                                    </h4>
+                                    <p class="text-xs text-slate-500 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">event</span>
+                                        <%= new Date(assignment.dueDate).toDateString() %>
+                                    </p>
+                                </button>
+
+                                <form action="/teacher/assignment/<%= assignment._id %>?_method=DELETE" method="POST"
+                                    class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onsubmit="return confirm('Delete this assignment permanently?');">
+                                    <button type="submit"
+                                        class="p-1 text-slate-400 hover:text-rose-500 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                            <% } %>
+                                <% } %>
+                </div>
+            </aside>
+
+            <div id="detail-view-container"
+                class="flex-1 flex flex-col bg-slate-50 dark:bg-background-dark overflow-hidden">
+                <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-slate-500">
+                    <span class="material-symbols-outlined text-6xl mb-4 opacity-20">description</span>
+                    <p class="font-medium">Select an assignment to view submissions and grade</p>
+                </div>
+
+                <div id="details-content" class="hidden flex-1 flex flex-col overflow-hidden">
+                    <div
+                        class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-background-dark">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <h3 id="view-title" class="text-xl font-bold"></h3>
+                                <span
+                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded uppercase">Active</span>
+                            </div>
+                            <p id="view-meta" class="text-sm text-slate-500"></p>
+                        </div>
+
+                        <form id="detail-delete-form" method="POST"
+                            onsubmit="return confirm('Permanently delete this assignment and all submissions?');">
+                            <button type="submit"
+                                class="flex items-center gap-2 px-4 py-2 border border-rose-200 text-rose-500 text-sm font-bold rounded-xl hover:bg-rose-50 transition-colors">
+                                <span class="material-symbols-outlined text-lg">delete</span>
+                                Delete Assignment
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+                        <div class="max-w-4xl mx-auto space-y-6">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                                Student Submissions</h4>
+                            <div id="submissions-list" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        window.showAssignmentDetails = function (element) {
+            try {
+                const data = JSON.parse(element.getAttribute('data-info'));
+
+                document.getElementById('empty-state').classList.add('hidden');
+                document.getElementById('details-content').classList.remove('hidden');
+
+                // Update Header
+                document.getElementById('view-title').innerText = data.title;
+                document.getElementById('view-meta').innerText = `${data.subject} • ${data.submissions.length} Submissions`;
+
+                // Set dynamic delete route for the detail view button
+                document.getElementById('detail-delete-form').action = `/teacher/assignment/${data._id}?_method=DELETE`;
+
+                // Render Submissions logic remains same...
+                const list = document.getElementById('submissions-list');
+                if (data.submissions.length === 0) {
+                    list.innerHTML = '<div class="p-10 text-center text-slate-500 border-2 border-dashed rounded-2xl">No submissions yet for this task.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.submissions.map(sub => `
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400">
+                    ${sub.student ? sub.student.name.charAt(0) : 'S'}
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">${sub.student ? sub.student.name : 'Unknown Student'}</p>
+                    <a href="${sub.fileUrl}" target="_blank" class="text-xs text-primary font-bold hover:underline mt-1 block">VIEW FILE</a>
+                </div>
+            </div>
+
+            ${sub.grade ? `
+                <div class="flex flex-col items-end">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-black rounded-lg border border-emerald-200 uppercase tracking-wider">
+                        Graded: ${sub.grade} Marks
+                    </span>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Points Saved</p>
+                </div>
+            ` : `
+                <form onsubmit="submitGrade(event, '${data._id}', '${sub._id}')" class="flex items-center gap-2">
+                    <input name="grade" type="number" class="w-20 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm" placeholder="Marks" required />
+                    <button type="submit" class="bg-slate-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800 transition-all">Save</button>
+                </form>
+            `}
+        </div>
+    </div>
+`).join('');
+            } catch (err) {
+                console.error("Error updating view:", err);
+            }
+        };
+
+        window.submitGrade = async function (event, assignmentId, submissionId) {
+            event.preventDefault();
+            const form = event.target;
+            const grade = form.grade.value;
+            const btn = form.querySelector('button');
+            const container = form.parentElement; // The div containing both student info and form
+
+            // Visual feedback while loading
+            btn.innerText = '...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`/teacher/assignment/${assignmentId}/grade/${submissionId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ grade: grade })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Remove the form and replace it with a static grade badge
+                    form.remove();
+
+                    const badgeHTML = `
+                <div class="flex flex-col items-end">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-black rounded-lg border border-emerald-200 uppercase tracking-wider">
+                        Graded: ${grade} Marks
+                    </span>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Points Saved</p>
+                </div>
+            `;
+                    container.insertAdjacentHTML('beforeend', badgeHTML);
+                } else {
+                    alert("Failed to save grade");
+                    btn.innerText = 'Save';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+                btn.innerText = 'Error';
+                btn.disabled = false;
+            }
+        };
+    </script>

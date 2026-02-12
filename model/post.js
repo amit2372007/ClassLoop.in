@@ -11,8 +11,8 @@ const postsSchema = Schema({
       require: true
    },
    image: {
-      type: String,
-      require: true,
+      url: String,
+      fileId: String
    },
    like: [
       {
