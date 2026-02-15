@@ -1,289 +1,842 @@
 <!DOCTYPE html>
-
 <html class="dark" lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ClassLoop.in | Connect Your Campus</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap"
-        rel="stylesheet" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
     <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#9f1fef",
-                        "background-light": "#f7f6f8",
-                        "background-dark": "#121212",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.25rem",
-                        "2xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                },
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#9f1fef",
+              "background-light": "#f7f6f8",
+              "background-dark": "#121212",
             },
-        }
+            animation: {
+              scroll: "scroll 40s linear infinite",
+            },
+            keyframes: {
+              scroll: {
+                "0%": { transform: "translateX(0)" },
+                "100%": { transform: "translateX(-50%)" },
+              },
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "1rem",
+              xl: "1.25rem",
+              "2xl": "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
     </script>
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+      /* Added Smooth Scroll for Navbar Functionality */
+      html {
+        scroll-behavior: smooth;
+      }
 
-        .hero-gradient {
-            background: radial-gradient(circle at 50% 50%, rgba(159, 31, 239, 0.15) 0%, rgba(18, 18, 18, 0) 70%);
-        }
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .hero-gradient {
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(159, 31, 239, 0.15) 0%,
+          rgba(18, 18, 18, 0) 70%
+        );
+      }
+
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
     </style>
-</head>
+  </head>
 
-<body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30">
-    <!-- TopNavBar -->
+  <body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30"
+  >
     <nav class="fixed top-0 w-full z-50 px-4 md:px-10 py-4">
-        <div class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                    <span class="material-symbols-outlined text-xl">all_inclusive</span>
-                </div>
-                <h2 class="text-xl font-bold tracking-tight">ClassLoop.in</h2>
-            </div>
-            <div class="hidden md:flex items-center gap-8">
-                <a class="text-sm font-medium hover:text-primary transition-colors" href="#features">Features</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors" href="#loopspace">LoopSpace</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Campus</a>
-                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Testimonials</a>
-            </div>
-            <form action="/user/login" method="get">
-                <button
-                    class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105">
-                    Log in
-                </button>
-            </form>
+      <div
+        class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="size-8 bg-primary rounded-lg flex items-center justify-center text-white"
+          >
+            <span class="material-symbols-outlined text-xl">all_inclusive</span>
+          </div>
+          <h2 class="text-xl font-bold tracking-tight">ClassLoop.in</h2>
         </div>
+        <div class="hidden md:flex items-center gap-8">
+          <a
+            class="text-sm font-medium hover:text-primary transition-colors"
+            href="#about"
+          >
+            About
+          </a>
+
+          <a
+            class="text-sm font-medium hover:text-primary transition-colors"
+            href="#network"
+          >
+            Campus Network
+          </a>
+
+          <a
+            class="text-sm font-medium hover:text-primary transition-colors"
+            href="#stories"
+          >
+            Success Stories
+          </a>
+
+          <a
+            class="text-sm font-medium hover:text-primary transition-colors"
+            href="#contact"
+          >
+            Contact
+          </a>
+        </div>
+
+        <form action="/user/login" method="get">
+          <button
+            class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105"
+          >
+            Log in
+          </button>
+        </form>
+      </div>
     </nav>
     <main class="pt-24">
-        <!-- Hero Section -->
-        <section class="relative px-6 py-12 md:py-24 overflow-hidden hero-gradient">
-            <div class="max-w-5xl mx-auto text-center">
+      <section
+        class="relative px-6 py-12 md:py-24 overflow-hidden hero-gradient"
+      >
+        <div class="max-w-5xl mx-auto text-center">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">rocket_launch</span>
+            NOW OPEN FOR SCHOOLS
+          </div>
+          <h1
+            class="text-5xl md:text-7xl font-black leading-tight tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60"
+          >
+            Connect Your <span class="text-primary">Campus</span>
+          </h1>
+          <p
+            class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
+            The social loop for the modern student. Bridge the gap between
+            majors and social circles in one seamless digital space.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <a
+              href="/user/signup"
+              class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all"
+            >
+              Get Started Free
+            </a>
+            <button
+              class="w-full sm:w-auto px-8 py-4 glass text-white rounded-xl font-bold text-lg hover:bg-white/5 transition-all"
+            >
+              View Demo
+            </button>
+          </div>
+          <div
+            class="mt-16 glass rounded-3xl p-4 max-w-4xl mx-auto shadow-2xl relative"
+          >
+            <div
+              class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-[100px]"
+            ></div>
+            <div
+              class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 blur-[100px]"
+            ></div>
+            <div
+              class="rounded-2xl overflow-hidden border border-white/10 aspect-video bg-neutral-900 flex items-center justify-center group"
+            >
+              <div class="grid grid-cols-12 w-full h-full p-4 gap-4">
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6">
-                    <span class="material-symbols-outlined text-sm">rocket_launch</span>
-                    NOW OPEN FOR UNIVERSITIES
+                  class="col-span-3 glass rounded-xl p-4 flex flex-col gap-4"
+                >
+                  <div class="h-4 w-2/3 bg-white/10 rounded"></div>
+                  <div class="h-10 w-full bg-white/5 rounded-lg"></div>
+                  <div class="h-10 w-full bg-white/5 rounded-lg"></div>
+                  <div class="h-10 w-full bg-white/5 rounded-lg"></div>
                 </div>
-                <h1
-                    class="text-5xl md:text-7xl font-black leading-tight tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-                    Connect Your <span class="text-primary">Campus</span>
-                </h1>
-                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-                    The social loop for the modern student. Bridge the gap between majors and social circles in one
-                    seamless digital space.
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="/user/signup"
-                        class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all">
-                        Get Started Free
-                    </a>
-                    <button
-                        class="w-full sm:w-auto px-8 py-4 glass text-white rounded-xl font-bold text-lg hover:bg-white/5 transition-all">
-                        View Demo
-                    </button>
-                </div>
-                <!-- Hero Image/Dashboard Preview Mockup -->
-                <div class="mt-16 glass rounded-3xl p-4 max-w-4xl mx-auto shadow-2xl relative">
-                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-[100px]"></div>
-                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 blur-[100px]"></div>
+                <div class="col-span-9 flex flex-col gap-4">
+                  <div class="h-12 w-full glass rounded-xl"></div>
+                  <div class="grid grid-cols-3 gap-4 grow">
                     <div
-                        class="rounded-2xl overflow-hidden border border-white/10 aspect-video bg-neutral-900 flex items-center justify-center group">
-                        <div class="grid grid-cols-12 w-full h-full p-4 gap-4">
-                            <div class="col-span-3 glass rounded-xl p-4 flex flex-col gap-4">
-                                <div class="h-4 w-2/3 bg-white/10 rounded"></div>
-                                <div class="h-10 w-full bg-white/5 rounded-lg"></div>
-                                <div class="h-10 w-full bg-white/5 rounded-lg"></div>
-                                <div class="h-10 w-full bg-white/5 rounded-lg"></div>
-                            </div>
-                            <div class="col-span-9 flex flex-col gap-4">
-                                <div class="h-12 w-full glass rounded-xl"></div>
-                                <div class="grid grid-cols-3 gap-4 grow">
-                                    <div class="glass rounded-xl bg-center bg-cover"
-                                        data-alt="Student dashboard interface preview with cards"
-                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBsrv2zmywz1fzDgYBiKlg2Et_-gUNLHDHb7HzhJuNeRuNrbUzXrAY4FLkh4b8OKWuoOq0a_lUQtzyP1wPhh0FYJjxnHI71ORRVbHYSlW42TvDQIkEm4PEcftSm-RI_z7QmuNSkvHuVAwjGQTY5fqz1O5TcAgawXJIsr5i_Cm9C665XC0uhRiHMw3bl87lFBPfy806V8ypkhZLgVN0-SUcv2vGAgYy6dJyHhcpWjxUseE-glUW_zxolopOu3I-UGABLpoxMo_sNBwXh');">
-                                    </div>
-                                    <div class="glass rounded-xl bg-center bg-cover"
-                                        data-alt="University campus event feed mockup"
-                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBER991yhwfwr_sSYzIPjTYW9Bs0uvzIKy5phjvu1fn6JRy3Ov-OFzFJZClU8XT-9vx-VHTpnIAt9kn8-ApoUNP0F1Rh-L0uWEd0awCXo2vEpVOxwxmA0OGqg0xsXPp_9q8V3xf1-yjmZVlriE6TSkvRAsFvIVgC-M1TCtEx6RlvPHpdX6HNtx53mYF5_K6K6witu4ACRATxzJN7WM1RD1IhNab2397Er4bjy3ZIQVPkh3_VPBviMeuHNlT_b0vLrYl7K2IYWbwPjnV');">
-                                    </div>
-                                    <div class="glass rounded-xl bg-center bg-cover"
-                                        data-alt="Student social group networking interface"
-                                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2On9GGV33JkMgNUI9CnB80A1qeMckmBvVtgTLV1Iwt7vT3a8x8GHvFssK2k4y5QViG2JXJvQbczAjsATtVb5mnlKTNAAw0gEkKJ5u8pzLohBWTnV3dl_cSVu2c3trPtRumq8m3DwTEtAgE63WfqDDO5UM-COs0wYDn5BI5RPND_LXXeyrsA8pW1ptomiMoQsWFzc4kyJzgLZizNtt2CJZnYt25ocy5wjh25-xySnarDIcmQ0WI8_KXUZKSXBaPrdA1icz1DrJHMxM');">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="material-symbols-outlined text-6xl text-white">play_circle</span>
-                        </div>
-                    </div>
+                      class="glass rounded-xl bg-center bg-cover"
+                      data-alt="Student dashboard interface preview with cards"
+                      style="
+                        background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBsrv2zmywz1fzDgYBiKlg2Et_-gUNLHDHb7HzhJuNeRuNrbUzXrAY4FLkh4b8OKWuoOq0a_lUQtzyP1wPhh0FYJjxnHI71ORRVbHYSlW42TvDQIkEm4PEcftSm-RI_z7QmuNSkvHuVAwjGQTY5fqz1O5TcAgawXJIsr5i_Cm9C665XC0uhRiHMw3bl87lFBPfy806V8ypkhZLgVN0-SUcv2vGAgYy6dJyHhcpWjxUseE-glUW_zxolopOu3I-UGABLpoxMo_sNBwXh&quot;);
+                      "
+                    ></div>
+                    <div
+                      class="glass rounded-xl bg-center bg-cover"
+                      data-alt="University campus event feed mockup"
+                      style="
+                        background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBER991yhwfwr_sSYzIPjTYW9Bs0uvzIKy5phjvu1fn6JRy3Ov-OFzFJZClU8XT-9vx-VHTpnIAt9kn8-ApoUNP0F1Rh-L0uWEd0awCXo2vEpVOxwxmA0OGqg0xsXPp_9q8V3xf1-yjmZVlriE6TSkvRAsFvIVgC-M1TCtEx6RlvPHpdX6HNtx53mYF5_K6K6witu4ACRATxzJN7WM1RD1IhNab2397Er4bjy3ZIQVPkh3_VPBviMeuHNlT_b0vLrYl7K2IYWbwPjnV&quot;);
+                      "
+                    ></div>
+                    <div
+                      class="glass rounded-xl bg-center bg-cover"
+                      data-alt="Student social group networking interface"
+                      style="
+                        background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuB2On9GGV33JkMgNUI9CnB80A1qeMckmBvVtgTLV1Iwt7vT3a8x8GHvFssK2k4y5QViG2JXJvQbczAjsATtVb5mnlKTNAAw0gEkKJ5u8pzLohBWTnV3dl_cSVu2c3trPtRumq8m3DwTEtAgE63WfqDDO5UM-COs0wYDn5BI5RPND_LXXeyrsA8pW1ptomiMoQsWFzc4kyJzgLZizNtt2CJZnYt25ocy5wjh25-xySnarDIcmQ0WI8_KXUZKSXBaPrdA1icz1DrJHMxM&quot;);
+                      "
+                    ></div>
+                  </div>
                 </div>
+              </div>
+              <div
+                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+              >
+                <span class="material-symbols-outlined text-6xl text-white"
+                  >play_circle</span
+                >
+              </div>
             </div>
-        </section>
-        <!-- FeatureSection: LoopSpace -->
-        <section class="px-6 py-20" id="loopspace">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 px-4">
-                    <div class="max-w-2xl">
-                        <h2 class="text-4xl md:text-5xl font-black mb-6">Your niche, found.</h2>
-                        <p class="text-slate-400 text-lg">
-                            Introducing LoopSpace - the intelligent grouping system for your college life. Join loops
-                            based on your classes, hobbies, or campus events.
-                        </p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button
-                            class="size-10 glass rounded-full flex items-center justify-center hover:bg-primary transition-colors">
-                            <span class="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <button
-                            class="size-10 glass rounded-full flex items-center justify-center hover:bg-primary transition-colors">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
-                    <div class="glass p-6 rounded-2xl group hover:border-primary/50 transition-all">
-                        <div class="w-full h-48 rounded-xl overflow-hidden mb-6 bg-cover bg-center"
-                            data-alt="Students collaborating in a design loop"
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBRdn0vIkeeVgtma1gCf__fDUv5zG1mI9X3HyIVfHOOO0TWn-cdyoMnK5ng_rOp7G7HBd1k7FXvKmZ_Kyc98WLMChBgdjNxe7MKyXyqM_DY6TqhD-VD3qaWgJua0vuUX91yNbTOEF7pmYQV9ZLd96oNVZ8B77ZP_99YMONEfzkZRA3hkumQrRa3fkhp4SehrVnsFzrwpnttggdrkHqHp8Y6mVDM0IwGUKa7kZe2DhF6fGd3AR9dE8LVZKYrVBhevU_DeTmw3dj5lnpR');">
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">LoopSpace Groups</h3>
-                        <p class="text-slate-400">Niche communities for every interest and major. From CS study groups
-                            to intramural frisbee.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl group hover:border-primary/50 transition-all">
-                        <div class="w-full h-48 rounded-xl overflow-hidden mb-6 bg-cover bg-center"
-                            data-alt="Classmates studying together in library"
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDyBJWWK5D_FKo-KqKGQHKRuVKqBxzgBrotmUltTWfP4MKTrevrR0aJjDvO8RocTOXhZ4iLRSch5oMTfTKWCvLPPLGuQkvd_02iyh95D6FsqfSuqZSPfnpm1i8FZQdg9YFV4oU9CwxZZXXWjRKnuQY4OskGWtCaUpZ286pLh2Zzx14orGtH9AT4dfkgByAsHvlxsLfGzm6ys_e3-BhRJVSHxvpmEYfRcxY1lfSySFpmSfbg12zD5pF5KbaFEZiCI_mguh9Ms1wRV-3W');">
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Academic Collaboration</h3>
-                        <p class="text-slate-400">Connect with classmates for study sessions and projects. Share notes
-                            and resources securely.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl group hover:border-primary/50 transition-all">
-                        <div class="w-full h-48 rounded-xl overflow-hidden mb-6 bg-cover bg-center"
-                            data-alt="Campus concert event crowd"
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXi7a4zrEjMLE8tWJW3jVkW7CIXfexcG7J1MoXKvuGh3CcQRy75dMmzq7SnS0HT4GC6EEmSEIBgyF8IM08SRPTvxWjFWkKFDlNoCqq4sYgwPbO6p6RxFi2ajwahu_1DkuOnTY3NhtQLBJ5Uf8m5gVIPxwFcfDnIrxH-aS7DULTuJ8RRLIUwohSnzhlaRkY8Ef0dth8sgZ_IHTvk3QMfj9QKTtEis_GACfbTdWt24MjUbo1TScIvHSwqGkGtd3OEWbMszGpmO3CYoOo');">
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Event Tracking</h3>
-                        <p class="text-slate-400">Never miss a campus event with our integrated timeline. RSVP and see
-                            which loops are attending.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- SectionHeader & ImageGrid -->
-        <section class="px-6 py-20 bg-primary/5">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-3xl font-bold px-4 mb-8">Experience the Loop</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
-                    <div class="relative group rounded-2xl overflow-hidden aspect-[4/5] lg:col-span-2">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                            data-alt="Modern mobile app dashboard view"
-                            style="background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGarEATFo84rAWvzT5Q-BVju8NL1KVBBz9bYV8UIDs3iKzt1TET2J2j1tPqEElKg8bdBZ1zerTN8C3vHCg2LuTDv2zaAzr6r2tl1UMDoQdWo_K_Aab2ML7wrE94yLULc7OthPlb6fn68zunU6khtj4Bwa7UIJDvP3RM3MNGXgDDAjhSee5hYcO9esXPsLR8u_suikPwm7GxMyQhOg3Z4k4HWCIF7QHExHWTCSykj9LBWozviufhLUsoKccKsbrwy39EtBgYK_SjMKO');">
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-8">
-                            <h3 class="text-2xl font-bold text-white mb-2">Student Dashboard</h3>
-                            <p class="text-slate-200">Everything you need in one centralized view.</p>
-                        </div>
-                    </div>
-                    <div class="relative group rounded-2xl overflow-hidden aspect-[4/5]">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                            data-alt="Mobile phone showing social feed"
-                            style="background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuC4Qm2nREdkxxAV72D1Ws0XvnA0r4wKvNQVq77RHpoU4-d7GZBepXgwJAE-J816ZhMdf3YqQX7YM6qUwmrvt9Ab7pbD0zg6Gs2jQej2yuD4kZhow4_n391ca2HH7Lt27Q1s3ihKvxbdbMRDD9FI3Tj_xQwQEtIWCjLLXIeMVuvfWyoNb4QFur6XsHWgRlXJ9XVhMbVPd5lyB5kg7w9SHwj38rNt-EPPyFD4k--QKZL3dlPu3dMxBtQG48B5LYK04rOqvfxp_hGeOVrk');">
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                            <h3 class="text-lg font-bold text-white">Campus Feed</h3>
-                        </div>
-                    </div>
-                    <div class="relative group rounded-2xl overflow-hidden aspect-[4/5]">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                            data-alt="Digital calendar with school events"
-                            style="background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuA408I9GY77nF8Zt7_BAvSvGjnzSVIUrjMdTZSCyARvzmJQaWeJocmfBQCXzRDhCEzEE7KEV2oxcKFFIqtGv9_zcqWq93oB9SXvqu5PUnkmLtnuerqoqC9ucqrU5ObYXdjKYrFrejaak4HU4dFUuDUlk2VfY4iC73rYrtGhzSvGk5y0J-sXDgOz09PbiARrBipx42FrLp7wk2yCC5ZkmWYEidIWDt67lB_VB6Jzhe6WQLMSqC9GGjzgV-LOgMKlze5sA3Hu937N8tL5');">
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                            <h3 class="text-lg font-bold text-white">Smart Planner</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- CTA Section -->
-        <section class="px-6 py-24">
-            <div class="max-w-4xl mx-auto glass p-12 rounded-[2rem] text-center relative overflow-hidden">
-                <div
-                    class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[80px] -translate-y-1/2 translate-x-1/2">
-                </div>
-                <h2 class="text-4xl md:text-5xl font-black mb-6">Ready to join the loop?</h2>
-                <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
-                    Be the first at your university to experience the new standard of campus connection.
-                </p>
-                <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault()">
-                    <input
-                        class="grow bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                        placeholder="Your college email" type="email" />
-                    <button
-                        class="bg-primary text-white font-bold px-8 py-4 rounded-xl hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all">
-                        Join Waitlist
-                    </button>
-                </form>
-                <p class="mt-6 text-xs text-slate-500">Join 500+ students already waiting for the launch.</p>
-            </div>
-        </section>
-    </main>
-    <!-- Footer -->
-    <footer class="border-t border-white/5 bg-background-dark py-12 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div class="flex items-center gap-2">
-                <div class="size-6 bg-primary/20 rounded flex items-center justify-center text-primary">
-                    <span class="material-symbols-outlined text-sm">all_inclusive</span>
-                </div>
-                <h2 class="text-lg font-bold">ClassLoop.in</h2>
-            </div>
-            <div class="flex gap-8 text-slate-500 text-sm">
-                <a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
-                <a class="hover:text-white transition-colors" href="#">Terms of Service</a>
-                <a class="hover:text-white transition-colors" href="#">Campus Ambassadors</a>
-                <a class="hover:text-white transition-colors" href="#">Contact</a>
-            </div>
-            <div class="flex gap-4">
-                <a class="size-10 glass rounded-full flex items-center justify-center hover:text-primary" href="#">
-                    <span class="material-symbols-outlined">share</span>
-                </a>
-                <a class="size-10 glass rounded-full flex items-center justify-center hover:text-primary" href="#">
-                    <span class="material-symbols-outlined">chat</span>
-                </a>
-            </div>
+          </div>
         </div>
-        <div class="max-w-7xl mx-auto text-center mt-12 text-slate-600 text-xs">
-            © 2024 ClassLoop Technologies. All rights reserved.
-        </div>
-    </footer>
-</body>
+      </section>
 
+      <section
+        class="relative px-6 py-24 overflow-hidden bg-slate-900 text-white"
+        id="about"
+      >
+        <div
+          class="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10 animate-pulse"
+        ></div>
+        <div
+          class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"
+        ></div>
+
+        <div class="max-w-7xl mx-auto">
+          <div
+            class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-4"
+          >
+            <div class="max-w-2xl">
+              <h2 class="text-5xl md:text-6xl font-black mb-6 leading-tight">
+                WHY
+                <span
+                  class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400"
+                  >CLASSLOOP?</span
+                >
+              </h2>
+              <p
+                class="text-slate-400 text-lg md:text-xl font-light leading-relaxed"
+              >
+                <strong class="text-white">ClassLoop.in</strong>
+                unifies campus life by combining niche
+                <strong class="text-white">social communities</strong>,
+                <strong class="text-white">real-time chat</strong>, and
+                <strong class="text-white">academic Q&A</strong> into one
+                seamless platform. It streamlines governance for teachers with
+                digital tools for attendance, exams, and secure student
+                applications.
+              </p>
+            </div>
+          </div>
+
+          <div class="w-full overflow-hidden px-4 pb-12">
+            <div
+              class="flex w-max gap-8 animate-scroll hover:[animation-play-state:paused]"
+            >
+              <div
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+              >
+                <div
+                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
+                  ></div>
+                  <span
+                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    >Community</span
+                  >
+                  <div
+                    class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop&quot;);
+                    "
+                  ></div>
+                </div>
+                <div class="px-2">
+                  <h3
+                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                  >
+                    LoopSpaces
+                  </h3>
+                  <p class="text-slate-400 leading-relaxed mb-4">
+                    Intelligent, niche-based communities for classes, hobbies,
+                    and societies where students collaborate.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+              >
+                <div
+                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
+                  ></div>
+                  <span
+                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    >Q&A</span
+                  >
+                  <div
+                    class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop&quot;);
+                    "
+                  ></div>
+                </div>
+                <div class="px-2">
+                  <h3
+                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                  >
+                    DoubtBin
+                  </h3>
+                  <p class="text-slate-400 leading-relaxed mb-4">
+                    A StackOverflow-style academic Q&A forum for peer-to-peer
+                    learning and expert solutions.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+              >
+                <div
+                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
+                  ></div>
+                  <span
+                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    >Networking</span
+                  >
+                  <div
+                    class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=800&auto=format&fit=crop&quot;);
+                    "
+                  ></div>
+                </div>
+                <div class="px-2">
+                  <h3
+                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                  >
+                    Social Connect
+                  </h3>
+                  <p class="text-slate-400 leading-relaxed mb-4">
+                    Real-time messaging and networking features to bridge the
+                    gap between students and peers.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+              >
+                <div
+                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
+                  ></div>
+                  <span
+                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    >Faculty</span
+                  >
+                  <div
+                    class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=800&auto=format&fit=crop&quot;);
+                    "
+                  ></div>
+                </div>
+                <div class="px-2">
+                  <h3
+                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                  >
+                    Teacher Portal
+                  </h3>
+                  <p class="text-slate-400 leading-relaxed mb-4">
+                    A dedicated dashboard for faculty to manage attendance,
+                    upload marks, and review applications.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+              >
+                <div
+                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
+                  ></div>
+                  <span
+                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    >Governance</span
+                  >
+                  <div
+                    class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop&quot;);
+                    "
+                  ></div>
+                </div>
+                <div class="px-2">
+                  <h3
+                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                  >
+                    Digital Desk
+                  </h3>
+                  <p class="text-slate-400 leading-relaxed mb-4">
+                    A paperless system for submitting and tracking Sick Leave,
+                    OD, and Bonafide requests securely.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+              >
+                <div
+                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
+                  ></div>
+                  <span
+                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    >Library</span
+                  >
+                  <div
+                    class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=800&auto=format&fit=crop&quot;);
+                    "
+                  ></div>
+                </div>
+                <div class="px-2">
+                  <h3
+                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                  >
+                    Resource Hub
+                  </h3>
+                  <p class="text-slate-400 leading-relaxed mb-4">
+                    A centralized repository for lecture notes, assignments, and
+                    previous year question papers.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="px-6 py-24 bg-slate-900 relative overflow-hidden"
+        id="network"
+      >
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"
+        ></div>
+
+        <div class="max-w-7xl mx-auto">
+          <div
+            class="flex flex-col md:flex-row items-end justify-between gap-6 mb-12 px-4"
+          >
+            <div>
+              <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+                Campuses
+                <span
+                  class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400"
+                  >Network</span
+                >
+              </h2>
+              <p class="text-slate-400 max-w-lg text-lg">
+                Join students from top universities already using ClassLoop to
+                manage their academic life.
+              </p>
+            </div>
+            <div class="hidden md:flex gap-2">
+              <div class="h-1 w-8 bg-primary rounded-full"></div>
+              <div class="h-1 w-2 bg-slate-700 rounded-full"></div>
+              <div class="h-1 w-2 bg-slate-700 rounded-full"></div>
+            </div>
+          </div>
+
+          <div class="w-full overflow-hidden relative mb-16">
+            <div
+              class="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"
+            ></div>
+            <div
+              class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"
+            ></div>
+
+            <div
+              class="flex w-max gap-6 animate-scroll hover:[animation-play-state:paused]"
+            >
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl"
+                >
+                  IIT
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">IIT Bombay</h4>
+                  <p class="text-slate-500 text-xs">Mumbai, MH</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-xl"
+                >
+                  CU
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">Chandigarh Univ</h4>
+                  <p class="text-slate-500 text-xs">Mohali, PB</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xl"
+                >
+                  DU
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">Delhi University</h4>
+                  <p class="text-slate-500 text-xs">New Delhi, DL</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-xl"
+                >
+                  VIT
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">VIT Vellore</h4>
+                  <p class="text-slate-500 text-xs">Vellore, TN</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xl"
+                >
+                  TI
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">Thapar Institute</h4>
+                  <p class="text-slate-500 text-xs">Patiala, PB</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl"
+                >
+                  IIT
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">IIT Bombay</h4>
+                  <p class="text-slate-500 text-xs">Mumbai, MH</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-xl"
+                >
+                  CU
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">Chandigarh Univ</h4>
+                  <p class="text-slate-500 text-xs">Mohali, PB</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xl"
+                >
+                  DU
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">Delhi University</h4>
+                  <p class="text-slate-500 text-xs">New Delhi, DL</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+              >
+                <div
+                  class="size-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-xl"
+                >
+                  VIT
+                </div>
+                <div>
+                  <h4 class="text-white font-bold text-lg">VIT Vellore</h4>
+                  <p class="text-slate-500 text-xs">Vellore, TN</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+            <div
+              class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
+            >
+              <div
+                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+              >
+                <span class="material-symbols-outlined text-6xl text-blue-400"
+                  >groups</span
+                >
+              </div>
+              <h3 class="text-4xl font-black text-white mb-1">10k+</h3>
+              <p class="text-blue-400 font-medium mb-3">Active Students</p>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                Connecting across engineering, arts, and medical streams
+                nationwide.
+              </p>
+            </div>
+
+            <div
+              class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
+            >
+              <div
+                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+              >
+                <span class="material-symbols-outlined text-6xl text-purple-400"
+                  >forum</span
+                >
+              </div>
+              <h3 class="text-4xl font-black text-white mb-1">500+</h3>
+              <p class="text-purple-400 font-medium mb-3">Daily Discussions</p>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                From exam prep strategies to campus event planning in real-time.
+              </p>
+            </div>
+
+            <div
+              class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
+            >
+              <div
+                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+              >
+                <span class="material-symbols-outlined text-6xl text-green-400"
+                  >map</span
+                >
+              </div>
+              <h3 class="text-4xl font-black text-white mb-1">12+</h3>
+              <p class="text-green-400 font-medium mb-3">Major Cities</p>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                Present in education hubs including Kota, Delhi, Mumbai, and
+                Bangalore.
+              </p>
+            </div>
+          </div>
+
+          <div class="text-center mt-12">
+            <p class="text-slate-500 text-sm">
+              Don't see your campus?
+              <a
+                href="#contact"
+                class="text-primary hover:text-white transition-colors underline decoration-primary/50 underline-offset-4"
+                >Request to add your institute</a
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="px-6 py-24 bg-slate-900 relative overflow-hidden"
+        id="stories"
+      >
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"
+        ></div>
+
+        <div
+          class="max-w-4xl mx-auto glass p-10 md:p-14 rounded-[2.5rem] text-center relative overflow-hidden border border-white/10 bg-slate-900/40 backdrop-blur-xl"
+        >
+          <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+            Experience the Loop
+          </h2>
+          <p class="text-slate-400 max-w-lg text-lg mx-auto">
+            A seamless digital ecosystem designed to keep your campus life
+            synchronized and stress-free.
+          </p>
+        </div>
+      </section>
+
+      <section class="px-6 py-24 relative overflow-hidden" id="contact">
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"
+        ></div>
+
+        <div
+          class="max-w-4xl mx-auto glass p-10 md:p-14 rounded-[2.5rem] text-center relative overflow-hidden border border-white/10 bg-slate-900/40 backdrop-blur-xl"
+        >
+          <div
+            class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"
+          ></div>
+
+          <h2
+            class="text-4xl md:text-5xl font-black mb-6 text-white leading-tight"
+          >
+            Bring ClassLoop to <br class="hidden md:block" />
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-300"
+              >Your Campus</span
+            >
+          </h2>
+
+          <p
+            class="text-slate-300 text-lg mb-10 max-w-xl mx-auto leading-relaxed"
+          >
+            Are you a College Administrator or Student Representative? Connect
+            with us to digitize your institution's academic ecosystem.
+          </p>
+
+          <div class="flex flex-col items-center justify-center gap-4">
+            <a
+              href="https://wa.me/qr/IPXM3YGNKY4SI1"
+              target="_blank"
+              class="group relative inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:shadow-[0_0_35px_rgba(37,211,102,0.5)] hover:-translate-y-1"
+            >
+              <svg
+                class="w-6 h-6 fill-current"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+                />
+              </svg>
+              <span>Connect via WhatsApp</span>
+              <span
+                class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform"
+                >arrow_forward</span
+              >
+            </a>
+
+            <div
+              class="flex items-center gap-2 mt-4 text-xs font-medium text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/5"
+            >
+              <span class="relative flex h-2.5 w-2.5">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"
+                ></span>
+              </span>
+              Typically replies within 1 hour
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t border-white/5 bg-background-dark py-12 px-6">
+      <div
+        class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="size-6 bg-primary/20 rounded flex items-center justify-center text-primary"
+          >
+            <span class="material-symbols-outlined text-sm">all_inclusive</span>
+          </div>
+          <h2 class="text-lg font-bold">ClassLoop.in</h2>
+        </div>
+        <div class="flex gap-8 text-slate-500 text-sm">
+          <a class="hover:text-white transition-colors" href="#"
+            >Privacy Policy</a
+          >
+          <a class="hover:text-white transition-colors" href="#"
+            >Terms of Service</a
+          >
+          <a class="hover:text-white transition-colors" href="#"
+            >Campus Ambassadors</a
+          >
+          <a class="hover:text-white transition-colors" href="#">Contact</a>
+        </div>
+        <div class="flex gap-4">
+          <a
+            class="size-10 glass rounded-full flex items-center justify-center hover:text-primary"
+            href="#"
+          >
+            <span class="material-symbols-outlined">share</span>
+          </a>
+          <a
+            class="size-10 glass rounded-full flex items-center justify-center hover:text-primary"
+            href="#"
+          >
+            <span class="material-symbols-outlined">chat</span>
+          </a>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto text-center mt-12 text-slate-600 text-xs">
+        © 2024 ClassLoop Technologies. All rights reserved.
+      </div>
+    </footer>
+  </body>
 </html>

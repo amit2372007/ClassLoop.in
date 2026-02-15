@@ -63,7 +63,7 @@
 
         <a href="/chat" class="p-2 hover:bg-white/5 rounded-xl transition-all group flex items-center justify-center"
           title="Messages">
-          <span class="material-symbols-outlined text-[28px] text-white/70 group-hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-[28px] text-white/70 group-hover:text-primary transition-colors">
             chat
           </span>
         </a>
@@ -71,7 +71,7 @@
 
                     <a href="/notifications" class="relative group p-2 hover:bg-white/5 rounded-xl transition-all">
                       <span
-                        class="material-symbols-outlined text-2xl text-white/70 group-hover:text-white transition-colors">
+                        class="material-symbols-outlined text-2xl text-white/70 group-hover:text-primary transition-colors">
                         notifications
                       </span>
                       <% if (unreadCount> 0) { %>
@@ -87,7 +87,7 @@
                     <% if(currUser.designation==='admin' ){ %>
                       <form action="/admin" method="GET">
                         <button
-                          class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">Admin
+                          class="bg-white/5 hover:text-green-400 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">Admin
                           Panel</button>
                       </form>
                       <% } else if(currUser.designation==='principle' ) { %>
@@ -106,7 +106,7 @@
 
                             <form action="/user/logout" method="GET">
                               <button
-                                class="text-white/60 hover:text-white px-3 py-2 text-sm font-medium transition-all">
+                                class="text-white/60 hover:text-red-400 px-3 py-2 text-sm font-medium transition-all">
                                 Logout
                               </button>
                             </form>
