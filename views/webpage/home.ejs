@@ -121,7 +121,7 @@
       </div>
     </a>
 
-    <% if(currentUser._id.equals(Post.owner._id)) { %>
+    <% if(currentUser._id.toString() === Post.owner._id.toString()) { %>
       <div class="relative post-menu-container">
         <button class="menu-button-toggle p-2 -mr-2 hover:bg-white/10 md:hover:bg-slate-100 md:dark:hover:bg-slate-800 rounded-full transition-colors outline-none active:scale-95">
           <span class="material-symbols-outlined text-white/60 md:text-slate-400 text-2xl md:text-xl">more_vert</span>

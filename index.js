@@ -54,6 +54,23 @@ const Resources = require("./model/school/resourse.js");
 // Connection model
 
 let Connection = require("./model/connection/connection.js");
+
+const Redis = require("ioredis");
+
+// Initialize Redis BEFORE the routes
+const redis = new Redis({
+  password: "4xVlBFGyDNwfv5jP9cu5nByT6NAnCmlI",
+  host: "redis-13705.crce206.ap-south-1-1.ec2.cloud.redislabs.com",
+  port: 13705,
+});
+
+redis.on("connect", () => {
+  console.log("Connected to redis server! 🚀");
+});
+
+// Make it global IMMEDIATELY after initialization
+global.redis = redis;
+
 // All routes
 const home = require("./routes/home.js");
 const doubtBin = require("./routes/doubtBin.js");

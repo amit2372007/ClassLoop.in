@@ -1,5 +1,7 @@
 const Schools = require("../model/school/school.js");
 const Class = require("../model/school/classes.js");
+const Users = require("../model/User.js");
+const LoopSpace = require("../model/loopSpace/loopSpace.js")
 
 module.exports.renderSchoolDashboard = async (req, res) => {
   try {
@@ -15,6 +17,7 @@ module.exports.renderSchoolDashboard = async (req, res) => {
           select: "name profilePic", // Optional: only fetch specific fields like name and pic
         },
       });
+      console.log(schoolData)
     const activeTab = req.query.tab || "Dashboard";
     res.render("./school/Dashboard.ejs", {
       School: schoolData,
