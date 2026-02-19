@@ -229,6 +229,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error.ejs", { err, statusCode, message });
 });
 
-server.listen(port, () => {
-  console.log(`🚀 Server (HTTP + Socket.IO) running on port: ${port}`);
+server.listen(process.env.PORT, () => {
+  console.log(`🚀 Server (HTTP + Socket.IO) running`);
 });
