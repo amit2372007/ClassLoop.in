@@ -30,7 +30,6 @@ const {
 } = require("./middleware.js");
 
 const port = 3000;
-const dbUrl = "mongodb://127.0.0.1:27017/bfgiSpot";
 //loopSpace
 const LoopSpace = require("./model/loopSpace/loopSpace.js");
 const SpaceMessage = require("./model/loopSpace/spaceMessage.js");
@@ -109,7 +108,7 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(dbUrl);
+  await mongoose.connect(process.env.ATLAS_DBURL);
 }
 
 app.use(session(sessionOption));

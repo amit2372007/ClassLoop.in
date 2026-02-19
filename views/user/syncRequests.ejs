@@ -61,12 +61,12 @@
         </style>
     </head>
 
-    <body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100">
+    <body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100 pb-20 md:pb-0">
 
-        <main class="max-w-[1380px] mx-auto px-2 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Left Sidebar: Profile Summary -->
-                <aside class="lg:col-span-3 space-y-4">
+        <main class="max-w-[1380px] mx-auto px-3 md:px-2 py-4 md:py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
+                <!-- Left Sidebar: Profile Summary (Hidden on Mobile) -->
+                <aside class="hidden lg:block lg:col-span-3 space-y-4">
                     <div
                         class="bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-black/5 dark:border-white/5">
                         <div class="h-16 bg-gradient-to-r from-primary to-purple-800"
@@ -145,92 +145,102 @@
                         <span class="text-sm font-bold tracking-tight">Back to Home</span>
                     </button>
                 </aside>
+
                 <!-- Main Content: Pending Requests -->
-                <section class="lg:col-span-6 space-y-6">
+                <section class="col-span-1 lg:col-span-6 space-y-4 md:space-y-6">
                     <!-- Page Heading -->
                     <div class="flex flex-col gap-1 px-2">
-                        <h1 class="text-3xl font-black tracking-tight dark:text-white">Connection Requests</h1>
-                        <p class="text-slate-500 dark:text-slate-400">Manage your incoming and outgoing networking loops
+                        <h1 class="text-2xl md:text-3xl font-black tracking-tight dark:text-white">Connection Requests</h1>
+                        <p class="text-sm md:text-base text-slate-500 dark:text-slate-400">Manage your incoming and outgoing networking loops
                         </p>
                     </div>
                     <!-- Main Glass Container -->
                     <div
                         class="bg-white dark:bg-glass-dark dark:glass-morphism rounded-xl overflow-hidden border border-black/5 dark:border-white/10 shadow-xl">
                         <!-- Tabs -->
-                        <div class="flex border-b border-black/5 dark:border-white/10 px-6">
+                        <div class="flex border-b border-black/5 dark:border-white/10 px-3 md:px-6 overflow-x-auto">
                             <a href="/user/sync-requests?tab=received"
-                                class="py-4 border-b-2 <%= activeTab === 'received' ? 'border-primary text-primary' : 'border-transparent text-slate-500' %> font-bold text-sm px-4">
+                                class="py-3 md:py-4 border-b-2 <%= activeTab === 'received' ? 'border-primary text-primary' : 'border-transparent text-slate-500' %> font-bold text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
                                 Received <span class="ml-1 bg-primary/20 text-[10px] py-0.5 px-2 rounded-full">
                                     <%= receivedRequests.length %>
                                 </span>
                             </a>
                             <a href="/user/sync-requests?tab=sent"
-                                class="py-4 border-b-2 <%= activeTab === 'sent' ? 'border-primary text-primary' : 'border-transparent text-slate-500' %> font-bold text-sm px-8 transition-colors">
+                                class="py-3 md:py-4 border-b-2 <%= activeTab === 'sent' ? 'border-primary text-primary' : 'border-transparent text-slate-500' %> font-bold text-xs md:text-sm px-3 md:px-8 transition-colors whitespace-nowrap">
                                 Sent
                             </a>
+                            <a href="/user/sync-requests?tab=network"
+                                class="md:hidden py-3 border-b-2 <%= activeTab === 'network' ? 'border-primary text-primary' : 'border-transparent text-slate-500' %> font-bold text-xs px-3 transition-colors whitespace-nowrap">
+                                Network
+                            </a>
                         </div>
+
                         <!-- Request List -->
                         <div class="divide-y divide-black/5 dark:divide-white/5">
     <% if(activeTab === 'received') { %>
         <% if(receivedRequests.length > 0) { %>
             <% for(let Request of receivedRequests) { %>
-                <div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors">
-                    <div class="flex items-center gap-4">
-                        <img class="h-14 w-14 rounded-full object-cover" src="<%= Request.sender.profilePic.url %>" />
-                        <div>
-                            <h4 class="font-bold text-white"><%= Request.sender.name %></h4>
-                            <p class="text-sm text-slate-400">Wants to sync with you</p>
+                <div class="p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-3 md:gap-4 w-full sm:w-auto">
+                        <img class="h-12 w-12 md:h-14 md:w-14 rounded-full object-cover flex-shrink-0" src="<%= Request.sender.profilePic.url %>" />
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-white text-sm md:text-base truncate"><%= Request.sender.name %></h4>
+                            <p class="text-xs md:text-sm text-slate-400">Wants to sync with you</p>
                         </div>
                     </div>
-                    <div class="flex gap-2">
-                        <form action="/user/accept-sync/<%=Request._id%>" method="POST"><button class="h-9 px-4 bg-primary text-white text-sm font-bold rounded-xl">Accept</button></form>
-                        <form action="/user/reject-sync/<%=Request._id%>" method="POST"><button class="h-9 px-4 border border-white/10 text-slate-400 text-sm font-bold rounded-xl">Decline</button></form>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <form action="/user/accept-sync/<%=Request._id%>" method="POST" class="flex-1 sm:flex-none">
+                            <button class="w-full h-9 px-3 md:px-4 bg-primary text-white text-xs md:text-sm font-bold rounded-xl">Accept</button>
+                        </form>
+                        <form action="/user/reject-sync/<%=Request._id%>" method="POST" class="flex-1 sm:flex-none">
+                            <button class="w-full h-9 px-3 md:px-4 border border-white/10 text-slate-400 text-xs md:text-sm font-bold rounded-xl">Decline</button>
+                        </form>
                     </div>
                 </div>
             <% } %>
         <% } else { %>
-            <div class="p-10 text-center text-slate-500">No incoming requests.</div>
+            <div class="p-8 md:p-10 text-center text-slate-500 text-sm md:text-base">No incoming requests.</div>
         <% } %>
 
     <% } else if(activeTab === 'sent') { %>
         <% if(sentRequests && sentRequests.length > 0) { %>
             <% for(let Request of sentRequests) { %>
                 <% if (Request.receiver) { %> 
-                <div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors">
-                    <div class="flex items-center gap-4">
-                        <img class="h-14 w-14 rounded-full object-cover" src="<%= Request.receiver.profilePic.url %>" />
-                        <div>
-                            <h4 class="font-bold text-white"><%= Request.receiver.name %></h4>
-                            <p class="text-sm text-slate-400">Waiting for classmate's response...</p>
+                <div class="p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-3 md:gap-4 w-full sm:w-auto">
+                        <img class="h-12 w-12 md:h-14 md:w-14 rounded-full object-cover flex-shrink-0" src="<%= Request.receiver.profilePic.url %>" />
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-white text-sm md:text-base truncate"><%= Request.receiver.name %></h4>
+                            <p class="text-xs md:text-sm text-slate-400">Waiting for classmate's response...</p>
                         </div>
                     </div>
-                    <form action="/user/revoke/<%=Request._id%>?_method=DELETE" method="POST">
-                        <button class="h-9 px-4 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white text-sm font-bold rounded-xl transition-all">Cancel Request</button>
+                    <form action="/user/revoke/<%=Request._id%>?_method=DELETE" method="POST" class="w-full sm:w-auto">
+                        <button class="w-full h-9 px-3 md:px-4 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white text-xs md:text-sm font-bold rounded-xl transition-all">Cancel Request</button>
                     </form>
                 </div>
                 <% } %>
             <% } %>
         <% } else { %>
-            <div class="p-10 text-center text-slate-500">You haven't sent any requests yet.</div>
+            <div class="p-8 md:p-10 text-center text-slate-500 text-sm md:text-base">You haven't sent any requests yet.</div>
         <% } %>
 
     <% } else if(activeTab === 'network') { %>
         <% if(myNetwork && myNetwork.length > 0) { %>
             <% for(let friend of myNetwork) { %>
-                <div class="p-6 flex items-center justify-between hover:bg-white/5 transition-colors">
-                    <div class="flex items-center gap-4">
-                        <img class="h-14 w-14 rounded-full object-cover border-2 border-primary/20" src="<%= friend.profilePic.url %>" />
-                        <div>
-                            <h4 class="font-bold text-white"><%= friend.name %></h4>
+                <div class="p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-3 md:gap-4 w-full sm:w-auto">
+                        <img class="h-12 w-12 md:h-14 md:w-14 rounded-full object-cover border-2 border-primary/20 flex-shrink-0" src="<%= friend.profilePic.url %>" />
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-white text-sm md:text-base truncate"><%= friend.name %></h4>
                             <p class="text-xs text-green-500 font-medium">Synced Connection</p>
                         </div>
                     </div>
-                    <div class="flex gap-2">
-                        <a href="/chat?chatId=<%= friend._id %>" class="h-9 px-4 bg-white/5 hover:bg-white/10 text-white text-sm font-bold rounded-xl flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">chat</span> Message
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <a href="/chat?chatId=<%= friend._id %>" class="flex-1 sm:flex-none h-9 px-3 md:px-4 bg-white/5 hover:bg-white/10 text-white text-xs md:text-sm font-bold rounded-xl flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">chat</span> <span class="hidden sm:inline">Message</span>
                         </a>
                         <form action="/user/unsync/<%= friend._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Remove connection?')">
-                            <button type="submit" class="h-9 px-4 border border-red-500/20 text-red-500/50 hover:bg-red-500 hover:text-white text-sm font-bold rounded-xl flex items-center gap-2">
+                            <button type="submit" class="h-9 px-3 md:px-4 border border-red-500/20 text-red-500/50 hover:bg-red-500 hover:text-white text-xs md:text-sm font-bold rounded-xl flex items-center gap-2">
                                 <span class="material-symbols-outlined text-sm">person_remove</span>
                             </button>
                         </form>
@@ -238,13 +248,15 @@
                 </div>
             <% } %>
         <% } else { %>
-            <div class="p-10 text-center text-slate-500">Your network is empty. Start syncing!</div>
+            <div class="p-8 md:p-10 text-center text-slate-500 text-sm md:text-base">Your network is empty. Start syncing!</div>
         <% } %>
     <% } %>
 </div>
+                    </div>
                 </section>
-                <!-- Right Sidebar: Loop Suggestions -->
-                <aside class="lg:col-span-3 space-y-6">
+
+                <!-- Right Sidebar: Loop Suggestions (Hidden on Mobile) -->
+                <aside class="hidden lg:block lg:col-span-3 space-y-6">
                     <div
                         class="bg-white dark:bg-card-dark rounded-xl p-5 shadow-sm border border-black/5 dark:border-white/5">
                         <div class="flex items-center justify-between mb-4">
@@ -254,7 +266,7 @@
                         </div>
                         <div class="space-y-4">
 
-                            <!-- Suggestion 1 -->
+                            <!-- Suggestions -->
                             <% for(let suggestion of loopSuggestions) { %>
                                 <a href="/user/<%=suggestion._id%>" class="flex items-center justify-between">
                                     <div class="flex items-center gap-3">
@@ -288,6 +300,39 @@
                 </aside>
             </div>
         </main>
+
+        <!-- Mobile Bottom Navigation (Visible only on mobile) -->
+        <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-2 bg-gradient-to-t from-black via-black/95 to-transparent">
+            <div class="bg-card-dark glass-morphism rounded-2xl px-1 py-3 flex items-center justify-around shadow-2xl border border-white/10">
+                <a href="/home" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-4 py-1">
+                    <span class="material-symbols-outlined text-2xl">home</span>
+                    <span class="text-[9px] font-semibold uppercase tracking-wider">Home</span>
+                </a>
+                
+                <a href="/user/sync-requests?tab=received" class="flex flex-col items-center gap-1.5 <%= activeTab === 'received' ? 'text-primary' : 'text-white/50' %> px-4 py-1 <%= activeTab === 'received' ? 'bg-primary/10 rounded-xl' : '' %>">
+                    <span class="material-symbols-outlined <%= activeTab === 'received' ? 'material-symbols-fill' : '' %> text-2xl">download</span>
+                    <span class="text-[9px] font-bold uppercase tracking-wider">Received</span>
+                    <% if (receivedRequests.length > 0) { %>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                            <%= receivedRequests.length %>
+                        </span>
+                    <% } %>
+                </a>
+                
+                <a href="/user/sync-requests?tab=sent" class="flex flex-col items-center gap-1.5 <%= activeTab === 'sent' ? 'text-primary' : 'text-white/50' %> px-4 py-1 <%= activeTab === 'sent' ? 'bg-primary/10 rounded-xl' : '' %>">
+                    <span class="material-symbols-outlined <%= activeTab === 'sent' ? 'material-symbols-fill' : '' %> text-2xl">send</span>
+                    <span class="text-[9px] font-bold uppercase tracking-wider">Sent</span>
+                </a>
+                
+                <a href="/user/sync-requests?tab=network" class="flex flex-col items-center gap-1.5 <%= activeTab === 'network' ? 'text-primary' : 'text-white/50' %> px-4 py-1 <%= activeTab === 'network' ? 'bg-primary/10 rounded-xl' : '' %>">
+                    <span class="material-symbols-outlined <%= activeTab === 'network' ? 'material-symbols-fill' : '' %> text-2xl">diversity_3</span>
+                    <span class="text-[9px] font-bold uppercase tracking-wider">Network</span>
+                </a>
+                
+                
+            </div>
+        </nav>
+
     </body>
 
     </html>

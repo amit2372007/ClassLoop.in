@@ -1,123 +1,204 @@
 
-
 <body class="bg-background-dark dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen">
   <!-- Top Navigation Bar -->
   <header
-    class="sticky top-0 z-50 w-full border-b border-white/10 glass-card px-4 md:px-8 py-3 bg-[#0f172a]/80 backdrop-blur-md">
-    <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
+    class="sticky top-0 z-50 w-full border-b border-white/10 glass-card px-3 md:px-8 py-2 md:py-3 bg-[#0f172a]/80 backdrop-blur-md">
+    <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-2 md:gap-4">
 
-      <a href="/home" class="flex items-center gap-3 group transition-all duration-300 ease-in-out">
-  <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white">
-          <span class="material-symbols-outlined text-2xl fill">all_inclusive</span>
+      <!-- Logo -->
+      <a href="/home" class="flex pr-5 items-center gap-2 md:gap-3 group transition-all duration-300 ease-in-out flex-shrink-0">
+        <div class="size-8 md:size-10 bg-primary rounded-lg md:rounded-xl flex items-center justify-center text-white">
+          <span class="material-symbols-outlined text-xl md:text-2xl fill">all_inclusive</span>
         </div>
+        <h2 class="text-lg md:text-xl text-white font-extrabold tracking-tighter hidden sm:block transition-colors duration-300 group-hover:text-primary">
+          ClassLoop<span class="text-primary group-hover:text-white transition-colors">.in</span>
+        </h2>
+      </a>
 
-  <h2 class="text-xl text-white font-extrabold tracking-tighter hidden md:block transition-colors duration-300 group-hover:text-primary">
-    ClassLoop<span class="text-primary group-hover:text-white transition-colors">.in</span>
-  </h2>
-</a>
-
-      <!-- <a href="/home" class="flex items-center gap-3">
-        <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white">
-          <span class="material-symbols-outlined text-2xl fill">all_inclusive</span>
-        </div>
-        <h2 class="text-xl text-white font-bold tracking-tight hidden md:block">ClassLoop.in</h2>
-      </a> -->
-      
-          <form action="/home/search" method="GET" class="flex-1 max-w-2xl px-4 py-2">
-  <label class="relative block w-full">
-    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-      <span class="material-symbols-outlined">search</span>
-    </span>
-    <input 
-      name="q" 
-      required
-      class="w-full bg-background-dark  border-transparent focus:ring-primary focus:border-primary rounded-xl py-2.5 pl-11 pr-4 text-sm placeholder:text-slate-500 text-white transition-colors border"
-      placeholder="Search for ClassMates, Posts and Doubts ..." 
-      type="text" 
-      value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
-    />
-  </label>
-</form>
-
-          <div class="flex items-center gap-3">
-            <% if(!currUser) { %>
-              <div class="flex items-center gap-2">
-                <form action="/user/signup" method="GET">
-                  <button
-                    class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">
-                    Sign up
-                  </button>
-                </form>
-                <form action="/user/login" method="GET">
-                  <button
-                    class="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all">
-                    Log in
-                  </button>
-                </form>
-              </div>
-              <% } else { %>
-                <div class="flex items-center gap-3">
-
-                  <div class="flex items-center gap-3">
-                    <% if(currUser) { %>
-
-        <a href="/chat" class="p-2 hover:bg-white/5 rounded-xl transition-all group flex items-center justify-center"
-          title="Messages">
-          <span class="material-symbols-outlined text-[28px] text-white/70 group-hover:text-primary transition-colors">
-            chat
+      <!-- Search Bar -->
+      <form action="/home/search" method="GET" class="flex-1 max-w-2xl">
+        <label class="relative block w-full">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 md:pl-4 text-slate-400">
+            <span class="material-symbols-outlined text-xl md:text-2xl">search</span>
           </span>
-        </a>
+          <input 
+            name="q" 
+            required
+            class="w-full bg-background-dark border-transparent focus:ring-primary focus:border-primary rounded-lg md:rounded-xl py-2 md:py-2.5 pl-10 md:pl-11 pr-3 md:pr-4 text-xs md:text-sm placeholder:text-slate-500 text-white transition-colors border"
+            placeholder="Search..." 
+            type="text" 
+            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+          />
+        </label>
+      </form>
+
+      <!-- Right Side Actions -->
+      <div class="flex items-center gap-1 md:gap-3 flex-shrink-0">
+        <% if(!currUser) { %>
+          <!-- Not Logged In - Show on Desktop Only -->
+          <div class="hidden md:flex items-center gap-2">
+            <form action="/user/signup" method="GET">
+              <button
+                class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">
+                Sign up
+              </button>
+            </form>
+            <form action="/user/login" method="GET">
+              <button
+                class="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all">
+                Log in
+              </button>
+            </form>
+          </div>
+
+          <!-- Mobile Login Button -->
+          <form action="/user/login" method="GET" class="md:hidden">
+            <button class="bg-primary hover:bg-primary/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">
+              Login
+            </button>
+          </form>
+        <% } else { %>
+          <!-- Logged In User Actions -->
+          <div class="flex items-center gap-1 md:gap-3">
+
+            <!-- Chat Icon -->
+            <% if(currUser) { %>
+              <a href="/chat" class="hidden md:block"
+                title="Messages">
+                <span class="material-symbols-outlined text-[22px] md:text-[28px] text-white/70 group-hover:text-primary transition-colors">
+                  chat
+                </span>
+              </a>
+            <% } %>
+
+            <!-- Notifications -->
+            <a href="/notifications" class="ml-5 mr-5 relative group p-1.5 md:p-2 hover:bg-white/5 rounded-lg md:rounded-xl transition-all">
+              <span
+                class="material-symbols-outlined text-xl md:text-2xl text-white/70 group-hover:text-primary transition-colors">
+                notifications
+              </span>
+              <% if (unreadCount> 0) { %>
+                <span class="absolute top-1 right-1 md:top-2 md:right-2 flex h-2 w-2 md:h-2.5 md:w-2.5">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                  <span
+                    class="relative inline-flex rounded-full h-2 w-2 md:h-2.5 md:w-2.5 bg-red-500 border border-[#0f172a] md:border-2"></span>
+                </span>
+              <% } %>
+            </a>
+
+            <!-- Admin/Teacher Panels - Hidden on Mobile -->
+            <% if(currUser.designation==='admin' ){ %>
+              <form action="/admin" method="GET" class="hidden md:block">
+                <button
+                  class="bg-white/5 hover:text-green-400 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">
+                  Admin Panel
+                </button>
+              </form>
+            <% } else if(currUser.designation==='principle' ) { %>
+              <form action="/school" method="GET" class="hidden md:block">
+                <button
+                  class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">
+                  Principle Panel
+                </button>
+              </form>
+            <% } else if(currUser.designation==='classTeacher' ) { %>
+              <form action="/teacher" method="GET" class="hidden md:block">
+                <button
+                  class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">
+                  Teacher Panel
+                </button>
+              </form>
+            <% } %>
+
+            <!-- Logout - Hidden on Mobile -->
+            <form action="/user/logout" method="GET" class="hidden md:block">
+              <button
+                class="text-white/60 hover:text-red-400 px-3 py-2 text-sm font-medium transition-all">
+                Logout
+              </button>
+            </form>
+
+            <!-- Profile Picture -->
+            <a href="/user/profile"
+              class="size-8 md:size-10 rounded-full border border-primary/20 md:border-2 overflow-hidden hover:scale-105 transition-transform flex-shrink-0">
+              <img src="<%=currUser.profilePic.url%>" alt="Profile" class="w-full h-full object-cover">
+            </a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Dropdown (Only visible when logged in on mobile) -->
+  <% if(currUser) { %>
+    <div id="mobile-menu" class="hidden md:hidden fixed top-[60px] left-0 right-0 z-40 glass-card border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-md">
+      <div class="px-4 py-3 space-y-2">
+        
+        <!-- Admin/Teacher Panel Links -->
+        <% if(currUser.designation==='admin' ){ %>
+          <form action="/admin" method="GET" class="w-full">
+            <button class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-white/5 text-white text-sm font-medium transition-all flex items-center gap-3">
+              <span class="material-symbols-outlined text-xl text-green-400">admin_panel_settings</span>
+              Admin Panel
+            </button>
+          </form>
+        <% } else if(currUser.designation==='principle' ) { %>
+          <form action="/school" method="GET" class="w-full">
+            <button class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-white/5 text-white text-sm font-medium transition-all flex items-center gap-3">
+              <span class="material-symbols-outlined text-xl text-primary">school</span>
+              Principle Panel
+            </button>
+          </form>
+        <% } else if(currUser.designation==='classTeacher' ) { %>
+          <form action="/teacher" method="GET" class="w-full">
+            <button class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-white/5 text-white text-sm font-medium transition-all flex items-center gap-3">
+              <span class="material-symbols-outlined text-xl text-primary">school</span>
+              Teacher Panel
+            </button>
+          </form>
         <% } %>
 
-                    <a href="/notifications" class="relative group p-2 hover:bg-white/5 rounded-xl transition-all">
-                      <span
-                        class="material-symbols-outlined text-2xl text-white/70 group-hover:text-primary transition-colors">
-                        notifications
-                      </span>
-                      <% if (unreadCount> 0) { %>
-                        <span class="absolute top-2 right-2 flex h-2.5 w-2.5">
-                          <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                          <span
-                            class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-[#0f172a]"></span>
-                        </span>
-                        <% } %>
-                    </a>
+        <!-- Logout -->
+        <form action="/user/logout" method="GET" class="w-full">
+          <button class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-red-500/10 text-red-400 text-sm font-medium transition-all flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl">logout</span>
+            Logout
+          </button>
+        </form>
 
-                    <% if(currUser.designation==='admin' ){ %>
-                      <form action="/admin" method="GET">
-                        <button
-                          class="bg-white/5 hover:text-green-400 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">Admin
-                          Panel</button>
-                      </form>
-                      <% } else if(currUser.designation==='principle' ) { %>
-                        <form action="/school" method="GET">
-                          <button
-                            class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">Principle
-                            Panel</button>
-                        </form>
-                        <% } else if(currUser.designation==='classTeacher' ) { %>
-                          <form action="/teacher" method="GET">
-                            <button
-                              class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10">Teacher
-                              Panel</button>
-                          </form>
-                          <% } %>
+        <form action="/user/profile" method="GET" class="w-full">
+          <button class="w-full text-left px-4 py-2.5 rounded-lg text-white text-sm font-medium transition-all flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl text-blue-400">account_box</span>
+            Profile
+          </button>
+        </form>
+      </div>
+    </div>
 
-                            <form action="/user/logout" method="GET">
-                              <button
-                                class="text-white/60 hover:text-red-400 px-3 py-2 text-sm font-medium transition-all">
-                                Logout
-                              </button>
-                            </form>
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+      // Toggle mobile menu when profile is clicked on mobile
+      document.addEventListener('DOMContentLoaded', function() {
+        const profileLink = document.querySelector('a[href="/user/profile"]');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (window.innerWidth < 768) {
+          profileLink.addEventListener('click', function(e) {
+            if (window.innerWidth < 768) {
+              e.preventDefault();
+              mobileMenu.classList.toggle('hidden');
+            }
+          });
 
-                            <a href="/user/profile"
-                              class="size-10 rounded-full border-2 border-primary/20 overflow-hidden hover:scale-105 transition-transform">
-                              <img src="<%=currUser.profilePic.url%>" alt="Profile" class="w-full h-full object-cover">
-                            </a>
-                  </div>
-                  <% } %>
-                </div>
-          </div>
-  </header>
+          // Close menu when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!profileLink.contains(e.target) && !mobileMenu.contains(e.target)) {
+              mobileMenu.classList.add('hidden');
+            }
+          });
+        }
+      });
+    </script>
+  <% } %>
 </body>

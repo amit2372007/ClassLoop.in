@@ -7,5 +7,5 @@ const searchController = require("../controllers/search.js");
 
 router.get("/", isLoggedIn, homeController.renderHomePage);
 router.get("/search", isLoggedIn, searchController.globalSearch);
-
+router.get("/api/posts/more", isLoggedIn, homeController.fetchMorePosts);
 module.exports = router;

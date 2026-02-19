@@ -1,80 +1,82 @@
 <% layout("/layout/boilerplate2.ejs") -%>
 
 <main class="flex-1 flex flex-col overflow-hidden bg-slate-50/50 dark:bg-slate-950">
-    <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-2 text-sm font-medium text-slate-500">
+
+    <!-- Header -->
+    <header class="h-auto min-h-[64px] bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-8 py-3 flex items-center justify-between gap-3 shrink-0 flex-wrap">
+        <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-500 flex-wrap">
             <a href="/teacher?tab=Overview" class="hover:text-primary">Dashboard</a>
             <span class="material-symbols-outlined text-xs">chevron_right</span>
             <span>Grade <%= currClass.className %></span>
             <span class="material-symbols-outlined text-xs">chevron_right</span>
             <span class="text-slate-900 dark:text-white font-bold">History</span>
         </div>
-        <div class="flex items-center gap-4">
-            <button class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-primary/20">
-                <span class="material-symbols-outlined text-lg">download</span> Download Report
+        <div class="flex items-center gap-2 sm:gap-4">
+            <button class="bg-primary text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined text-base sm:text-lg">download</span>
+                <span class="hidden sm:inline">Download Report</span>
+                <span class="sm:hidden">Report</span>
             </button>
-            <div class="h-10 w-10 rounded-full border-2 border-white shadow-sm overflow-hidden">
+            <div class="h-9 w-9 sm:h-10 sm:w-10 rounded-full border-2 border-white shadow-sm overflow-hidden flex-shrink-0">
                 <img src="<%= currUser.profilePic.url %>" alt="Profile">
             </div>
         </div>
     </header>
 
     <div class="flex-1 overflow-hidden flex">
-        <aside class="w-80 border-r border-slate-200 dark:border-slate-800 p-6 space-y-8 overflow-y-auto hidden xl:block bg-white dark:bg-slate-900">
+
+        <%# LEFT SIDEBAR — hidden on mobile, visible on xl+ (matches original xl:block) %>
+        <aside class="w-80 border-r border-slate-200 dark:border-slate-800 p-6 space-y-8 overflow-y-auto hidden xl:block bg-white dark:bg-slate-900 flex-shrink-0">
             <div class="space-y-4">
-    <div class="flex items-center justify-between">
-        <h4 class="font-bold text-slate-900 dark:text-white">
-            <%= selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' }) %>
-        </h4>
-        <div class="flex gap-1">
-            <% 
-                // Logic to jump 5 days back and forward
-                const prevDate = new Date(selectedDate);
-                prevDate.setDate(prevDate.getDate() - 5);
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-slate-900 dark:text-white">
+                        <%= selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' }) %>
+                    </h4>
+                    <div class="flex gap-1">
+                        <% 
+                            const prevDate = new Date(selectedDate);
+                            prevDate.setDate(prevDate.getDate() - 5);
+                            
+                            const nextDate = new Date(selectedDate);
+                            nextDate.setDate(nextDate.getDate() + 5);
+                        %>
+                        <a href="/teacher/Attendance-Insights?date=<%= prevDate.toISOString().split('T')[0] %>" 
+                           class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary decoration-none">
+                            chevron_left
+                        </a>
+                        <a href="/teacher/Attendance-Insights?date=<%= nextDate.toISOString().split('T')[0] %>" 
+                           class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary decoration-none">
+                            chevron_right
+                        </a>
+                    </div>
+                </div>
                 
-                const nextDate = new Date(selectedDate);
-                nextDate.setDate(nextDate.getDate() + 5);
-            %>
-            <a href="/teacher/Attendance-Insights?date=<%= prevDate.toISOString().split('T')[0] %>" 
-               class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary decoration-none">
-                chevron_left
-            </a>
-            <a href="/teacher/Attendance-Insights?date=<%= nextDate.toISOString().split('T')[0] %>" 
-               class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary decoration-none">
-                chevron_right
-            </a>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-5 gap-2">
-        <% 
-            for(let i = -2; i <= 2; i++) { 
-                let d = new Date(selectedDate);
-                d.setDate(d.getDate() + i);
-                
-                // Compare only YYYY-MM-DD to check if it's today's live date
-                const today = new Date().toISOString().split('T')[0];
-                const loopDate = d.toISOString().split('T')[0];
-                const isSelected = i === 0;
-                const isToday = today === loopDate;
-        %>
-            <a href="/teacher/Attendance-Insights?date=<%= loopDate %>" 
-               class="flex flex-col items-center p-2 rounded-xl transition-all relative
-               <%= isSelected ? 'bg-primary text-white shadow-md' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
-                
-                <span class="text-[10px] uppercase font-bold"><%= d.toLocaleString('default', { weekday: 'short' }) %></span>
-                <span class="text-sm font-bold"><%= d.getDate() %></span>
-                
-                <% if(isToday && !isSelected) { %>
-                    <span class="absolute -top-1 -right-1 flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                    </span>
-                <% } %>
-            </a>
-        <% } %>
-    </div>
-</div>
+                <div class="grid grid-cols-5 gap-2">
+                    <% 
+                        for(let i = -2; i <= 2; i++) { 
+                            let d = new Date(selectedDate);
+                            d.setDate(d.getDate() + i);
+                            
+                            const today = new Date().toISOString().split('T')[0];
+                            const loopDate = d.toISOString().split('T')[0];
+                            const isSelected = i === 0;
+                            const isToday = today === loopDate;
+                    %>
+                        <a href="/teacher/Attendance-Insights?date=<%= loopDate %>" 
+                           class="flex flex-col items-center p-2 rounded-xl transition-all relative
+                           <%= isSelected ? 'bg-primary text-white shadow-md' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
+                            <span class="text-[10px] uppercase font-bold"><%= d.toLocaleString('default', { weekday: 'short' }) %></span>
+                            <span class="text-sm font-bold"><%= d.getDate() %></span>
+                            <% if(isToday && !isSelected) { %>
+                                <span class="absolute -top-1 -right-1 flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                            <% } %>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
 
             <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
                 <h4 class="text-sm font-bold mb-4">Monthly Attendance Trends</h4>
@@ -91,34 +93,84 @@
             </div>
         </aside>
 
-        <section class="flex-1 overflow-y-auto p-8 space-y-8">
-            <div class="flex items-end justify-between">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-900 dark:text-white">Attendance Insights - Class <%= currClass.className %>-<%= currClass.section %></h2>
-                    <p class="text-slate-500 font-medium mt-1">Detailed review for <%= selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) %></p>
+        <!-- Main content section -->
+        <section class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-5 sm:space-y-8 min-w-0">
+
+            <!-- Mobile date strip — only visible below xl -->
+            <div class="xl:hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-slate-500">
+                        <%= selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' }) %>
+                    </span>
+                    <div class="flex gap-1">
+                        <a href="/teacher/Attendance-Insights?date=<%= prevDate.toISOString().split('T')[0] %>"
+                           class="material-symbols-outlined text-slate-400 hover:text-primary text-lg decoration-none">chevron_left</a>
+                        <a href="/teacher/Attendance-Insights?date=<%= nextDate.toISOString().split('T')[0] %>"
+                           class="material-symbols-outlined text-slate-400 hover:text-primary text-lg decoration-none">chevron_right</a>
+                    </div>
                 </div>
-                <div class="flex gap-3">
-                    <button class="px-6 py-2 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/25">View Insights</button>
-                    <button class="px-6 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl font-bold text-sm">Edit Mode</button>
+                <div class="grid grid-cols-5 gap-1.5">
+                    <% 
+                        for(let j = -2; j <= 2; j++) { 
+                            let dMob = new Date(selectedDate);
+                            dMob.setDate(dMob.getDate() + j);
+                            const todayMob = new Date().toISOString().split('T')[0];
+                            const loopDateMob = dMob.toISOString().split('T')[0];
+                            const isSelectedMob = j === 0;
+                            const isTodayMob = todayMob === loopDateMob;
+                    %>
+                        <a href="/teacher/Attendance-Insights?date=<%= loopDateMob %>"
+                           class="flex flex-col items-center p-2 rounded-xl transition-all relative
+                           <%= isSelectedMob ? 'bg-primary text-white shadow-md' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>">
+                            <span class="text-[9px] uppercase font-bold"><%= dMob.toLocaleString('default', { weekday: 'short' }) %></span>
+                            <span class="text-sm font-bold"><%= dMob.getDate() %></span>
+                            <% if(isTodayMob && !isSelectedMob) { %>
+                                <span class="absolute -top-1 -right-1 flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                            <% } %>
+                        </a>
+                    <% } %>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-6 shadow-sm">
-                    <div class="relative size-24 shrink-0">
+            <!-- Page heading -->
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-0">
+                <div>
+                    <h2 class="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
+                        Attendance Insights<span class="hidden sm:inline"> - Class <%= currClass.className %>-<%= currClass.section %></span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+                        <%= selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) %>
+                    </p>
+                </div>
+                <div class="flex gap-2 sm:gap-3">
+                    <button class="px-4 sm:px-6 py-2 bg-primary text-white rounded-xl font-bold text-xs sm:text-sm shadow-lg shadow-primary/25">View Insights</button>
+                    <button class="px-4 sm:px-6 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl font-bold text-xs sm:text-sm">Edit Mode</button>
+                </div>
+            </div>
+
+            <!-- Stats cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                <!-- Donut card -->
+                <div class="col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 sm:gap-6 shadow-sm">
+                    <div class="relative size-20 sm:size-24 shrink-0">
                         <svg class="size-full -rotate-90" viewBox="0 0 36 36">
                             <circle cx="18" cy="18" r="16" fill="none" class="stroke-slate-100 dark:stroke-slate-800" stroke-width="3"></circle>
                             <circle cx="18" cy="18" r="16" fill="none" class="stroke-primary" stroke-width="3" stroke-dasharray="<%= stats.percentage %>, 100"></circle>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-xl font-black"><%= stats.percentage %>%</span>
+                            <span class="text-lg sm:text-xl font-black"><%= stats.percentage %>%</span>
                             <span class="text-[8px] uppercase font-bold text-slate-400">Attendance</span>
                         </div>
                     </div>
-                    <div class="h-12 w-px bg-slate-100 dark:bg-slate-800"></div>
+                    <div class="h-10 sm:h-12 w-px bg-slate-100 dark:bg-slate-800"></div>
                     <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase">Performance</p>
-                        <p class="text-sm font-bold text-emerald-500 flex items-center gap-1">Above Average <span class="material-symbols-outlined text-sm">trending_up</span></p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Performance</p>
+                        <p class="text-xs sm:text-sm font-bold text-emerald-500 flex items-center gap-1">
+                            Above Average <span class="material-symbols-outlined text-sm">trending_up</span>
+                        </p>
                     </div>
                 </div>
 
@@ -128,86 +180,130 @@
                     { label: 'Late / Leave', val: stats.lateLeave, color: 'text-amber-500', bg: 'bg-amber-500' }
                 ] %>
                 <% cardItems.forEach(item => { %>
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest"><%= item.label %></p>
-                        <h3 class="text-4xl font-black <%= item.color %>"><%= item.val %></h3>
-                        <div class="w-full h-1.5 <%= item.bg %>/10 rounded-full mt-4 overflow-hidden">
+                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <p class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase mb-3 sm:mb-4 tracking-widest"><%= item.label %></p>
+                        <h3 class="text-3xl sm:text-4xl font-black <%= item.color %>"><%= item.val %></h3>
+                        <div class="w-full h-1.5 <%= item.bg %>/10 rounded-full mt-3 sm:mt-4 overflow-hidden">
                             <div class="h-full <%= item.bg %>" style="width: <%= (item.val/records.length)*100 %>%"></div>
                         </div>
                     </div>
                 <% }) %>
             </div>
 
+            <!-- Student Records table -->
             <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                    <h3 class="font-bold text-lg">Student Records</h3>
-                    <div class="flex gap-4">
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                            <input type="text" placeholder="Search by name or roll no..." class="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm w-64 focus:ring-2 focus:ring-primary/20">
+                <!-- Table header / search -->
+                <div class="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <h3 class="font-bold text-base sm:text-lg">Student Records</h3>
+                    <div class="flex gap-2 sm:gap-4">
+                        <div class="relative flex-1 sm:flex-none">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base sm:text-lg">search</span>
+                            <input type="text" placeholder="Search student..." class="pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-xs sm:text-sm w-full sm:w-64 focus:ring-2 focus:ring-primary/20">
                         </div>
-                        <button class="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+                        <button class="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors flex-shrink-0">
                             <span class="material-symbols-outlined">filter_list</span>
                         </button>
                     </div>
                 </div>
 
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 dark:border-slate-800">
-                            <th class="px-8 py-4">Student</th>
-                            <th class="px-8 py-4 text-center">Roll No.</th>
-                            <th class="px-8 py-4 text-center">Status</th>
-                            <th class="px-8 py-4">Remarks</th>
-                            <th class="px-8 py-4 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
-                        <% if (records.length === 0) { %>
-                            <tr>
-                                <td colspan="5" class="py-20 text-center text-slate-400 font-medium italic">No attendance records found for this date.</td>
+                <!-- Desktop table — hidden on mobile -->
+                <div class="hidden sm:block overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 dark:border-slate-800">
+                                <th class="px-8 py-4">Student</th>
+                                <th class="px-8 py-4 text-center">Roll No.</th>
+                                <th class="px-8 py-4 text-center">Status</th>
+                                <th class="px-8 py-4">Remarks</th>
+                                <th class="px-8 py-4 text-right">Action</th>
                             </tr>
-                        <% } else { %>
-                            <%records.forEach(record => {%>
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td class="px-8 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <img src="<%= record.student.profilePic.url %>" class="size-9 rounded-full object-cover border border-slate-200">
-                                            <span class="text-sm font-bold text-slate-700 dark:text-slate-200"><%= record.student.name %></span>
-                                        </div>
-                                    </td>
-                                    <td class="px-8 py-4 text-center text-sm font-bold text-slate-500"><%= record.student.rollNumber %></td>
-                                    <td class="px-8 py-4">
-                                        <div class="flex justify-center">
-                                            <% 
-                                                const statusStyles = {
-                                                    'Present': 'bg-emerald-100 text-emerald-600',
-                                                    'Absent': 'bg-rose-100 text-rose-600',
-                                                    'Late': 'bg-amber-100 text-amber-600',
-                                                    'Leave': 'bg-blue-100 text-blue-600'
-                                                };
-                                            %>
-                                            <span class="px-3 py-1 <%= statusStyles[record.status] %> text-[10px] font-bold rounded-full flex items-center gap-1 uppercase tracking-tighter">
-                                                <span class="size-1 rounded-full bg-current"></span>
-                                                <%= record.status %>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="px-8 py-4">
-                                        <span class="text-xs <%= record.remarks ? 'text-slate-600 dark:text-slate-400 italic' : 'text-slate-300' %>">
-                                            <%= record.remarks || '-' %>
-                                        </span>
-                                    </td>
-                                    <td class="px-8 py-4 text-right">
-                                        <button class="text-slate-400 hover:text-slate-900 dark:hover:text-white">
-                                            <span class="material-symbols-outlined">more_vert</span>
-                                        </button>
-                                    </td>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                            <% if (records.length === 0) { %>
+                                <tr>
+                                    <td colspan="5" class="py-20 text-center text-slate-400 font-medium italic">No attendance records found for this date.</td>
                                 </tr>
-                            <% }) %>
-                        <% } %>
-                    </tbody>
-                </table>
+                            <% } else { %>
+                                <%records.forEach(record => {%>
+                                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                        <td class="px-8 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <img src="<%= record.student.profilePic.url %>" class="size-9 rounded-full object-cover border border-slate-200">
+                                                <span class="text-sm font-bold text-slate-700 dark:text-slate-200"><%= record.student.name %></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-4 text-center text-sm font-bold text-slate-500"><%= record.student.rollNumber %></td>
+                                        <td class="px-8 py-4">
+                                            <div class="flex justify-center">
+                                                <% 
+                                                    const statusStyles = {
+                                                        'Present': 'bg-emerald-100 text-emerald-600',
+                                                        'Absent': 'bg-rose-100 text-rose-600',
+                                                        'Late': 'bg-amber-100 text-amber-600',
+                                                        'Leave': 'bg-blue-100 text-blue-600'
+                                                    };
+                                                %>
+                                                <span class="px-3 py-1 <%= statusStyles[record.status] %> text-[10px] font-bold rounded-full flex items-center gap-1 uppercase tracking-tighter">
+                                                    <span class="size-1 rounded-full bg-current"></span>
+                                                    <%= record.status %>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-4">
+                                            <span class="text-xs <%= record.remarks ? 'text-slate-600 dark:text-slate-400 italic' : 'text-slate-300' %>">
+                                                <%= record.remarks || '-' %>
+                                            </span>
+                                        </td>
+                                        <td class="px-8 py-4 text-right">
+                                            <button class="text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                                                <span class="material-symbols-outlined">more_vert</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile card list — visible only on mobile -->
+                <div class="sm:hidden divide-y divide-slate-100 dark:divide-slate-800">
+                    <% if (records.length === 0) { %>
+                        <div class="py-16 text-center text-slate-400 font-medium italic text-sm px-4">
+                            No attendance records found for this date.
+                        </div>
+                    <% } else { %>
+                        <% records.forEach(record => { %>
+                            <% 
+                                const statusStyles = {
+                                    'Present': 'bg-emerald-100 text-emerald-600',
+                                    'Absent': 'bg-rose-100 text-rose-600',
+                                    'Late': 'bg-amber-100 text-amber-600',
+                                    'Leave': 'bg-blue-100 text-blue-600'
+                                };
+                            %>
+                            <div class="px-4 py-3.5 flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <img src="<%= record.student.profilePic.url %>" class="size-9 rounded-full object-cover border border-slate-200 flex-shrink-0">
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate"><%= record.student.name %></p>
+                                        <p class="text-[10px] text-slate-400 font-medium">Roll #<%= record.student.rollNumber %></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <span class="px-2.5 py-1 <%= statusStyles[record.status] %> text-[10px] font-bold rounded-full flex items-center gap-1 uppercase">
+                                        <span class="size-1 rounded-full bg-current"></span>
+                                        <%= record.status %>
+                                    </span>
+                                    <button class="text-slate-400">
+                                        <span class="material-symbols-outlined text-lg">more_vert</span>
+                                    </button>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+
             </div>
         </section>
     </div>

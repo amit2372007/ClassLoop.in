@@ -1,0 +1,296 @@
+<% layout("/layout/boilerplate.ejs") -%>
+
+    <title>Professional Profile Editor - ClassLoop</title>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9f1fef",
+                        "background-dark": "#0b0b0b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-background-dark text-slate-200 font-display min-h-screen;
+            }
+        }
+        .glass-header {
+            background: rgba(11, 11, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .locked-field {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .save-glow:hover {
+            box-shadow: 0 0 25px rgba(159, 31, 239, 0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(159, 31, 239, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+
+    <main class="pb-20 lg:pb-24">
+        <section class="relative w-full">
+            <div class="relative w-full h-[180px] md:h-[250px] lg:h-[350px] overflow-hidden bg-slate-900">
+                <img alt="Campus Cover" class="w-full h-full object-cover opacity-60"
+                    src="<%= currentUser.coverPic.url %>" />
+                <div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
+            </div>
+
+            <div class="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 lg:left-24 lg:translate-x-0">
+                <div class="relative w-28 h-28 md:w-36 md:h-36 lg:w-48 lg:h-48 rounded-full border-4 md:border-[6px] border-background-dark shadow-2xl overflow-hidden bg-slate-800">
+                    <img alt="<%= currentUser.name %> profile picture" class="w-full h-full object-cover "
+                        src="<%= currentUser?.profilePic?.url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png' %>" />
+                    
+                
+                </div>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-6 mt-16 md:mt-20 lg:mt-24 pt-6 md:pt-8 lg:pt-10">
+            <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
+                <!-- Left Sidebar (Hidden on Mobile) -->
+                <aside class="hidden lg:block lg:w-1/4">
+                    <div class="sticky top-32">
+                        <h1 class="text-3xl font-bold text-white mb-2">Edit Profile</h1>
+                        <p class="text-slate-400 text-sm mb-8 leading-relaxed">Update your public identity and showcase
+                            your professional expertise to the community.</p>
+                        <nav class="flex flex-col gap-2">
+                            <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-semibold"
+                                href="#">
+                                <span class="material-symbols-outlined">person</span>
+                                General Profile
+                            </a>
+                            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+                                href="#">
+                                <span class="material-symbols-outlined">security</span>
+                                Security
+                            </a>
+                            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+                                href="#">
+                                <span class="material-symbols-outlined">notifications</span>
+                                Notifications
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Mobile Header (Visible only on mobile) -->
+                <div class="lg:hidden mb-4">
+                    <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">Edit Profile</h1>
+                    <p class="text-slate-400 text-sm">Update your information</p>
+                </div>
+
+                <div class="w-full lg:w-3/4 max-w-4xl space-y-10 md:space-y-16 pb-10">
+                    <section>
+                        <div class="flex items-center gap-3 mb-6 md:mb-8">
+                            <div class="w-1 md:w-1.5 h-5 md:h-6 bg-primary rounded-full"></div>
+                            <h2 class="text-lg md:text-xl font-bold text-white">Identity Details</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                            <div class="space-y-2 group">
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                                <div class="relative">
+                                    <input class="locked-field w-full px-4 md:px-5 py-3 md:py-4 rounded-xl text-sm md:text-base border focus:ring-0 cursor-not-allowed transition-all"
+                                        disabled type="text" value="<%= currentUser.name %>" />
+                                    <span class="material-symbols-outlined absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-[18px] md:text-[20px] text-slate-600">lock</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2 group">
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Username</label>
+                                <div class="relative">
+                                    <input class="locked-field w-full px-4 md:px-5 py-3 md:py-4 rounded-xl text-sm md:text-base border focus:ring-0 cursor-not-allowed transition-all"
+                                        disabled type="text" value="<%= currentUser.username %>" />
+                                    <span class="material-symbols-outlined absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-[18px] md:text-[20px] text-slate-600">lock</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2 group">
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Phone Number</label>
+                                <div class="relative">
+                                    <input class="locked-field w-full px-4 md:px-5 py-3 md:py-4 rounded-xl text-sm md:text-base border focus:ring-0 cursor-not-allowed transition-all"
+                                        disabled type="text" value="<%= currentUser.phone || 'Not Provided' %>" />
+                                    <span class="material-symbols-outlined absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-[18px] md:text-[20px] text-slate-600">lock</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2 group">
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Member Since</label>
+                                <div class="relative">
+                                    <input class="locked-field w-full px-4 md:px-5 py-3 md:py-4 rounded-xl text-sm md:text-base border focus:ring-0 cursor-not-allowed transition-all"
+                                        disabled type="text" value="<%= new Date(currentUser.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' }) %>" />
+                                    <span class="material-symbols-outlined absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-[18px] md:text-[20px] text-slate-600">history</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 md:mt-4 flex items-start md:items-center gap-2 px-1 text-[11px] md:text-[13px] text-slate-500">
+                            <span class="material-symbols-outlined text-[14px] md:text-[16px] flex-shrink-0">info</span>
+                            <span>These primary fields are verified by the institution and cannot be edited.</span>
+                        </div>
+                    </section>
+
+                    <form action="/user/editProfile?_method=PUT" method="POST">
+                        <section class="space-y-8 md:space-y-10 pt-6 md:pt-8 border-t border-white/5">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-1 md:w-1.5 h-5 md:h-6 bg-primary rounded-full"></div>
+                                <h2 class="text-lg md:text-xl font-bold text-white">Professional Bio</h2>
+                            </div>
+                            
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">About You</label>
+                                <textarea name="bio"
+                                    class="w-full bg-white/[0.03] border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-sm md:text-base focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all custom-scrollbar outline-none placeholder:text-slate-600 leading-relaxed text-white"
+                                    placeholder="Tell us about your academic journey..."
+                                    rows="4"><%= currentUser.bio || '' %></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                                <div class="space-y-2 md:space-y-3">
+                                    <label class="block text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Campus / Location</label>
+                                    <div class="relative group">
+                                        <span class="material-symbols-outlined absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-[18px] md:text-[20px] text-slate-500 group-focus-within:text-primary transition-colors">location_on</span>
+                                        <input name="location"
+                                            class="w-full bg-white/[0.03] border border-white/10 rounded-xl pl-10 md:pl-12 pr-4 md:pr-5 py-3 md:py-4 text-sm md:text-base focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all outline-none text-white"
+                                            type="text" value="<%= currentUser.location || '' %>" placeholder="e.g. BFGI, Bathinda" />
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2 md:space-y-3">
+                                    <label class="block text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Expertise & Skills</label>
+                                    
+                                    <input type="hidden" name="skills" id="hidden-skills-input" value="<%= currentUser.skills ? currentUser.skills.join(',') : '' %>">
+                                    
+                                    <div id="skills-container" class="flex flex-wrap gap-2 p-2 md:p-3 bg-white/[0.03] border border-white/10 rounded-xl min-h-[50px] md:min-h-[58px] content-start focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+                                        
+                                        <input id="skill-text-input"
+                                            class="bg-transparent border-none focus:ring-0 py-1 px-2 text-xs md:text-sm text-slate-300 w-28 md:w-32 outline-none placeholder:text-slate-600"
+                                            placeholder="Type & press Enter" type="text" />
+                                    </div>
+                                    <p class="text-[9px] md:text-[10px] text-slate-500 ml-1">Press 'Enter' to add a tag.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 md:gap-6 pt-8 md:pt-12 border-t border-white/5 mt-10 md:mt-16">
+                            <a href="/user/profile"
+                                class="px-6 md:px-8 py-3 md:py-3.5 rounded-xl text-xs md:text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer text-center">
+                                Discard Changes
+                            </a>
+                            <button type="submit"
+                                class="bg-primary hover:bg-primary/90 text-white px-8 md:px-10 py-3 md:py-3.5 rounded-xl text-xs md:text-sm font-bold transition-all save-glow flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+                                Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation (Visible only on mobile) -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-2 bg-gradient-to-t from-black via-black/95 to-transparent">
+        <div class="bg-slate-900/90 backdrop-blur-xl rounded-2xl px-1 py-3 flex items-center justify-around shadow-2xl border border-white/10">
+            <a href="/home" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-4 py-1">
+                <span class="material-symbols-outlined text-2xl">home</span>
+                <span class="text-[9px] font-semibold uppercase tracking-wider">Home</span>
+            </a>
+            
+            <a href="/user/profile" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-4 py-1">
+                <span class="material-symbols-outlined text-2xl">person</span>
+                <span class="text-[9px] font-semibold uppercase tracking-wider">Profile</span>
+            </a>
+            
+            <button type="button" class="flex flex-col items-center gap-1.5 text-primary px-4 py-1 rounded-xl bg-primary/10">
+                <span class="material-symbols-outlined fill text-2xl">edit</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Editing</span>
+            </button>
+            
+            <a href="/chat" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-4 py-1">
+                <span class="material-symbols-outlined text-2xl">chat</span>
+                <span class="text-[9px] font-semibold uppercase tracking-wider">Chats</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const skillInput = document.getElementById('skill-text-input');
+            const skillsContainer = document.getElementById('skills-container');
+            const hiddenInput = document.getElementById('hidden-skills-input');
+            
+            // Load initial skills from the database
+            let skillsArray = hiddenInput.value ? hiddenInput.value.split(',') : [];
+
+            // Function to re-render the visual tags
+            function renderSkills() {
+                // Remove existing visual tags (keep the text input)
+                document.querySelectorAll('.skill-tag').forEach(tag => tag.remove());
+
+                // Generate HTML for each skill and insert BEFORE the text input
+                skillsArray.forEach((skill, index) => {
+                    const tagHTML = `
+                        <div class="skill-tag flex items-center gap-1.5 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-bold transition-all">
+                            <span>${skill}</span>
+                            <button type="button" onclick="removeSkill(${index})" class="hover:text-white transition-colors outline-none focus:outline-none flex items-center">
+                                <span class="material-symbols-outlined text-[14px]">close</span>
+                            </button>
+                        </div>
+                    `;
+                    skillInput.insertAdjacentHTML('beforebegin', tagHTML);
+                });
+
+                // Update the hidden input that actually gets submitted to Node.js
+                hiddenInput.value = skillsArray.join(',');
+            }
+
+            // Make remove function globally available
+            window.removeSkill = function(index) {
+                skillsArray.splice(index, 1);
+                renderSkills();
+            };
+
+            // Handle typing and pressing "Enter"
+            skillInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Stop the form from submitting!
+                    
+                    const newSkill = skillInput.value.trim();
+                    if (newSkill && !skillsArray.includes(newSkill)) {
+                        skillsArray.push(newSkill);
+                        skillInput.value = '';
+                        renderSkills();
+                    }
+                }
+            });
+
+            // Handle pressing "Backspace" to delete the last tag if input is empty
+            skillInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Backspace' && skillInput.value === '' && skillsArray.length > 0) {
+                    skillsArray.pop();
+                    renderSkills();
+                }
+            });
+
+            // Initial render
+            renderSkills();
+        });
+    </script>

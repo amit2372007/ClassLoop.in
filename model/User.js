@@ -27,6 +27,13 @@ const userSchema = Schema({
     default: "other",
     enum: ["student", "teacher", "principle", "admin", "classTeacher","other"],
   },
+  skills: [
+    {
+      type: String,
+      min: 3,
+      max: 10
+    }
+  ],
 
   //social media
   post: [

@@ -58,14 +58,21 @@
 
 .liked {
   color: #8a2ce2 !important;
-  font-variation-settings: 'FILL' 1; /* This fills the Material Symbol */
+  font-variation-settings: 'FILL' 1;
   filter: drop-shadow(0 0 5px rgba(138, 44, 226, 0.5));
   animation: heart-pop 0.3s ease-out;
+}
+
+.mobile-tab-content {
+  display: none;
+}
+.mobile-tab-content.active {
+  display: block;
 }
     </style>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark text-white font-display antialiased">
+<body class="bg-background-light dark:bg-background-dark text-white font-display antialiased pb-20 lg:pb-0">
 
   <% if(currentUser._id.equals(currUser._id)) { %>
     <div id="update-preview-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
@@ -73,26 +80,27 @@
             <div class="relative w-full aspect-video bg-gradient-to-r from-primary/20 to-primary/10">
                 <img id="preview-cover-img" class="w-full h-full object-cover" src="<%= currentUser.coverPic?.url %>" />
                 <div class="absolute -bottom-10 left-6">
-                    <div class="size-24 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark shadow-xl">
+                    <div class="size-20 md:size-24 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark shadow-xl">
                         <img id="preview-profile-img" class="w-full h-full object-cover" src="<%= currentUser.profilePic?.url || '/images/default-avatar.png' %>" />
                     </div>
                 </div>
             </div>
-            <div class="pt-14 pb-8 px-8">
-                <h3 class="text-xl font-bold mb-2 white">Update Preview</h3>
-                <p class="text-gray-400 text-sm mb-8">Review your changes before saving to ClassLoop.</p>
+            <div class="pt-12 md:pt-14 pb-6 md:pb-8 px-6 md:px-8">
+                <h3 class="text-lg md:text-xl font-bold mb-2 white">Update Preview</h3>
+                <p class="text-gray-400 text-xs md:text-sm mb-6 md:mb-8">Review your changes before saving to ClassLoop.</p>
                 <div class="flex items-center justify-end gap-3">
-                    <button onclick="closePreview()" class="px-6 py-2.5 text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all">Cancel</button>
-                    <button id="confirm-upload-btn" class="px-8 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg transition-all shadow-lg shadow-primary/20">Confirm</button>
+                    <button onclick="closePreview()" class="px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all">Cancel</button>
+                    <button id="confirm-upload-btn" class="px-6 md:px-8 py-2 md:py-2.5 bg-primary hover:bg-primary/90 text-white text-xs md:text-sm font-semibold rounded-lg transition-all shadow-lg shadow-primary/20">Confirm</button>
                 </div>
             </div>
         </div>
     </div>
     <% } %>
     
-    <main class="pt-8 pb-12 px-4 max-w-[1440px] mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <aside class="lg:col-span-3 space-y-6 hidden lg:block">
+    <main class="pt-4 md:pt-8 pb-6 md:pb-12 px-3 md:px-4 max-w-[1440px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+        <!-- Left Sidebar (Desktop Only) -->
+        <aside class="hidden lg:block lg:col-span-3 space-y-6">
           <div class="sticky-sidebar space-y-6">
             <% if(currentUser.instituition?.class) { %>
             <div class="glass-card rounded-xl p-5">
@@ -132,19 +140,30 @@
             <% } %>
 
             <div class="glass-card rounded-xl p-5">
-              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Profile Link</h3>
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">User Id</h3>
               <div class="bg-black/40 rounded-lg p-3 flex items-center justify-between border border-white/5">
-                <span class="text-xs text-gray-400 truncate pr-2" id="profileUrl">classloop.in/user/<%= currentUser._id %></span>
+                <span class="text-xs text-gray-400 truncate pr-2" id="profileUrl"><%= currentUser._id %></span>
                 <button onclick="copyToClipboard()" class="text-primary hover:text-primary/80 transition-colors">
                   <span class="material-symbols-outlined text-lg">content_copy</span>
                 </button>
               </div>
             </div>
+
+
+           <div class="pt-2">
+  <form action="/user/editProfile" method="GET" class="m-0">
+    <button class="group w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-primary/30 bg-primary/10 text-primary hover:bg-primary hover:text-white hover:border-primary hover:shadow-[0_0_15px_rgba(159,31,239,0.3)] transition-all text-sm font-bold active:scale-95">
+      <span class="material-symbols-outlined text-lg group-hover:animate-pulse">edit</span>
+      Edit Profile
+    </button>
+  </form>
+</div>
+
             <% const loginUserId = currUser._id
                const profileId = currentUser.id
               if(loginUserId.equals(profileId)) { %>
             <div class="pt-2">
-<button class="group w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/30 transition-all text-sm font-medium">
+<button onclick="confirmDelete()" class="group w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/30 transition-all text-sm font-medium">
 <span class="material-symbols-outlined text-lg">delete</span>
                             Delete Profile
                         </button>
@@ -153,80 +172,81 @@
           </div>
         </aside>
 
-        <div class="lg:col-span-6 space-y-6">
+        <!-- Main Content - Desktop -->
+        <div class="hidden lg:block lg:col-span-6 space-y-4 md:space-y-6">
           <div class="glass-card rounded-xl overflow-hidden relative">
-            <div class="h-48 w-full relative group overflow-hidden">
+            <div class="h-32 md:h-48 w-full relative group overflow-hidden">
                         <img class="w-full h-full object-cover opacity-60" src="<%= currentUser.coverPic?.url %>" />
                         <% if(currentUser._id.equals(currUser._id)) { %>
-                            <label class="absolute top-4 right-4 bg-black/50 hover:bg-primary p-2 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
+                            <label class="absolute top-3 right-3 md:top-4 md:right-4 bg-black/50 hover:bg-primary p-1.5 md:p-2 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                 <span class="material-symbols-outlined text-white text-sm">edit</span>
                                 <input type="file" class="hidden" onchange="previewImage(event, 'cover')">
                             </label>
                         <% } %>
                     </div>
 
-            <div class="px-8 pb-8">
-              <div class="relative flex justify-between items-end -mt-16 mb-3">
+            <div class="px-4 md:px-8 pb-4 md:pb-8">
+              <div class="relative flex flex-col sm:flex-row justify-between items-start sm:items-end -mt-12 md:-mt-16 mb-3 gap-3">
                 <div class="relative group">
-                                <div class="size-32 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark relative">
+                                <div class="size-24 md:size-32 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark relative">
                                     <img id="profile-img" class="w-full h-full object-cover" src="<%= currentUser.profilePic?.url || '/images/default-avatar.png' %>" />
                                     <% if(currentUser._id.equals(currUser._id)) { %>
                                         <label class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
-                                            <span class="material-symbols-outlined text-white text-2xl">photo_camera</span>
+                                            <span class="material-symbols-outlined text-white text-xl md:text-2xl">photo_camera</span>
                                             <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="previewImage(event, 'profile')">
                                         </label>
                                     <% } %>
                                 </div>
-                                <div class="absolute bottom-1 right-1 size-6 <%= currentUser.isActive ? 'bg-green-500' : 'bg-gray-500' %> border-2 border-background-dark rounded-full"></div>
+                                <div class="absolute bottom-1 right-1 size-5 md:size-6 <%= currentUser.isActive ? 'bg-green-500' : 'bg-gray-500' %> border-2 border-background-dark rounded-full"></div>
                             </div>
                 <% const id = currentUser._id 
                    if(!id.equals(currUser._id)) { %>
-                <div class="flex gap-3">
+                <div class="flex gap-2 md:gap-3 w-full sm:w-auto">
                   <button id="connectBtn" onclick="handleConnect('<%= currentUser._id %>')"
-                    class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-8 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+                    class="flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-white font-bold py-2 md:py-2.5 px-6 md:px-8 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm md:text-base">
                     <span class="material-symbols-outlined text-lg">person_add</span>
                     <span>Connect</span>
                   </button>
-                  <button class="bg-white/5 hover:bg-white/10 text-white p-2.5 rounded-xl border border-white/10 transition-colors">
-                    <span class="material-symbols-outlined">mail</span>
+                  <button class="bg-white/5 hover:bg-white/10 text-white p-2 md:p-2.5 rounded-xl border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-xl md:text-2xl">mail</span>
                   </button>
                 </div>
                 <% } %>
               </div>
               <div class="space-y-2">
                 <div class="flex items-center gap-2">
-                  <h2 class="text-3xl white font-bold"><%= currentUser.name %></h2>
-                  <span class="material-symbols-outlined text-blue-400 text-xl" title="Verified">verified</span>
+                  <h2 class="text-xl md:text-3xl white font-bold"><%= currentUser.name %></h2>
+                  <span class="material-symbols-outlined text-blue-400 text-lg md:text-xl" title="Verified">verified</span>
                 </div>
-                <p class="text-primary font-medium capitalize"><%= currentUser.designation %></p>
-                <p class="text-gray-400 max-w-2xl leading-relaxed mt-4">
+                <p class="text-primary font-medium capitalize text-sm md:text-base"><%= currentUser.designation %></p>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl leading-relaxed mt-3 md:mt-4">
                   <%= currentUser.bio || "No bio available." %>
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="space-y-6">
-            <div class="flex border-b border-white/10 px-2 gap-8">
-              <button class="pb-4 text-primary border-b-2 border-primary font-semibold text-sm">Activity</button>
-              <button class="pb-4 text-gray-500 hover:text-gray-300 transition-colors font-medium text-sm">Media</button>
+          <div class="space-y-4 md:space-y-6">
+            <div class="flex border-b border-white/10 px-2 gap-6 md:gap-8 overflow-x-auto">
+              <button class="pb-3 md:pb-4 text-primary border-b-2 border-primary font-semibold text-xs md:text-sm whitespace-nowrap">Activity</button>
+              <button class="pb-3 md:pb-4 text-gray-500 hover:text-gray-300 transition-colors font-medium text-xs md:text-sm whitespace-nowrap">Media</button>
             </div>
 
             <% if(allPosts && allPosts.length > 0) { %>
               <% for(let post of allPosts) { %>
-                <div class="glass-card rounded-xl p-4 space-y-4" id="post-<%= post._id %>">
+                <div class="glass-card rounded-xl p-3 md:p-4 space-y-3 md:space-y-4" id="post-<%= post._id %>">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                      <div class="size-10 rounded-full overflow-hidden">
+                    <div class="flex items-center gap-2 md:gap-3">
+                      <div class="size-9 md:size-10 rounded-full overflow-hidden">
                         <img class="w-full h-full object-cover" src="<%= currentUser.profilePic.url %>" />
                       </div>
                       <div>
-                        <p class="text-sm white font-bold"><%= currentUser.name %></p>
-                        <p class="text-xs text-gray-500"><%= post.createdAt.toDateString() %></p>
+                        <p class="text-xs md:text-sm white font-bold"><%= currentUser.name %></p>
+                        <p class="text-[10px] md:text-xs text-gray-500"><%= post.createdAt.toDateString() %></p>
                       </div>
                     </div>
                   </div>
-                  <p class="text-sm leading-relaxed text-gray-200"><%= post.content %></p>
+                  <p class="text-xs md:text-sm leading-relaxed text-gray-200"><%= post.content %></p>
                   
                   <% if(post.image && post.image.url) { %>
                   <div class="rounded-xl overflow-hidden border border-white/5 aspect-video bg-black/20">
@@ -234,32 +254,296 @@
                   </div>
                   <% } %>
 
-                  <div class="pt-4 flex items-center justify-between border-t border-white/5">
-                    <div class="flex items-center gap-6">
-                      <button onclick="likePost('<%= post._id %>')" class="flex items-center gap-2 transition-colors group">
-                        <span class="material-symbols-outlined text-xl transition-all duration-200 <%= (post.like && post.like.includes(currentUser._id)) ? 'liked' : 'text-gray-400' %>" 
+                  <div class="pt-3 md:pt-4 flex items-center justify-between border-t border-white/5">
+                    <div class="flex items-center gap-4 md:gap-6">
+                      <button onclick="likePost('<%= post._id %>')" class="flex items-center gap-1.5 md:gap-2 transition-colors group">
+                        <span class="material-symbols-outlined text-lg md:text-xl transition-all duration-200 <%= (post.like && post.like.includes(currentUser._id)) ? 'liked' : 'text-gray-400' %>" 
       id="heart-<%= post._id %>">
   favorite
 </span>
-                        <span class="text-sm font-medium text-gray-400" id="likes-count-<%= post._id %>">
+                        <span class="text-xs md:text-sm font-medium text-gray-400" id="likes-count-<%= post._id %>">
                             <%= post.like?.length || 0 %>
                         </span>
                       </button>
-                      <button class="flex items-center gap-2 text-gray-400 hover:text-white">
-                        <span class="material-symbols-outlined text-xl">chat_bubble</span>
-                        <span class="text-sm font-medium">0</span>
+                      <button class="flex items-center gap-1.5 md:gap-2 text-gray-400 hover:text-white">
+                        <span class="material-symbols-outlined text-lg md:text-xl">chat_bubble</span>
+                        <span class="text-xs md:text-sm font-medium">0</span>
                       </button>
                     </div>
                   </div>
                 </div>
               <% } %>
             <% } else { %>
-                <div class="text-center py-10 text-gray-500">No posts yet.</div>
+                <div class="text-center py-8 md:py-10 text-gray-500 text-sm">No posts yet.</div>
             <% } %>
           </div>
         </div>
 
-        <aside class="lg:col-span-3 space-y-6">
+        <!-- Mobile Tabbed Content -->
+        <div class="lg:hidden col-span-1 space-y-4">
+          
+          <!-- Mobile Tab: Profile -->
+          <div id="mobile-profile-tab" class="mobile-tab-content active pb-10">
+            <div class="glass-card rounded-xl overflow-hidden relative mb-3">
+              <div class="h-32 w-full relative group overflow-hidden">
+                <img class="w-full h-full object-cover opacity-60" src="<%= currentUser.coverPic?.url %>" />
+                <% if(currentUser._id.equals(currUser._id)) { %>
+                  <label class="absolute top-3 right-3 bg-black/50 hover:bg-primary p-1.5 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
+                    <span class="material-symbols-outlined text-white text-sm">edit</span>
+                    <input type="file" class="hidden" onchange="previewImage(event, 'cover')">
+                  </label>
+                <% } %>
+              </div>
+
+              <div class="px-4 pb-4">
+                <div class="relative flex flex-col justify-between items-start -mt-12 mb-3 gap-3">
+                  <div class="relative group">
+                    <div class="size-24 rounded-full border-4 border-background-dark overflow-hidden bg-background-dark relative">
+                      <img class="w-full h-full object-cover" src="<%= currentUser.profilePic?.url || '/images/default-avatar.png' %>" />
+                      <% if(currentUser._id.equals(currUser._id)) { %>
+                        <label class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                          <span class="material-symbols-outlined text-white text-xl">photo_camera</span>
+                          <input type="file" class="hidden" accept="image/*" onchange="previewImage(event, 'profile')">
+                        </label>
+                      <% } %>
+                    </div>
+                    <div class="absolute bottom-1 right-1 size-5 <%= currentUser.isActive ? 'bg-green-500' : 'bg-gray-500' %> border-2 border-background-dark rounded-full"></div>
+                  </div>
+                  <% const id2 = currentUser._id 
+                     if(!id2.equals(currUser._id)) { %>
+                  <div class="flex gap-2 w-full">
+                    <button onclick="handleConnect('<%= currentUser._id %>')"
+                      class="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm">
+                      <span class="material-symbols-outlined text-lg">person_add</span>
+                      <span>Connect</span>
+                    </button>
+                    <button class="bg-white/5 hover:bg-white/10 text-white p-2 rounded-xl border border-white/10 transition-colors">
+                      <span class="material-symbols-outlined text-xl">mail</span>
+                    </button>
+                  </div>
+                  <% } %>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-xl white font-bold"><%= currentUser.name %></h2>
+                    <span class="material-symbols-outlined text-blue-400 text-lg" title="Verified">verified</span>
+                  </div>
+                  <p class="text-primary font-medium capitalize text-sm"><%= currentUser.designation %></p>
+                  <p class="text-gray-400 text-sm max-w-2xl leading-relaxed mt-3">
+                    <%= currentUser.bio || "No bio available." %>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            
+
+              <% if(allPosts && allPosts.length > 0) { %>
+                <% for(let post of allPosts) { %>
+                  <div class="glass-card rounded-xl p-3 space-y-3 mb-3">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-2">
+                        <div class="size-9 rounded-full overflow-hidden">
+                          <img class="w-full h-full object-cover" src="<%= currentUser.profilePic.url %>" />
+                        </div>
+                        <div>
+                          <p class="text-xs white font-bold"><%= currentUser.name %></p>
+                          <p class="text-[10px] text-gray-500"><%= post.createdAt.toDateString() %></p>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-xs leading-relaxed text-gray-200"><%= post.content %></p>
+                    
+                    <% if(post.image && post.image.url) { %>
+                    <div class="rounded-xl overflow-hidden border border-white/5 aspect-video bg-black/20">
+                      <img class="w-full h-full object-cover" src="<%= post.image.url %>" />
+                    </div>
+                    <% } %>
+
+                    <div class="pt-3 flex items-center justify-between border-t border-white/5">
+                      <div class="flex items-center gap-4">
+                        <button onclick="likePost('<%= post._id %>')" class="flex items-center gap-1.5 transition-colors group">
+                          <span class="material-symbols-outlined text-lg transition-all duration-200 <%= (post.like && post.like.includes(currentUser._id)) ? 'liked' : 'text-gray-400' %>" 
+        id="heart-mobile-<%= post._id %>">
+    favorite
+  </span>
+                          <span class="text-xs font-medium text-gray-400">
+                              <%= post.like?.length || 0 %>
+                          </span>
+                        </button>
+                        <button class="flex items-center gap-1.5 text-gray-400 hover:text-white">
+                          <span class="material-symbols-outlined text-lg">chat_bubble</span>
+                          <span class="text-xs font-medium">0</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                <% } %>
+              <% } else { %>
+                  <div class="text-center py-8 text-gray-500 text-sm">No posts yet.</div>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Mobile Tab: Academic -->
+          <div id="mobile-academic-tab" class="mobile-tab-content pb-5">
+            <h2 class="text-xl font-bold text-white mb-4">Academic Information</h2>
+
+            <% if(currentUser.instituition?.class) { %>
+            <div class="glass-card rounded-xl p-5 mb-4">
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">account_balance</span>
+                Institution
+              </h3>
+              <div class="flex flex-col gap-4">
+                <div class="flex items-start gap-3">
+                  <div>
+                    <p class="text-sm white font-medium"><%= currentUser.instituition.class.school?.name || 'Institution Linked' %></p>
+                    <p class="text-xs text-gray-500 mt-1">Associated class: <%= currentUser.instituition.class.className %> - <%= currentUser.instituition.class.section %></p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+                  <div>
+                    <p class="text-sm white font-medium">
+                        <%= currentUser.instituition.class.school?.address?.city || 'Bokaro' %>, 
+                        <%= currentUser.instituition.class.school?.address?.state || 'Jharkhand' %>
+                    </p>
+                    <p class="text-xs text-gray-500">India</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } else { %>
+             <div class="glass-card rounded-xl p-5 mb-4">
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Institution</h3>
+              <div class="flex flex-col items-center justify-center py-4 text-center">
+                <div class="size-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
+                  <span class="material-symbols-outlined text-gray-500 text-2xl">school</span>
+                </div>
+                <p class="text-sm text-gray-400 mb-2">No institution linked yet</p>
+                <a class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors" href="#">Add Institution</a>
+              </div>
+            </div>
+            <% } %>
+
+            <div class="glass-card rounded-xl p-5 mb-4">
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">User Id</h3>
+              <div class="bg-black/40 rounded-lg p-3 flex items-center justify-between border border-white/5">
+                <span class="text-xs text-gray-400 truncate pr-2" id="profileUrlMobile"><%= currentUser._id %></span>
+                <button onclick="copyToClipboardMobile()" class="text-primary hover:text-primary/80 transition-colors">
+                  <span class="material-symbols-outlined text-lg">content_copy</span>
+                </button>
+              </div>
+            </div>
+
+            <% if(currentUser.synced && currentUser.synced.length > 0) { %>
+            <div class="glass-card rounded-xl p-5 mb-4">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-lg white font-bold">Connections</h3>
+                  <p class="text-xs text-primary font-semibold"><%= currentUser.synced?.length || 0 %> total</p>
+                </div>
+                <a class="text-xs text-gray-400 hover:text-white underline underline-offset-4" href="#">View All</a>
+              </div>
+              <div class="grid grid-cols-4 gap-3">
+                    <% currentUser.synced.slice(0, 7).forEach(friend => { %>
+                        <a href="/user/<%=friend._id%>" class="aspect-square rounded-lg overflow-hidden border border-white/10 hover:border-primary cursor-pointer">
+                            <img class="w-full h-full object-cover" src="<%= friend.profilePic.url %>" title="<%= friend.name %>" />
+                        </a>
+                    <% }) %>
+                    <% if(currentUser.synced.length > 7) { %>
+                        <div class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-xs font-bold text-gray-500 border border-white/5">
+                            +<%= currentUser.synced.length - 7 %>
+                        </div>
+                    <% } %>
+              </div>
+            </div>
+            <% } %>
+
+            <% if(currentUser.loopSpace && currentUser.loopSpace.length > 0) { %>
+            <div class="glass-card rounded-xl p-5 mb-4">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-white text-lg font-bold">MY LOOPSPACES</h3>
+                <span class="material-symbols-outlined text-white/40 text-sm">groups</span>
+              </div>
+              <div class="space-y-4">
+                    <% for(let LoopSpace of currentUser.loopSpace) { %>
+                        <a href="/loopSpace/<%=LoopSpace._id%>"
+                            class="flex items-center gap-3 group cursor-pointer p-2 rounded-xl hover:bg-white/5 transition-all">
+                            <div class="size-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                                LS
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-white truncate">
+                                    <%= LoopSpace.name %>
+                                </p>
+                                <p class="text-[10px] text-white/40 group-hover:text-white/60 transition-colors">
+                                    <%= LoopSpace.members.length %> members • <%= LoopSpace.category %>
+                                </p>
+                            </div>
+                        </a>
+                    <% } %>
+              </div>
+            </div>
+            <% } %>
+
+            <div class="glass-card rounded-xl p-5 mb-10">
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Interests</h3>
+              <div class="flex flex-wrap gap-2">
+              <% if(currentUser.skills && currentUser.skills.length > 0) { %>
+                  <% for(let skill of currentUser.skills) { %>
+                      <span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-xs font-semibold rounded-full shadow-sm">
+                          <%= skill %>
+                      </span>
+                  <% } %>
+              <% } else { %>
+                  <div class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-center">
+                      <p class="text-xs text-white/40 font-medium">No skills added yet.</p>
+                  </div>
+              <% } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Tab: Settings -->
+          <div id="mobile-settings-tab" class="mobile-tab-content">
+            <h2 class="text-xl font-bold text-white mb-4">Settings</h2>
+
+            <div class="space-y-3">
+              <form action="/user/editProfile" method="GET" class="m-0">
+                <button class="group w-full flex items-center justify-between gap-3 px-5 py-4 rounded-xl border border-primary/30 bg-primary/10 text-primary hover:bg-primary hover:text-white hover:border-primary transition-all">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-xl">edit</span>
+                    <div class="text-left">
+                      <p class="text-sm font-bold">Edit Profile</p>
+                      <p class="text-xs opacity-70">Update your information</p>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-lg">chevron_right</span>
+                </button>
+              </form>
+
+              <% const loginUserId2 = currUser._id
+                 const profileId2 = currentUser.id
+                if(loginUserId2.equals(profileId2)) { %>
+              <button onclick="confirmDelete()" class="group w-full flex items-center justify-between gap-3 px-5 py-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/30 transition-all">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-xl">delete</span>
+                  <div class="text-left">
+                    <p class="text-sm font-bold">Delete Profile</p>
+                    <p class="text-xs opacity-70">Permanently remove account</p>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined text-lg">chevron_right</span>
+              </button>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar (Desktop Only) -->
+        <aside class="hidden lg:block lg:col-span-3 space-y-6">
           <div class="sticky-sidebar space-y-6">
             <% if(currUser.synced.length > 0 ){ %> 
             <div class="glass-card rounded-xl p-5">
@@ -305,14 +589,55 @@
 </div>
 <% } %>
 
+
+<div class="glass-card rounded-xl p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-white text-lg font-bold">MY LOOPSPACES</h3>
+                <span class="material-symbols-outlined text-white/40 text-sm">groups</span>
+            </div>
+
+            <div class="space-y-4">
+                <% if(currentUser.loopSpace.length===0 ) { %>
+                    <p class="text-[11px] text-white/40 truncate">You Have'nt connect to any LoopSpace</p>
+                <% }else { %>
+                    <% for(let LoopSpace of currentUser.loopSpace) { %>
+                        <a href="/loopSpace/<%=LoopSpace._id%>"
+                            class="flex items-center gap-3 group cursor-pointer p-2 rounded-xl hover:bg-white/5 transition-all">
+                            <div class="size-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                                10A
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-white truncate">
+                                    <%= LoopSpace.name %>
+                                </p>
+                                <p class="text-[10px] text-white/40 group-hover:text-white/60 transition-colors">
+                                    <%= LoopSpace.members.length %> members • <%= LoopSpace.category %>
+                                </p>
+                            </div>
+                        </a>
+                    <% } }%>
+            </div>
+            <% if(currentUser.loopSpace.length> 3) { %>
+                <button class="w-full mt-4 py-2 text-[11px] font-bold text-white/40 hover:text-white transition-colors uppercase tracking-widest">
+                    View all LoopSpaces
+                </button>
+            <% } %>
+        </div>
+
 <div class="glass-card rounded-xl p-5">
 <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Interests</h3>
 <div class="flex flex-wrap gap-2">
-<span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-xs font-semibold rounded-full">Quantum Mechanics</span>
-<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">AI Ethics</span>
-<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">Python</span>
-<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">Data Viz</span>
-<span class="px-3 py-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-medium rounded-full">C++</span>
+ <% if(currentUser.skills && currentUser.skills.length > 0) { %>
+    <% for(let skill of currentUser.skills) { %>
+        <span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-xs font-semibold rounded-full shadow-sm">
+            <%= skill %>
+        </span>
+    <% } %>
+<% } else { %>
+    <div class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-center">
+        <p class="text-xs text-white/40 font-medium">No skills added yet.</p>
+    </div>
+<% } %>
 </div>
 </div>
           </div>
@@ -320,9 +645,63 @@
       </div>
     </main>
 
+    <!-- Mobile Bottom Navigation (Visible only on mobile) -->
+    <% if(currentUser._id.equals(currUser._id)) { %>
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-2 bg-gradient-to-t from-black via-black/95 to-transparent">
+        <div class="glass-card rounded-2xl px-1 py-3 flex items-center justify-around shadow-2xl border border-white/10">
+            <a href="/home" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-3 py-1">
+                <span class="material-symbols-outlined text-2xl">home</span>
+                <span class="text-[9px] font-semibold uppercase tracking-wider">Home</span>
+            </a>
+            
+            <button onclick="showTab('profile')" id="tab-profile" class="flex flex-col items-center gap-1.5 text-primary px-3 py-1 rounded-xl bg-primary/10">
+                <span class="material-symbols-outlined fill text-2xl">person</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Profile</span>
+            </button>
+            
+            <button onclick="showTab('academic')" id="tab-academic" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-3 py-1">
+                <span class="material-symbols-outlined text-2xl">school</span>
+                <span class="text-[9px] font-semibold uppercase tracking-wider">Academic</span>
+            </button>
+            
+            <button onclick="showTab('settings')" id="tab-settings" class="flex flex-col items-center gap-1.5 text-white/50 hover:text-white transition-colors px-3 py-1">
+                <span class="material-symbols-outlined text-2xl">settings</span>
+                <span class="text-[9px] font-semibold uppercase tracking-wider">Settings</span>
+            </button>
+        </div>
+    </nav>
+    <% } %>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();
+
+      function showTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.mobile-tab-content').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        
+        // Remove active state from all buttons
+        document.querySelectorAll('[id^="tab-"]').forEach(btn => {
+          btn.classList.remove('text-primary', 'bg-primary/10', 'rounded-xl');
+          btn.classList.add('text-white/50');
+          btn.querySelector('.material-symbols-outlined').classList.remove('fill');
+          btn.querySelector('span:last-child').classList.remove('font-bold');
+          btn.querySelector('span:last-child').classList.add('font-semibold');
+        });
+        
+        // Show selected tab
+        document.getElementById(`mobile-${tabName}-tab`).classList.add('active');
+        
+        // Add active state to selected button
+        const activeBtn = document.getElementById(`tab-${tabName}`);
+        activeBtn.classList.remove('text-white/50');
+        activeBtn.classList.add('text-primary', 'bg-primary/10', 'rounded-xl');
+        activeBtn.querySelector('.material-symbols-outlined').classList.add('fill');
+        activeBtn.querySelector('span:last-child').classList.remove('font-semibold');
+        activeBtn.querySelector('span:last-child').classList.add('font-bold');
+      }
 
       function likePost(postId) {
         socket.emit('like_post', { postId, userId: '<%= currentUser._id %>' });
@@ -353,54 +732,68 @@
 
       function copyToClipboard() {
         const text = document.getElementById('profileUrl').innerText;
-        navigator.clipboard.writeText(text);
-        alert('Profile link copied to clipboard!');
+        navigator.clipboard.writeText(text).then(() => {
+          alert('User ID copied to clipboard!');
+        });
+      }
+
+      function copyToClipboardMobile() {
+        const text = document.getElementById('profileUrlMobile').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          alert('User ID copied to clipboard!');
+        });
       }
 
       function confirmDelete() {
-        if(confirm("Are you sure you want to delete your ClassLoop profile?")) {
+        if(confirm("Are you sure you want to delete your ClassLoop profile? This action cannot be undone.")) {
             window.location.href = "/user/delete/<%= currentUser._id %>";
         }
       }
 
       function likePost(postId) {
-  socket.emit('like_post', { postId, userId: '<%= currentUser._id %>' });
-  
-  const heartIcon = document.getElementById(`heart-${postId}`);
-  
-  // Toggle the custom 'liked' class for fill/animation
-  heartIcon.classList.toggle('liked');
-  
-  // Toggle the default gray color when unliked
-  heartIcon.classList.toggle('text-gray-400');
-}
-
-
-
-let stagedFile = null;
-        let stagedType = '';
-
-        function previewImage(event, type) {
-            const file = event.target.files[0];
-            if (!file) return;
-            stagedFile = file;
-            stagedType = type;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById(type === 'profile' ? 'preview-profile-img' : 'preview-cover-img').src = e.target.result;
-                document.getElementById('update-preview-modal').classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
+        socket.emit('like_post', { postId, userId: '<%= currentUser._id %>' });
+        
+        const heartIcon = document.getElementById(`heart-${postId}`);
+        const heartIconMobile = document.getElementById(`heart-mobile-${postId}`);
+        
+        if(heartIcon) {
+          heartIcon.classList.toggle('liked');
+          heartIcon.classList.toggle('text-gray-400');
         }
-
-        function closePreview() {
-            document.getElementById('update-preview-modal').classList.add('hidden');
-            stagedFile = null;
-            document.getElementById('imageInput').value = '';
+        
+        if(heartIconMobile) {
+          heartIconMobile.classList.toggle('liked');
+          heartIconMobile.classList.toggle('text-gray-400');
         }
+      }
 
-        document.getElementById('confirm-upload-btn').onclick = async function() {
+      let stagedFile = null;
+      let stagedType = '';
+
+      function previewImage(event, type) {
+          const file = event.target.files[0];
+          if (!file) return;
+          stagedFile = file;
+          stagedType = type;
+
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              document.getElementById(type === 'profile' ? 'preview-profile-img' : 'preview-cover-img').src = e.target.result;
+              document.getElementById('update-preview-modal').classList.remove('hidden');
+          };
+          reader.readAsDataURL(file);
+      }
+
+      function closePreview() {
+          document.getElementById('update-preview-modal').classList.add('hidden');
+          stagedFile = null;
+          const imageInput = document.getElementById('imageInput');
+          if(imageInput) imageInput.value = '';
+      }
+
+      const confirmBtn = document.getElementById('confirm-upload-btn');
+      if(confirmBtn) {
+        confirmBtn.onclick = async function() {
             if (!stagedFile || !stagedType) return;
             const formData = new FormData();
             formData.append('image', stagedFile);
@@ -418,6 +811,7 @@ let stagedFile = null;
                 this.disabled = false;
             }
         };
+      }
 
     </script>
 </body>

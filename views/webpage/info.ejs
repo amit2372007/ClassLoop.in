@@ -80,19 +80,20 @@
   </head>
 
   <body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30"
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30 pb-20 md:pb-0"
   >
-    <nav class="fixed top-0 w-full z-50 px-4 md:px-10 py-4">
+    <!-- Desktop Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-3 md:px-10 py-3 md:py-4">
       <div
-        class="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex items-center justify-between"
+        class="max-w-7xl mx-auto glass rounded-xl md:rounded-2xl px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between"
       >
         <div class="flex items-center gap-2">
           <div
-            class="size-8 bg-primary rounded-lg flex items-center justify-center text-white"
+            class="size-7 md:size-8 bg-primary rounded-lg flex items-center justify-center text-white"
           >
-            <span class="material-symbols-outlined text-xl">all_inclusive</span>
+            <span class="material-symbols-outlined text-lg md:text-xl">all_inclusive</span>
           </div>
-          <h2 class="text-xl font-bold tracking-tight">ClassLoop.in</h2>
+          <h2 class="text-lg md:text-xl font-bold tracking-tight">ClassLoop.in</h2>
         </div>
         <div class="hidden md:flex items-center gap-8">
           <a
@@ -126,90 +127,125 @@
 
         <form action="/user/login" method="get">
           <button
-            class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105"
+            class="bg-primary hover:bg-primary/90 text-white px-4 md:px-5 py-1.5 md:py-2 rounded-lg md:rounded-xl text-xs md:text-sm font-bold transition-all transform hover:scale-105"
           >
             Log in
           </button>
         </form>
       </div>
     </nav>
-    <main class="pt-24">
+
+    <!-- Mobile Bottom Navigation (visible only on mobile) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
+      <div class="glass rounded-2xl px-2 py-3 flex items-center justify-around">
+        <a
+          href="#about"
+          class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors px-3 py-1"
+        >
+          <span class="material-symbols-outlined text-xl">info</span>
+          <span class="text-[10px] font-medium">About</span>
+        </a>
+        <a
+          href="#network"
+          class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors px-3 py-1"
+        >
+          <span class="material-symbols-outlined text-xl">school</span>
+          <span class="text-[10px] font-medium">Network</span>
+        </a>
+        <a
+          href="#stories"
+          class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors px-3 py-1"
+        >
+          <span class="material-symbols-outlined text-xl">star</span>
+          <span class="text-[10px] font-medium">Stories</span>
+        </a>
+        <a
+          href="#contact"
+          class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors px-3 py-1"
+        >
+          <span class="material-symbols-outlined text-xl">mail</span>
+          <span class="text-[10px] font-medium">Contact</span>
+        </a>
+      </div>
+    </nav>
+
+    <main class="pt-20 md:pt-24">
       <section
-        class="relative px-6 py-12 md:py-24 overflow-hidden hero-gradient"
+        class="relative px-4 md:px-6 py-8 md:py-24 overflow-hidden hero-gradient"
       >
         <div class="max-w-5xl mx-auto text-center">
           <div
-            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6"
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-4 md:mb-6"
           >
             <span class="material-symbols-outlined text-sm">rocket_launch</span>
             NOW OPEN FOR SCHOOLS
           </div>
           <h1
-            class="text-5xl md:text-7xl font-black leading-tight tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60"
+            class="text-3xl sm:text-4xl md:text-7xl font-black leading-tight tracking-tight mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60"
           >
             Connect Your <span class="text-primary">Campus</span>
           </h1>
           <p
-            class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+            class="text-base md:text-xl text-slate-400 max-w-2xl mx-auto mb-6 md:mb-10 leading-relaxed px-2"
           >
             The social loop for the modern student. Bridge the gap between
             majors and social circles in one seamless digital space.
           </p>
           <div
-            class="flex flex-col sm:flex-row items-center justify-center gap-4"
+            class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 px-4"
           >
             <a
               href="/user/signup"
-              class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all"
+              class="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-primary text-white rounded-xl font-bold text-base md:text-lg hover:shadow-[0_0_20px_rgba(159,31,239,0.4)] transition-all"
             >
               Get Started Free
             </a>
             <button
-              class="w-full sm:w-auto px-8 py-4 glass text-white rounded-xl font-bold text-lg hover:bg-white/5 transition-all"
+              class="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 glass text-white rounded-xl font-bold text-base md:text-lg hover:bg-white/5 transition-all"
             >
               View Demo
             </button>
           </div>
           <div
-            class="mt-16 glass rounded-3xl p-4 max-w-4xl mx-auto shadow-2xl relative"
+            class="mt-8 md:mt-16 glass rounded-2xl md:rounded-3xl p-2 md:p-4 max-w-4xl mx-auto shadow-2xl relative"
           >
             <div
-              class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-[100px]"
+              class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 blur-[100px] hidden md:block"
             ></div>
             <div
-              class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 blur-[100px]"
+              class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 blur-[100px] hidden md:block"
             ></div>
             <div
-              class="rounded-2xl overflow-hidden border border-white/10 aspect-video bg-neutral-900 flex items-center justify-center group"
+              class="rounded-xl md:rounded-2xl overflow-hidden border border-white/10 aspect-video bg-neutral-900 flex items-center justify-center group"
             >
-              <div class="grid grid-cols-12 w-full h-full p-4 gap-4">
+              <div class="grid grid-cols-12 w-full h-full p-2 md:p-4 gap-2 md:gap-4">
                 <div
-                  class="col-span-3 glass rounded-xl p-4 flex flex-col gap-4"
+                  class="col-span-3 glass rounded-lg md:rounded-xl p-2 md:p-4 flex flex-col gap-2 md:gap-4"
                 >
-                  <div class="h-4 w-2/3 bg-white/10 rounded"></div>
-                  <div class="h-10 w-full bg-white/5 rounded-lg"></div>
-                  <div class="h-10 w-full bg-white/5 rounded-lg"></div>
-                  <div class="h-10 w-full bg-white/5 rounded-lg"></div>
+                  <div class="h-2 md:h-4 w-2/3 bg-white/10 rounded"></div>
+                  <div class="h-6 md:h-10 w-full bg-white/5 rounded-lg"></div>
+                  <div class="h-6 md:h-10 w-full bg-white/5 rounded-lg"></div>
+                  <div class="h-6 md:h-10 w-full bg-white/5 rounded-lg"></div>
                 </div>
-                <div class="col-span-9 flex flex-col gap-4">
-                  <div class="h-12 w-full glass rounded-xl"></div>
-                  <div class="grid grid-cols-3 gap-4 grow">
+                <div class="col-span-9 flex flex-col gap-2 md:gap-4">
+                  <div class="h-8 md:h-12 w-full glass rounded-lg md:rounded-xl"></div>
+                  <div class="grid grid-cols-3 gap-2 md:gap-4 grow">
                     <div
-                      class="glass rounded-xl bg-center bg-cover"
+                      class="glass rounded-lg md:rounded-xl bg-center bg-cover"
                       data-alt="Student dashboard interface preview with cards"
                       style="
                         background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBsrv2zmywz1fzDgYBiKlg2Et_-gUNLHDHb7HzhJuNeRuNrbUzXrAY4FLkh4b8OKWuoOq0a_lUQtzyP1wPhh0FYJjxnHI71ORRVbHYSlW42TvDQIkEm4PEcftSm-RI_z7QmuNSkvHuVAwjGQTY5fqz1O5TcAgawXJIsr5i_Cm9C665XC0uhRiHMw3bl87lFBPfy806V8ypkhZLgVN0-SUcv2vGAgYy6dJyHhcpWjxUseE-glUW_zxolopOu3I-UGABLpoxMo_sNBwXh&quot;);
                       "
                     ></div>
                     <div
-                      class="glass rounded-xl bg-center bg-cover"
+                      class="glass rounded-lg md:rounded-xl bg-center bg-cover"
                       data-alt="University campus event feed mockup"
                       style="
                         background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBER991yhwfwr_sSYzIPjTYW9Bs0uvzIKy5phjvu1fn6JRy3Ov-OFzFJZClU8XT-9vx-VHTpnIAt9kn8-ApoUNP0F1Rh-L0uWEd0awCXo2vEpVOxwxmA0OGqg0xsXPp_9q8V3xf1-yjmZVlriE6TSkvRAsFvIVgC-M1TCtEx6RlvPHpdX6HNtx53mYF5_K6K6witu4ACRATxzJN7WM1RD1IhNab2397Er4bjy3ZIQVPkh3_VPBviMeuHNlT_b0vLrYl7K2IYWbwPjnV&quot;);
                       "
                     ></div>
                     <div
-                      class="glass rounded-xl bg-center bg-cover"
+                      class="glass rounded-lg md:rounded-xl bg-center bg-cover"
                       data-alt="Student social group networking interface"
                       style="
                         background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuB2On9GGV33JkMgNUI9CnB80A1qeMckmBvVtgTLV1Iwt7vT3a8x8GHvFssK2k4y5QViG2JXJvQbczAjsATtVb5mnlKTNAAw0gEkKJ5u8pzLohBWTnV3dl_cSVu2c3trPtRumq8m3DwTEtAgE63WfqDDO5UM-COs0wYDn5BI5RPND_LXXeyrsA8pW1ptomiMoQsWFzc4kyJzgLZizNtt2CJZnYt25ocy5wjh25-xySnarDIcmQ0WI8_KXUZKSXBaPrdA1icz1DrJHMxM&quot;);
@@ -221,7 +257,7 @@
               <div
                 class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
               >
-                <span class="material-symbols-outlined text-6xl text-white"
+                <span class="material-symbols-outlined text-4xl md:text-6xl text-white"
                   >play_circle</span
                 >
               </div>
@@ -231,7 +267,7 @@
       </section>
 
       <section
-        class="relative px-6 py-24 overflow-hidden bg-slate-900 text-white"
+        class="relative px-4 md:px-6 py-12 md:py-24 overflow-hidden bg-slate-900 text-white"
         id="about"
       >
         <div
@@ -243,10 +279,10 @@
 
         <div class="max-w-7xl mx-auto">
           <div
-            class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-4"
+            class="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-10 md:mb-16 px-2 md:px-4"
           >
             <div class="max-w-2xl">
-              <h2 class="text-5xl md:text-6xl font-black mb-6 leading-tight">
+              <h2 class="text-3xl md:text-6xl font-black mb-4 md:mb-6 leading-tight">
                 WHY
                 <span
                   class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400"
@@ -254,7 +290,7 @@
                 >
               </h2>
               <p
-                class="text-slate-400 text-lg md:text-xl font-light leading-relaxed"
+                class="text-slate-400 text-base md:text-xl font-light leading-relaxed"
               >
                 <strong class="text-white">ClassLoop.in</strong>
                 unifies campus life by combining niche
@@ -268,21 +304,21 @@
             </div>
           </div>
 
-          <div class="w-full overflow-hidden px-4 pb-12">
+          <div class="w-full overflow-hidden px-2 md:px-4 pb-8 md:pb-12">
             <div
-              class="flex w-max gap-8 animate-scroll hover:[animation-play-state:paused]"
+              class="flex w-max gap-4 md:gap-8 animate-scroll hover:[animation-play-state:paused]"
             >
               <div
-                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-4 md:p-5 rounded-2xl md:rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
               >
                 <div
-                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                  class="relative w-full h-48 md:h-56 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6"
                 >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
                   ></div>
                   <span
-                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    class="absolute top-3 left-3 md:top-4 md:left-4 z-20 px-2.5 md:px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
                     >Community</span
                   >
                   <div
@@ -292,13 +328,13 @@
                     "
                   ></div>
                 </div>
-                <div class="px-2">
+                <div class="px-1 md:px-2">
                   <h3
-                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                    class="text-xl md:text-2xl font-bold mb-2 md:mb-3 flex items-center gap-2 text-white"
                   >
                     LoopSpaces
                   </h3>
-                  <p class="text-slate-400 leading-relaxed mb-4">
+                  <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-4">
                     Intelligent, niche-based communities for classes, hobbies,
                     and societies where students collaborate.
                   </p>
@@ -306,16 +342,16 @@
               </div>
 
               <div
-                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-4 md:p-5 rounded-2xl md:rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
               >
                 <div
-                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                  class="relative w-full h-48 md:h-56 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6"
                 >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
                   ></div>
                   <span
-                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    class="absolute top-3 left-3 md:top-4 md:left-4 z-20 px-2.5 md:px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
                     >Q&A</span
                   >
                   <div
@@ -325,13 +361,13 @@
                     "
                   ></div>
                 </div>
-                <div class="px-2">
+                <div class="px-1 md:px-2">
                   <h3
-                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                    class="text-xl md:text-2xl font-bold mb-2 md:mb-3 flex items-center gap-2 text-white"
                   >
                     DoubtBin
                   </h3>
-                  <p class="text-slate-400 leading-relaxed mb-4">
+                  <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-4">
                     A StackOverflow-style academic Q&A forum for peer-to-peer
                     learning and expert solutions.
                   </p>
@@ -339,16 +375,16 @@
               </div>
 
               <div
-                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-4 md:p-5 rounded-2xl md:rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
               >
                 <div
-                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                  class="relative w-full h-48 md:h-56 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6"
                 >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
                   ></div>
                   <span
-                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    class="absolute top-3 left-3 md:top-4 md:left-4 z-20 px-2.5 md:px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
                     >Networking</span
                   >
                   <div
@@ -358,13 +394,13 @@
                     "
                   ></div>
                 </div>
-                <div class="px-2">
+                <div class="px-1 md:px-2">
                   <h3
-                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                    class="text-xl md:text-2xl font-bold mb-2 md:mb-3 flex items-center gap-2 text-white"
                   >
                     Social Connect
                   </h3>
-                  <p class="text-slate-400 leading-relaxed mb-4">
+                  <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-4">
                     Real-time messaging and networking features to bridge the
                     gap between students and peers.
                   </p>
@@ -372,16 +408,16 @@
               </div>
 
               <div
-                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-4 md:p-5 rounded-2xl md:rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
               >
                 <div
-                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                  class="relative w-full h-48 md:h-56 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6"
                 >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
                   ></div>
                   <span
-                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    class="absolute top-3 left-3 md:top-4 md:left-4 z-20 px-2.5 md:px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
                     >Faculty</span
                   >
                   <div
@@ -391,13 +427,13 @@
                     "
                   ></div>
                 </div>
-                <div class="px-2">
+                <div class="px-1 md:px-2">
                   <h3
-                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                    class="text-xl md:text-2xl font-bold mb-2 md:mb-3 flex items-center gap-2 text-white"
                   >
                     Teacher Portal
                   </h3>
-                  <p class="text-slate-400 leading-relaxed mb-4">
+                  <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-4">
                     A dedicated dashboard for faculty to manage attendance,
                     upload marks, and review applications.
                   </p>
@@ -405,16 +441,16 @@
               </div>
 
               <div
-                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-4 md:p-5 rounded-2xl md:rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
               >
                 <div
-                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                  class="relative w-full h-48 md:h-56 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6"
                 >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
                   ></div>
                   <span
-                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    class="absolute top-3 left-3 md:top-4 md:left-4 z-20 px-2.5 md:px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
                     >Governance</span
                   >
                   <div
@@ -424,13 +460,13 @@
                     "
                   ></div>
                 </div>
-                <div class="px-2">
+                <div class="px-1 md:px-2">
                   <h3
-                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                    class="text-xl md:text-2xl font-bold mb-2 md:mb-3 flex items-center gap-2 text-white"
                   >
                     Digital Desk
                   </h3>
-                  <p class="text-slate-400 leading-relaxed mb-4">
+                  <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-4">
                     A paperless system for submitting and tracking Sick Leave,
                     OD, and Bonafide requests securely.
                   </p>
@@ -438,16 +474,16 @@
               </div>
 
               <div
-                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-5 rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+                class="w-[85vw] md:w-[380px] flex-shrink-0 group relative bg-white/5 backdrop-blur-xl border border-white/10 p-4 md:p-5 rounded-2xl md:rounded-3xl hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
               >
                 <div
-                  class="relative w-full h-56 rounded-2xl overflow-hidden mb-6"
+                  class="relative w-full h-48 md:h-56 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6"
                 >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"
                   ></div>
                   <span
-                    class="absolute top-4 left-4 z-20 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
+                    class="absolute top-3 left-3 md:top-4 md:left-4 z-20 px-2.5 md:px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-white"
                     >Library</span
                   >
                   <div
@@ -457,13 +493,13 @@
                     "
                   ></div>
                 </div>
-                <div class="px-2">
+                <div class="px-1 md:px-2">
                   <h3
-                    class="text-2xl font-bold mb-3 flex items-center gap-2 text-white"
+                    class="text-xl md:text-2xl font-bold mb-2 md:mb-3 flex items-center gap-2 text-white"
                   >
                     Resource Hub
                   </h3>
-                  <p class="text-slate-400 leading-relaxed mb-4">
+                  <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-4">
                     A centralized repository for lecture notes, assignments, and
                     previous year question papers.
                   </p>
@@ -475,7 +511,7 @@
       </section>
 
       <section
-        class="px-6 py-24 bg-slate-900 relative overflow-hidden"
+        class="px-4 md:px-6 py-12 md:py-24 bg-slate-900 relative overflow-hidden"
         id="network"
       >
         <div
@@ -484,17 +520,17 @@
 
         <div class="max-w-7xl mx-auto">
           <div
-            class="flex flex-col md:flex-row items-end justify-between gap-6 mb-12 px-4"
+            class="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 md:gap-6 mb-8 md:mb-12 px-2 md:px-4"
           >
             <div>
-              <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+              <h2 class="text-3xl md:text-5xl font-black text-white mb-3 md:mb-4">
                 Campuses
                 <span
                   class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400"
                   >Network</span
                 >
               </h2>
-              <p class="text-slate-400 max-w-lg text-lg">
+              <p class="text-slate-400 max-w-lg text-base md:text-lg">
                 Join students from top universities already using ClassLoop to
                 manage their academic life.
               </p>
@@ -506,195 +542,195 @@
             </div>
           </div>
 
-          <div class="w-full overflow-hidden relative mb-16">
+          <div class="w-full overflow-hidden relative mb-10 md:mb-16">
             <div
-              class="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"
+              class="absolute top-0 left-0 w-16 md:w-32 h-full bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"
             ></div>
             <div
-              class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"
+              class="absolute top-0 right-0 w-16 md:w-32 h-full bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"
             ></div>
 
             <div
-              class="flex w-max gap-6 animate-scroll hover:[animation-play-state:paused]"
+              class="flex w-max gap-4 md:gap-6 animate-scroll hover:[animation-play-state:paused]"
             >
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   IIT
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">IIT Bombay</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">IIT Bombay</h4>
                   <p class="text-slate-500 text-xs">Mumbai, MH</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   CU
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Chandigarh Univ</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">Chandigarh Univ</h4>
                   <p class="text-slate-500 text-xs">Mohali, PB</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   DU
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Delhi University</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">Delhi University</h4>
                   <p class="text-slate-500 text-xs">New Delhi, DL</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   VIT
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">VIT Vellore</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">VIT Vellore</h4>
                   <p class="text-slate-500 text-xs">Vellore, TN</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   TI
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Thapar Institute</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">Thapar Institute</h4>
                   <p class="text-slate-500 text-xs">Patiala, PB</p>
                 </div>
               </div>
 
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   IIT
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">IIT Bombay</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">IIT Bombay</h4>
                   <p class="text-slate-500 text-xs">Mumbai, MH</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   CU
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Chandigarh Univ</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">Chandigarh Univ</h4>
                   <p class="text-slate-500 text-xs">Mohali, PB</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   DU
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Delhi University</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">Delhi University</h4>
                   <p class="text-slate-500 text-xs">New Delhi, DL</p>
                 </div>
               </div>
               <div
-                class="flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-6 rounded-2xl min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
+                class="flex items-center gap-3 md:gap-4 bg-white/5 border border-white/10 px-5 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl min-w-[260px] md:min-w-[300px] hover:bg-white/10 hover:border-primary/50 transition-colors group cursor-pointer"
               >
                 <div
-                  class="size-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-xl"
+                  class="size-10 md:size-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-lg md:text-xl flex-shrink-0"
                 >
                   VIT
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">VIT Vellore</h4>
+                  <h4 class="text-white font-bold text-base md:text-lg">VIT Vellore</h4>
                   <p class="text-slate-500 text-xs">Vellore, TN</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 px-2 md:px-4">
             <div
-              class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
+              class="bg-white/5 backdrop-blur-md border border-white/10 p-6 md:p-8 rounded-2xl md:rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
             >
               <div
                 class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
               >
-                <span class="material-symbols-outlined text-6xl text-blue-400"
+                <span class="material-symbols-outlined text-5xl md:text-6xl text-blue-400"
                   >groups</span
                 >
               </div>
-              <h3 class="text-4xl font-black text-white mb-1">10k+</h3>
-              <p class="text-blue-400 font-medium mb-3">Active Students</p>
-              <p class="text-slate-400 text-sm leading-relaxed">
+              <h3 class="text-3xl md:text-4xl font-black text-white mb-1">10k+</h3>
+              <p class="text-blue-400 font-medium mb-2 md:mb-3 text-sm md:text-base">Active Students</p>
+              <p class="text-slate-400 text-xs md:text-sm leading-relaxed">
                 Connecting across engineering, arts, and medical streams
                 nationwide.
               </p>
             </div>
 
             <div
-              class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
+              class="bg-white/5 backdrop-blur-md border border-white/10 p-6 md:p-8 rounded-2xl md:rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
             >
               <div
                 class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
               >
-                <span class="material-symbols-outlined text-6xl text-purple-400"
+                <span class="material-symbols-outlined text-5xl md:text-6xl text-purple-400"
                   >forum</span
                 >
               </div>
-              <h3 class="text-4xl font-black text-white mb-1">500+</h3>
-              <p class="text-purple-400 font-medium mb-3">Daily Discussions</p>
-              <p class="text-slate-400 text-sm leading-relaxed">
+              <h3 class="text-3xl md:text-4xl font-black text-white mb-1">500+</h3>
+              <p class="text-purple-400 font-medium mb-2 md:mb-3 text-sm md:text-base">Daily Discussions</p>
+              <p class="text-slate-400 text-xs md:text-sm leading-relaxed">
                 From exam prep strategies to campus event planning in real-time.
               </p>
             </div>
 
             <div
-              class="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
+              class="bg-white/5 backdrop-blur-md border border-white/10 p-6 md:p-8 rounded-2xl md:rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors"
             >
               <div
                 class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
               >
-                <span class="material-symbols-outlined text-6xl text-green-400"
+                <span class="material-symbols-outlined text-5xl md:text-6xl text-green-400"
                   >map</span
                 >
               </div>
-              <h3 class="text-4xl font-black text-white mb-1">12+</h3>
-              <p class="text-green-400 font-medium mb-3">Major Cities</p>
-              <p class="text-slate-400 text-sm leading-relaxed">
+              <h3 class="text-3xl md:text-4xl font-black text-white mb-1">12+</h3>
+              <p class="text-green-400 font-medium mb-2 md:mb-3 text-sm md:text-base">Major Cities</p>
+              <p class="text-slate-400 text-xs md:text-sm leading-relaxed">
                 Present in education hubs including Kota, Delhi, Mumbai, and
                 Bangalore.
               </p>
             </div>
           </div>
 
-          <div class="text-center mt-12">
-            <p class="text-slate-500 text-sm">
+          <div class="text-center mt-8 md:mt-12 px-2">
+            <p class="text-slate-500 text-xs md:text-sm">
               Don't see your campus?
               <a
                 href="#contact"
@@ -707,7 +743,7 @@
       </section>
 
       <section
-        class="px-6 py-24 bg-slate-900 relative overflow-hidden"
+        class="px-4 md:px-6 py-12 md:py-24 bg-slate-900 relative overflow-hidden"
         id="stories"
       >
         <div
@@ -715,32 +751,32 @@
         ></div>
 
         <div
-          class="max-w-4xl mx-auto glass p-10 md:p-14 rounded-[2.5rem] text-center relative overflow-hidden border border-white/10 bg-slate-900/40 backdrop-blur-xl"
+          class="max-w-4xl mx-auto glass p-6 md:p-14 rounded-3xl md:rounded-[2.5rem] text-center relative overflow-hidden border border-white/10 bg-slate-900/40 backdrop-blur-xl"
         >
-          <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+          <h2 class="text-3xl md:text-5xl font-black text-white mb-3 md:mb-4">
             Experience the Loop
           </h2>
-          <p class="text-slate-400 max-w-lg text-lg mx-auto">
+          <p class="text-slate-400 max-w-lg text-base md:text-lg mx-auto px-2">
             A seamless digital ecosystem designed to keep your campus life
             synchronized and stress-free.
           </p>
         </div>
       </section>
 
-      <section class="px-6 py-24 relative overflow-hidden" id="contact">
+      <section class="px-4 md:px-6 py-12 md:py-24 relative overflow-hidden" id="contact">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"
         ></div>
 
         <div
-          class="max-w-4xl mx-auto glass p-10 md:p-14 rounded-[2.5rem] text-center relative overflow-hidden border border-white/10 bg-slate-900/40 backdrop-blur-xl"
+          class="max-w-4xl mx-auto glass p-6 md:p-14 rounded-3xl md:rounded-[2.5rem] text-center relative overflow-hidden border border-white/10 bg-slate-900/40 backdrop-blur-xl"
         >
           <div
             class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"
           ></div>
 
           <h2
-            class="text-4xl md:text-5xl font-black mb-6 text-white leading-tight"
+            class="text-3xl md:text-5xl font-black mb-4 md:mb-6 text-white leading-tight px-2"
           >
             Bring ClassLoop to <br class="hidden md:block" />
             <span
@@ -750,20 +786,20 @@
           </h2>
 
           <p
-            class="text-slate-300 text-lg mb-10 max-w-xl mx-auto leading-relaxed"
+            class="text-slate-300 text-base md:text-lg mb-8 md:mb-10 max-w-xl mx-auto leading-relaxed px-2"
           >
             Are you a College Administrator or Student Representative? Connect
             with us to digitize your institution's academic ecosystem.
           </p>
 
-          <div class="flex flex-col items-center justify-center gap-4">
+          <div class="flex flex-col items-center justify-center gap-4 px-2">
             <a
               href="https://wa.me/918102073403?text=Hi!%20I%20am%20interested%20in%20setting%20up%20ClassLoop%20for%20our%20college%20campus.%20Can%20you%20share%20more%20details%3F" rel="noopener noreferrer"
               target="_blank"
-              class="group relative inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:shadow-[0_0_35px_rgba(37,211,102,0.5)] hover:-translate-y-1"
+              class="group relative inline-flex items-center gap-2 md:gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:shadow-[0_0_35px_rgba(37,211,102,0.5)] hover:-translate-y-1 text-sm md:text-base w-full sm:w-auto"
             >
               <svg
-                class="w-6 h-6 fill-current"
+                class="w-5 h-5 md:w-6 md:h-6 fill-current flex-shrink-0"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -773,15 +809,15 @@
               </svg>
               <span>Connect via WhatsApp</span>
               <span
-                class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform"
+                class="material-symbols-outlined text-lg md:text-xl group-hover:translate-x-1 transition-transform"
                 >arrow_forward</span
               >
             </a>
 
             <div
-              class="flex items-center gap-2 mt-4 text-xs font-medium text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/5"
+              class="flex items-center gap-2 mt-4 text-xs font-medium text-slate-400 bg-white/5 px-3 md:px-4 py-2 rounded-full border border-white/5"
             >
-              <span class="relative flex h-2.5 w-2.5">
+              <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
                 <span
                   class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"
                 ></span>
@@ -795,9 +831,9 @@
         </div>
       </section>
     </main>
-    <footer class="border-t border-white/5 bg-background-dark py-12 px-6">
+    <footer class="border-t border-white/5 bg-background-dark py-8 md:py-12 px-4 md:px-6 mb-20 md:mb-0">
       <div
-        class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
+        class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8"
       >
         <div class="flex items-center gap-2">
           <div
@@ -805,9 +841,9 @@
           >
             <span class="material-symbols-outlined text-sm">all_inclusive</span>
           </div>
-          <h2 class="text-lg font-bold">ClassLoop.in</h2>
+          <h2 class="text-base md:text-lg font-bold">ClassLoop.in</h2>
         </div>
-        <div class="flex gap-8 text-slate-500 text-sm">
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-slate-500 text-xs md:text-sm">
           <a class="hover:text-white transition-colors" href="#"
             >Privacy Policy</a
           >
@@ -821,20 +857,20 @@
         </div>
         <div class="flex gap-4">
           <a
-            class="size-10 glass rounded-full flex items-center justify-center hover:text-primary"
+            class="size-9 md:size-10 glass rounded-full flex items-center justify-center hover:text-primary"
             href="#"
           >
-            <span class="material-symbols-outlined">share</span>
+            <span class="material-symbols-outlined text-lg md:text-xl">share</span>
           </a>
           <a
-            class="size-10 glass rounded-full flex items-center justify-center hover:text-primary"
+            class="size-9 md:size-10 glass rounded-full flex items-center justify-center hover:text-primary"
             href="#"
           >
-            <span class="material-symbols-outlined">chat</span>
+            <span class="material-symbols-outlined text-lg md:text-xl">chat</span>
           </a>
         </div>
       </div>
-      <div class="max-w-7xl mx-auto text-center mt-12 text-slate-600 text-xs">
+      <div class="max-w-7xl mx-auto text-center mt-8 md:mt-12 text-slate-600 text-xs">
         © 2024 ClassLoop Technologies. All rights reserved.
       </div>
     </footer>

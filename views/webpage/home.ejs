@@ -1,8 +1,8 @@
 <% layout("/layout/boilerplate.ejs") -%>
 
-  <main class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 p-4 md:p-8">
-    <!-- Left Sidebar: Utility Column -->
-    <aside class="md:col-span-3 space-y-6 h-fit sticky top-24">
+  <main class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 p-3 md:p-8 pb-24 md:pb-8">
+    <!-- Left Sidebar: Utility Column (Hidden on Mobile) -->
+    <aside class="hidden md:block md:col-span-3 space-y-6 h-fit sticky top-24">
       <div class="glass-card rounded-xl p-5 flex flex-col gap-4">
         <div>
           <h1 class="text-white text-lg font-bold">Utility</h1>
@@ -37,16 +37,16 @@
         <div class="glass-card rounded-xl p-5">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">
-              DoubtBin Q&amp;A
+             Your Recent Doubt
             </h3>
             <span class="material-symbols-outlined text-primary text-sm">trending_up</span>
           </div>
           <div class="space-y-4">
             <% for (let Doubt of currentUser.doubt) { %>
               <div class="border-l-2 border-primary pl-3">
-                <p class="text-xs text-white/90 font-medium line-clamp-2">
+                <a href="/doubtBin/<%=Doubt._id%>" class="text-xs text-white/90 font-medium line-clamp-2">
                   <%=Doubt.title%>
-                </p>
+                </a>
                 <p class="text-[10px] text-white/40 mt-1">
                   <%=Doubt.answers.length%> Answers • <%=Doubt.createdAt.toDateString()%>
                 </p>
@@ -76,130 +76,138 @@
           </div>
           <% } %>
     </aside>
+
     <!-- Center Feed: Social Cards -->
     <% if(view==="feed" ) { %>
-      <section class="md:col-span-6 space-y-6">
+      <section class="col-span-1 md:col-span-6 space-y-4 md:space-y-6">
         <!-- Post Composer Placeholder -->
-        <div class="glass-card rounded-xl p-4 flex gap-4 items-center">
-          <div class="size-10 rounded-full bg-cover bg-center shrink-0" data-alt="User profile avatar"
+        <div class="glass-card rounded-xl p-3 md:p-4 flex gap-3 md:gap-4 items-center">
+          <div class="size-9 md:size-10 rounded-full bg-cover bg-center shrink-0" data-alt="User profile avatar"
             style="background-image: url('<%=currUser.profilePic.url%>')"></div>
-          <form action="/post/new" method="POST" enctype="multipart/form-data" class="flex items-center gap-3 w-full">
+          <form action="/post/new" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 md:gap-3 w-full">
 
             <input name="post[description]"
-              class="flex-1 bg-white/5 rounded-xl px-4 py-2.5 text-white outline-none focus:ring-1 focus:ring-primary/50 text-sm"
+              class="flex-1 bg-white/5 rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-white outline-none focus:ring-1 focus:ring-primary/50 text-xs md:text-sm"
               placeholder="What's on your mind?" required />
 
             <div class="flex items-center shrink-0">
               <label for="file-upload"
-                class="cursor-pointer text-primary p-2 hover:bg-primary/10 rounded-full transition-colors">
-                <span class="material-symbols-outlined">image</span>
+                class="cursor-pointer text-primary p-1.5 md:p-2 hover:bg-primary/10 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-xl md:text-2xl">image</span>
                 <input id="file-upload" type="file" name="image" class="hidden" accept="image/*" />
               </label>
 
-              <button type="submit" class="text-primary p-2 hover:bg-primary/10 rounded-full transition-colors">
-                <span class="material-symbols-outlined">upload</span>
+              <button type="submit" class="text-primary p-1.5 md:p-2 hover:bg-primary/10 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-xl md:text-2xl">upload</span>
               </button>
             </div>
           </form>
         </div>
         <!-- Social Feed Card 1 -->
         <% for (let Post of allPosts) { %>
-          <article class="glass-card rounded-xl overflow-hidden shadow-2xl transition-all hover:border-white/20">
-            <div class="p-4 flex items-center justify-between">
+          <article class="glass-card rounded-2xl md:rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] md:shadow-2xl transition-all hover:border-white/20 mb-4 flex flex-col min-h-[250px] md:min-h-0 md:block">
+  
+  <div class="p-4 flex items-center justify-between">
+    <a href="/user/<%=Post.owner._id%>" class="flex items-center gap-3 group">
+      <div class="size-11 md:size-10 rounded-full bg-cover bg-center shadow-sm" data-alt="<%=Post.owner.name%> profile image"
+        style="background-image: url('<%=Post.owner.profilePic.url%>')"></div>
+      <div class="flex flex-col justify-center">
+        <p class="text-[15px] md:text-sm font-bold text-white group-hover:text-primary transition-colors leading-tight">
+          <%=Post.owner.name%>
+        </p>
+        <p class="text-xs md:text-[11px] text-white/40 font-medium mt-0.5 md:mt-0">
+          <%=Post.createdAt.toDateString()%> • BFGI
+        </p>
+      </div>
+    </a>
 
-              <a href="/user/<%=Post.owner._id%>" class="flex items-center gap-3">
-                <div class="size-10 rounded-full bg-cover bg-center" data-alt="Student Rahul Sharma profile image"
-                  style="background-image: url('<%=Post.owner.profilePic.url%>')"></div>
-                <div>
-                  <p class="text-sm font-bold text-white">
-                    <%=Post.owner.name%>
-                  </p>
-                  <p class="text-[11px] text-white/40">
-                    <%=Post.createdAt.toDateString()%> • IIT Delhi
-                  </p>
-                </div>
-              </a>
+    <% if(currentUser._id.equals(Post.owner._id)) { %>
+      <div class="relative post-menu-container">
+        <button class="menu-button-toggle p-2 -mr-2 hover:bg-white/10 md:hover:bg-slate-100 md:dark:hover:bg-slate-800 rounded-full transition-colors outline-none active:scale-95">
+          <span class="material-symbols-outlined text-white/60 md:text-slate-400 text-2xl md:text-xl">more_vert</span>
+        </button>
 
-              <% if(currentUser._id.equals(Post.owner._id)) { %>
-                <div class="relative post-menu-container">
-                  <button
-                    class="menu-button-toggle p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors outline-none">
-                    <span class="material-symbols-outlined text-slate-400">more_vert</span>
-                  </button>
+        <div class="hidden post-dropdown absolute right-0 mt-2 w-48 md:w-40 bg-[#1a1a1a]/95 md:bg-white md:dark:bg-slate-800 backdrop-blur-xl md:backdrop-blur-none rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] md:shadow-2xl border border-white/10 md:border-slate-100 md:dark:border-slate-700 z-50 py-1.5 md:py-2 overflow-hidden transform origin-top-right transition-all">
+          <form action="/post/edit/<%=Post._id%>" method="GET" class="m-0">
+            <button class="w-full text-left px-4 py-3.5 md:py-2 text-sm text-white/90 md:text-slate-700 md:dark:text-slate-200 hover:bg-white/10 md:hover:bg-slate-50 md:dark:hover:bg-slate-700 flex items-center gap-3 md:gap-2 transition-colors active:bg-white/20">
+              <span class="material-symbols-outlined text-[20px] md:text-lg text-white/60 md:text-inherit">edit</span> 
+              <span class="font-medium md:font-normal">Edit Post</span>
+            </button>
+          </form>
 
-                  <div
-                    class="hidden post-dropdown absolute right-0 mt-1 w-40 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 z-10 py-2">
-                    <form action="/post/edit/<%=Post._id%>" method="GET">
-                      <button
-                        class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors">
-                        <span class="material-symbols-outlined text-lg">edit</span> Edit
-                        Post
-                      </button>
-                    </form>
-                    <form action="/post/delete/<%=Post._id%>?_method=DELETE" method="POST">
-                      <button
-                        class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
-                        <span class="material-symbols-outlined text-lg">delete</span>
-                        Delete Post
-                      </button>
-                    </form>
-                  </div>
+          <div class="h-[1px] w-full bg-white/10 md:hidden my-0.5"></div>
 
-                </div>
-                <% } %>
-            </div>
-            <div class="px-4 pb-3">
-              <p class="text-sm text-white/90 leading-relaxed">
-                <%=Post.description%>
-              </p>
-            </div>
-            <% if(Post.image.url) { %>
-              <div class="mx-4 mb-4 rounded-xl aspect-video bg-cover bg-center overflow-hidden"
-                data-alt="Hackathon group photo or poster" style="background-image: url('<%=Post.image.url%>')"></div>
-              <% } %>
-                <!-- Reaction Bar -->
-                <div class="px-4 py-3 border-t border-white/5 flex items-center justify-between">
-                  <div class="flex gap-4">
-                    <button class="like-btn flex items-center gap-1.5 transition-all active:scale-125"
-                      data-id="<%= Post._id %>">
-                      <span
-                        class="material-symbols-outlined text-[20px] icon-heart <%= Post.like.includes(currentUser._id) ? 'fill text-primary' : 'text-white/50' %>">
-                        favorite
-                      </span>
-                      <span
-                        class="like-count text-xs font-bold <%= Post.like.includes(currentUser._id) ? 'text-primary' : 'text-white/50' %>">
-                        <%= Post.like.length %>
-                      </span>
-                    </button>
-                    <button onclick="focusCommentInput('<%=Post._id%>')"
-                      class="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors">
-                      <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                      <span class="text-xs font-bold">
-                        <%=Post.comments.length%>
-                      </span>
-                    </button>
-                    <button class="flex items-center gap-1.5 text-white/50 hover:text-white">
-                      <span class="material-symbols-outlined text-[20px]">share</span>
-                      <span class="text-xs font-bold">
-                        <%=Post.comments.length%>
-                      </span>
-                    </button>
-                  </div>
-                  <a href="/post/<%=Post._id%>"
-                    class="bg-primary/20 hover:bg-primary/30 text-primary text-xs font-bold px-4 py-1.5 rounded-lg transition-colors">
-                    view
-                  </a>
-                </div>
+          <form action="/post/delete/<%=Post._id%>?_method=DELETE" method="POST" class="m-0">
+            <button class="w-full text-left px-4 py-3.5 md:py-2 text-sm text-red-400 md:text-red-500 hover:bg-red-500/10 md:hover:bg-red-50 md:dark:hover:bg-red-900/20 flex items-center gap-3 md:gap-2 transition-colors active:bg-red-500/20">
+              <span class="material-symbols-outlined text-[20px] md:text-lg">delete</span>
+              <span class="font-medium md:font-normal">Delete Post</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    <% } %>
+  </div>
 
+  <div class="px-4 pb-4 md:pb-3">
+    <p class="text-[15px] md:text-sm text-white/95 md:text-white/90 leading-[1.6] md:leading-relaxed break-words">
+      <%=Post.description%>
+    </p>
+  </div>
 
-          </article>
+  <% if(Post.image.url) { %>
+    <div class="mx-4 mb-5 md:mb-4 rounded-2xl md:rounded-xl h-[320px] md:h-auto md:aspect-video bg-cover bg-center overflow-hidden border border-white/10 md:border-0 shadow-lg md:shadow-none"
+      data-alt="Post image" style="background-image: url('<%=Post.image.url%>')"></div>
+  <% } else { %>
+    <div class="h-4 md:hidden"></div>
+  <% } %>
+
+  <div class="mt-auto md:mt-0 px-4 py-4 md:py-3 border-t border-white/5 flex items-center justify-between bg-white/[0.02] md:bg-transparent">
+    
+    <div class="flex gap-6 md:gap-4">
+      
+      <button class="like-btn flex items-center gap-2 md:gap-1.5 transition-all active:scale-110" data-id="<%= Post._id %>">
+        <span class="material-symbols-outlined text-[26px] md:text-[20px] icon-heart <%= Post.like.includes(currentUser._id) ? 'fill text-primary' : 'text-white/50' %>">
+          favorite
+        </span>
+        <span class="like-count text-sm md:text-xs font-semibold md:font-bold <%= Post.like.includes(currentUser._id) ? 'text-primary' : 'text-white/50' %>">
+          <%= Post.like.length %>
+        </span>
+      </button>
+
+      <button onclick="focusCommentInput('<%=Post._id%>')" class="flex items-center gap-2 md:gap-1.5 text-white/50 hover:text-white transition-all active:scale-110">
+        <span class="material-symbols-outlined text-[26px] md:text-[20px]">chat_bubble</span>
+        <span class="text-sm md:text-xs font-semibold md:font-bold">
+          <%=Post.comments.length%>
+        </span>
+      </button>
+
+      <button class="flex items-center gap-2 md:gap-1.5 text-white/50 hover:text-white transition-all active:scale-110">
+        <span class="material-symbols-outlined text-[26px] md:text-[20px]">send</span>
+      </button>
+
+    </div>
+
+    <a href="/post/<%=Post._id%>"
+      class="bg-primary/10 md:bg-primary/20 hover:bg-primary md:hover:bg-primary/30 text-primary md:hover:text-primary hover:text-white text-sm md:text-xs font-bold px-5 py-2.5 md:px-4 md:py-1.5 rounded-xl md:rounded-lg transition-all border border-primary/20 md:border-none shadow-lg shadow-primary/0 hover:shadow-primary/20 md:shadow-none">
+      <span class="md:hidden">View Post</span>
+      <span class="hidden md:inline">view</span>
+    </a>
+  </div>
+
+</article>
           <% } %>
+          <div class="text-center mt-4 pb-24 md:pb-0" id="load-more-container">
+            <button id="load-more-btn" data-page="2" class="text-primary text-xs md:text-sm font-bold hover:underline bg-transparent border-none cursor-pointer">
+              See more Posts
+            </button>
+          </div>
       </section>
       <% } else { %>
         <%- include("../includes/post.ejs") %>
           <% } %>
-            <!-- Right Sidebar: All Chats -->
-           <aside class="md:col-span-3">
+
+            <!-- Right Sidebar: All Chats (Hidden on Mobile) -->
+           <aside class="hidden md:block md:col-span-3">
     <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 custom-scrollbar space-y-4">
         
         <div class="glass-card rounded-xl p-5">
@@ -315,6 +323,33 @@
 </aside>
   </main>
 
+  <!-- Mobile Bottom Navigation (Visible only on mobile) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
+    <div class="glass-card rounded-2xl px-2 py-3 flex items-center justify-around shadow-2xl">
+      <a href="/home" class="flex flex-col items-center gap-1 text-primary px-3 py-1">
+        <span class="material-symbols-outlined fill text-xl">amp_stories</span>
+        <span class="text-[10px] font-semibold">Feed</span>
+      </a>
+      <a href="/user/sync-requests" class="flex flex-col items-center gap-1 text-white/60 hover:text-primary transition-colors px-3 py-1 relative">
+        <span class="material-symbols-outlined text-xl">person_add</span>
+        <span class="text-[10px] font-medium">Requests</span>
+        <% if (connectionRequestCount> 0) { %>
+          <span class="absolute top-0 right-1 bg-primary text-[8px] px-1.5 py-0.5 rounded-full animate-pulse">
+            <%= connectionRequestCount %>
+          </span>
+        <% } %>
+      </a>
+      <a href="/doubtBin" class="flex flex-col items-center gap-1 text-white/60 hover:text-primary transition-colors px-3 py-1">
+        <span class="material-symbols-outlined text-xl">help_center</span>
+        <span class="text-[10px] font-medium">DoubtBin</span>
+      </a>
+      <a href="/chat" class="flex flex-col items-center gap-1 text-white/60 hover:text-primary transition-colors px-3 py-1">
+        <span class="material-symbols-outlined text-xl">forum</span>
+        <span class="text-[10px] font-medium">Chats</span>
+      </a>
+    </div>
+  </nav>
+
   <script>
     function focusCommentInput(postId) {
       // If you are on the individual post view (post.ejs)
@@ -402,4 +437,152 @@
         console.error("AJAX Like Error:", err);
       }
     });
-  </script>
+ 
+    document.getElementById('load-more-btn').addEventListener('click', async (e) => {
+    const btn = e.target;
+    const nextPage = btn.getAttribute('data-page');
+    
+    // Change button text to show it's loading
+    btn.innerText = "Loading...";
+
+    try {
+      // Hit the new backend route
+      const response = await fetch(`/home/api/posts/more?page=${nextPage}`);
+      const data = await response.json();
+
+      if (data.success) {
+        // Target the container that holds the button
+        const loadMoreContainer = document.getElementById('load-more-container');
+
+        data.posts.forEach(post => {
+          // 1. Check if the current user owns this post to show the edit/delete menu
+          // You need to pass the currentUser ID from EJS to a JS variable somewhere, 
+          // or assume it's passed in the API response. 
+          // For this example, assuming your API sends back `post.isOwner` boolean.
+          // If not, you might need to compare IDs if your API returns the current user ID.
+          
+          // Fallback if your API doesn't send this flag:
+          const currentUserId = '<%= currentUser._id %>'; 
+          const isOwner = currentUserId === post.owner._id;
+
+          // 2. Format the date (since JSON dates come as strings)
+          const date = new Date(post.createdAt).toDateString();
+
+          // 3. Build the Post HTML
+          let postHTML = `
+          <article class="glass-card rounded-xl overflow-hidden shadow-2xl transition-all hover:border-white/20 mb-4 md:mb-6">
+            <div class="p-3 md:p-4 flex items-center justify-between">
+              <a href="/user/${post.owner._id}" class="flex items-center gap-2 md:gap-3">
+                <div class="size-9 md:size-10 rounded-full bg-cover bg-center" data-alt="${post.owner.name} profile image"
+                  style="background-image: url('${post.owner.profilePic ? post.owner.profilePic.url : ''}')"></div>
+                <div>
+                  <p class="text-xs md:text-sm font-bold text-white">
+                    ${post.owner.name}
+                  </p>
+                  <p class="text-[10px] md:text-[11px] text-white/40">
+                    ${date} • BFGI
+                  </p>
+                </div>
+              </a>
+          `;
+
+          // Add Edit/Delete menu if owner
+          if (isOwner) {
+            postHTML += `
+              <div class="relative post-menu-container">
+                <button class="menu-button-toggle p-1.5 md:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors outline-none">
+                  <span class="material-symbols-outlined text-slate-400 text-xl md:text-2xl">more_vert</span>
+                </button>
+                <div class="hidden post-dropdown absolute right-0 mt-1 w-36 md:w-40 bg-white dark:bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 z-10 py-2">
+                  <form action="/post/edit/${post._id}" method="GET">
+                    <button class="w-full text-left px-3 md:px-4 py-2 text-xs md:text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors">
+                      <span class="material-symbols-outlined text-base md:text-lg">edit</span> Edit Post
+                    </button>
+                  </form>
+                  <form action="/post/delete/${post._id}?_method=DELETE" method="POST">
+                    <button class="w-full text-left px-3 md:px-4 py-2 text-xs md:text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
+                      <span class="material-symbols-outlined text-base md:text-lg">delete</span> Delete Post
+                    </button>
+                  </form>
+                </div>
+              </div>
+            `;
+          }
+
+          postHTML += `
+            </div>
+            <div class="px-3 md:px-4 pb-2 md:pb-3">
+              <p class="text-xs md:text-sm text-white/90 leading-relaxed">
+                ${post.description}
+              </p>
+            </div>
+          `;
+
+          // Add Image if it exists
+          if (post.image && post.image.url) {
+            postHTML += `
+              <div class="mx-3 md:mx-4 mb-3 md:mb-4 rounded-lg md:rounded-xl aspect-video bg-cover bg-center overflow-hidden"
+                style="background-image: url('${post.image.url}')"></div>
+            `;
+          }
+
+          // Check if the current user has liked this post
+          const isLiked = post.like && post.like.includes(currentUserId);
+          const likeCount = post.like ? post.like.length : 0;
+          const commentCount = post.comments ? post.comments.length : 0;
+
+          // Reaction Bar
+          postHTML += `
+              <div class="px-3 md:px-4 py-2.5 md:py-3 border-t border-white/5 flex items-center justify-between">
+                <div class="flex gap-3 md:gap-4">
+                  <button class="like-btn flex items-center gap-1 md:gap-1.5 transition-all active:scale-125" data-id="${post._id}">
+                    <span class="material-symbols-outlined text-[18px] md:text-[20px] icon-heart ${isLiked ? 'fill text-primary' : 'text-white/50'}">
+                      favorite
+                    </span>
+                    <span class="like-count text-[10px] md:text-xs font-bold ${isLiked ? 'text-primary' : 'text-white/50'}">
+                      ${likeCount}
+                    </span>
+                  </button>
+                  <button onclick="focusCommentInput('${post._id}')" class="flex items-center gap-1 md:gap-1.5 text-white/50 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-[18px] md:text-[20px]">chat_bubble</span>
+                    <span class="text-[10px] md:text-xs font-bold">
+                      ${commentCount}
+                    </span>
+                  </button>
+                  <button class="flex items-center gap-1 md:gap-1.5 text-white/50 hover:text-white">
+                    <span class="material-symbols-outlined text-[18px] md:text-[20px]">share</span>
+                    <span class="text-[10px] md:text-xs font-bold">
+                      ${commentCount}
+                    </span>
+                  </button>
+                </div>
+                <a href="/post/${post._id}" class="bg-primary/20 hover:bg-primary/30 text-primary text-[10px] md:text-xs font-bold px-3 md:px-4 py-1 md:py-1.5 rounded-lg transition-colors">
+                  view
+                </a>
+              </div>
+          </article>
+          `;
+
+          // Insert the HTML right before the Load More button container
+          loadMoreContainer.insertAdjacentHTML('beforebegin', postHTML);
+        });
+
+        // Update the page number for the next click
+        btn.setAttribute('data-page', parseInt(nextPage) + 1);
+        btn.innerText = "See more Posts";
+
+        // If your API sends a flag indicating there are no more posts
+        if (!data.hasMore) {
+          loadMoreContainer.style.display = 'none';
+        }
+
+      } else {
+        console.error("API returned success: false");
+        btn.innerText = "See more Posts";
+      }
+    } catch (error) {
+      console.error("Failed to load posts", error);
+      btn.innerText = "See more Posts";
+    }
+  });
+    </script>

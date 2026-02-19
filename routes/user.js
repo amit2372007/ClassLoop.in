@@ -23,6 +23,8 @@ router.get("/logout", userController.logout);
 router.get("/profile", isLoggedIn , userController.userProfile);
 router.get("/find", userController.findUsers);
 router.get("/forgetPassword", userController.renderForgetPassword);
+router.get("/editProfile" , isLoggedIn , userController.editProfilePage);
+router.put("/editProfile" , isLoggedIn , userController.editProfile); 
 router.post("/request-reset-otp", userController.requestPasswordReset);
 router.post("/verify-reset-otp", userController.verifyResetOTP);
 router.post("/update-password", userController.updatePassword);

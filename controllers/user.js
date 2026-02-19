@@ -64,7 +64,7 @@ module.exports.signup = async (req, res, next) => {
             await req.user.save();
 
             // Clear the OTP session ID from the session for security
-            delete req.session.otpSessionId;
+            // delete req.session.otpSessionId;
 
             req.flash("success", `Hey! ${req.user.name}, your account was created successfully.`);
             res.redirect("/home");
@@ -265,6 +265,8 @@ module.exports.userProfile = async (req, res) => {
 
         let currentUser = await Users.findById(req.user._id)
             .populate("synced")
+            .populate("loopSpace")
+            .populate("skills")
             .populate({
                 path: "instituition",
                 populate: {
@@ -277,6 +279,53 @@ module.exports.userProfile = async (req, res) => {
     } catch (error) {
         console.error("Error loading profile:", error);
         res.status(500).send("Internal Server Error");
+    }
+};
+
+module.exports.editProfilePage = async(req,res)=>{
+    let currentUser = await Users.findById(req.user._id);
+    res.render("./user/editProfile.ejs" , {currentUser});
+}
+
+module.exports.editProfile = async(req,res)=>{
+   try {
+        // 1. Destructure the data coming from the form inputs
+        const { bio, location, skills } = req.body;
+        const userId = req.user._id;
+
+        // 2. Convert the comma-separated skills string back into a clean array
+        let skillsArray = [];
+        if (skills) {
+            // Split by comma, trim extra spaces, and remove empty strings just in case
+            skillsArray = skills.split(',')
+                                .map(skill => skill.trim())
+                                .filter(skill => skill.length > 0);
+        }
+
+        // 3. Find the user and update their details in one fast database call
+        const updatedUser = await Users.findByIdAndUpdate(
+            userId,
+            {
+                bio: bio,
+                location: location,
+                skills: skillsArray
+            },
+            { new: true, runValidators: true } // 'new' returns the updated document
+        );
+
+        if (!updatedUser) {
+            req.flash("error", "User not found. Could not update profile.");
+            return res.redirect("/home");
+        }
+
+        // 4. Send a success message and redirect them to view their shiny new profile
+        req.flash("success", "Profile updated successfully!");
+        res.redirect("/user/profile"); // Change this if your profile route is named something else (like '/user/profile')
+
+    } catch (error) {
+        console.error("Profile Update Error:", error);
+        req.flash("error", "Something went wrong while updating your profile. Please try again.");
+        res.redirect('/user/profile'); // Sends them back to the edit page so they don't lose their typing
     }
 };
 

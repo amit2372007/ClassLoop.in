@@ -1,10 +1,10 @@
 <% layout("/layout/boilerplate.ejs") -%>
     <title>ClassLoop Direct Messages</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
@@ -60,17 +60,28 @@
           position: relative;
           top: 8px;
         }
+        
+        /* Fix for mobile viewport height */
+        @supports (height: 100dvh) {
+          .mobile-vh-fix {
+            height: 100dvh;
+          }
+        }
     </style>
     </head>
 
     <body class="bg-background-light dark:bg-background-dark font-display text-white antialiased">
-        <div class="flex h-screen w-full flex-col overflow-hidden">
+        <div class="flex mobile-vh-fix h-screen w-full flex-col overflow-hidden">
 
-            <main class="flex flex-1 overflow-hidden bg-background-dark p-4 gap-4">
-                <aside class="h-[87vh] flex w-full max-w-[360px] flex-col rounded-2xl bg-surface-dark overflow-hidden">
-                    <div class="p-4 space-y-4">
+            <main class="flex flex-1 overflow-hidden bg-background-dark p-0 md:p-4 gap-0 md:gap-4">
+                <!-- Conversations List -->
+                <aside class="<%= isChatting ? 'hidden md:flex' : 'flex' %> h-full md:h-[87vh] w-full md:max-w-[360px] flex-col rounded-none md:rounded-2xl bg-surface-dark overflow-hidden">
+                    <div class="p-3 md:p-4 space-y-3 md:space-y-4">
                         <div class="flex items-center justify-between">
-                            <h1 class="text-white text-xl font-bold">Messages</h1>
+                            <a href="/home" class=" -ml-2 mr-1 p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined text-white text-xl">arrow_back</span>
+                            </a>
+                            <h1 class="text-white text-lg md:text-xl font-bold">Messages</h1>
                             <button
                                 class="size-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center hover:bg-primary/30 transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">edit_square</span>
@@ -91,13 +102,13 @@
                                 class="flex items-center gap-3 rounded-xl p-3 mb-1 cursor-pointer transition-colors <%= (isChatting && Receiver && Receiver._id.equals(User._id)) ? 'bg-primary/20 border border-primary/30' : 'hover:bg-white/5' %>">
                                     
                                     <div class="relative shrink-0">
-                                        <div class="size-12 rounded-full bg-cover bg-center"
+                                        <div class="size-11 md:size-12 rounded-full bg-cover bg-center"
                                             style="background-image: url('<%= User.profilePic.url || "/images/default-avatar.png" %>');">
                                         </div>
                                         <% if(User.isActive) { %>
-                                        <div class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-surface-dark bg-green-500"></div>
+                                        <div class="absolute bottom-0 right-0 size-3 md:size-3.5 rounded-full border-2 border-surface-dark bg-green-500"></div>
                                         <% } else{ %>
-                                        <div style="background: grey;" class="absolute bottom-0 right-0 size-3.5 rounded-full border-2 border-surface-dark"></div>
+                                        <div style="background: grey;" class="absolute bottom-0 right-0 size-3 md:size-3.5 rounded-full border-2 border-surface-dark"></div>
                                         <% }  %>
                                     </div>
 
@@ -116,9 +127,11 @@
                             <% } %>
                              </div>
                 </aside>
+
                 <% if(isChatting==false) { %>
+                    <!-- Empty State -->
                     <section
-                        class="flex flex-1 flex-col rounded-2xl bg-surface-dark overflow-hidden relative items-center justify-center p-8">
+                        class="hidden md:flex flex-1 flex-col rounded-2xl bg-surface-dark overflow-hidden relative items-center justify-center p-8">
                         <div class="flex flex-col items-center max-w-sm text-center">
                             <div class="relative mb-8 flex items-center justify-center">
                                 <div class="absolute inset-0 bg-primary/20 blur-[60px] rounded-full scale-150"></div>
@@ -152,129 +165,134 @@
                         </div>
                     </section>
                 <% } else { %>
-                        <!-- Right Pane: Chat Window -->
-                    <section class="h-[87vh] flex flex-1 flex-col rounded-2xl bg-surface-dark overflow-hidden relative">
+                        <!-- Chat Window -->
+                    <section class="h-full md:h-[87vh] flex flex-1 flex-col rounded-none md:rounded-2xl bg-surface-dark overflow-hidden">
                         
-                            <header class="flex h-16 items-center justify-between border-b border-white/5 px-6 shrink-0">
-    <div class="flex items-center gap-3">
-        <div class="size-10 rounded-full bg-cover bg-center"
-             style="background-image: url('<%= Receiver.profilePic.url %>');">
-        </div>
-        <div>
-            <h3 class="text-white text-base font-bold leading-none"><%= Receiver.name %></h3>
-            <p class="text-[11px] text-green-500 mt-1 font-medium"><%if(Receiver.isActive == true) { %>
-                Active Now 
-            <%} else { %> 
-            <p class="text-[11px] text-white mt-1 font-medium">Offline</p>
-            <% } %>
-            </p>
-        </div>
-    </div>
-</header>
-
-            <div id="chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
-                <% for(let msg of messages) { %>
-                    <% if(msg.sender.equals(currentUser._id)) { %>
-    <div class="flex flex-col items-end mb-4 group" id="msg-<%= msg._id %>">
-        <div class="relative flex items-center gap-2 max-w-[80%]">
-            
-            <div class="opacity-0  group-hover:opacity-100 transition-opacity">
-                <button onclick="toggleMessageMenu('<%= msg._id %>')" class="text-slate-500 hover:text-white flex items-center">
-                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
-                </button>
-                
-                <div id="menu-<%= msg._id %>" class="hidden absolute left-0 bottom-full mb-2 w-28 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
-                    <button onclick="editMessage('<%= msg._id %>', '<%= msg.content %>')" class="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">edit</span> Edit
-                    </button>
-                    <button onclick="deleteMessage('<%= msg._id %>')" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-slate-700 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">delete</span> Delete
-                    </button>
-                </div>
-            </div>
-
-            <div class="glass-purple rounded-2xl rounded-br-none px-4 py-3 shadow-lg">
-                <% if(msg.image && msg.image.url) { %>
-                    <div class="relative overflow-hidden rounded-xl mb-2">
-                        <img class="w-full h-auto max-h-60 object-cover" src="<%= msg.image.url %>" />
-                    </div>
-                <% } %>
-                
-                <p class="text-sm text-white leading-relaxed msg-content">
-                    <%= msg.content %>
-                </p>
-                
-                <div class="flex items-center justify-end gap-1 mt-1">
-                    <span class="text-[10px] text-white/40">
-                        <%= msg.createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
-                    </span>
-                    <span class="tick material-symbols-outlined text-[14px] <%= msg.isRead ? 'text-blue-400' : 'text-white/40' %>">
-                        <%= msg.isRead ? 'done_all' : 'check' %>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-                    <% } else { %>
-                        <div class="flex items-end gap-3 max-w-[80%]">
-                            <div class="size-8 rounded-full bg-cover bg-center shrink-0 mb-1"
-                                style="background-image: url('<%= Receiver.profilePic.url %>');">
+                        <!-- Chat Header - Fixed -->
+                        <header class="flex h-14 md:h-16 items-center justify-between border-b border-white/5 px-4 md:px-6 shrink-0 bg-surface-dark">
+                            <div class="flex items-center gap-3">
+                                <a href="/chat" class="md:hidden -ml-2 mr-1 p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined text-white text-xl">arrow_back</span>
+                                </a>
+                                
+                                <div class="size-9 md:size-10 rounded-full bg-cover bg-center"
+                                     style="background-image: url('<%= Receiver.profilePic.url %>');">
+                                </div>
+                                <div>
+                                    <h3 class="text-white text-sm md:text-base font-bold leading-none"><%= Receiver.name %></h3>
+                                    <p class="text-[10px] md:text-[11px] mt-1 font-medium <%= Receiver.isActive ? 'text-green-500' : 'text-white/60' %>">
+                                        <% if(Receiver.isActive == true) { %>
+                                            Active Now 
+                                        <% } else { %> 
+                                            Offline
+                                        <% } %>
+                                    </p>
+                                </div>
                             </div>
-                            <div class="glass-neutral rounded-2xl rounded-bl-none px-4 py-3">
-                                <% if(msg.image.url) { %>
-                                <div class="relative overflow-hidden rounded-xl">
-<img alt="Textbook page with shell scripting notes" class="w-full h-auto aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGelrDzmunH1FpVwEjTFuB9CWuQKTogyYYwKOCfVUg3CqjIF4Bop-0_FizdPNjy04GTEKcyOVj2ZYdVo3djd-JnVP_RgYnr4kB3SPRgpHhDkPnrGvho99b1SYZ43DEYj38bbKIra9EdBLXxMqPAtrPEJBgvXgCYOjyROdQ54rh-28mdJq_-qpV_pzlvon0dELkUFKvCzHoWVFyI0_mCWIt0q7QIypQkblKi3DOM_WxpXmaBlsg2oEPURDweF02Ca_WlzeG7Dt61ZnH"/>
-<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-<div class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/10">
-<span class="material-symbols-outlined text-[18px]">zoom_in</span>
-<span class="text-[11px] font-medium">Click to expand</span>
-</div>
-</div>
-</div>
-<% } %>
-                                <p class="text-sm leading-relaxed text-white/90"><%= msg.content %></p>
-                                <span class="mt-1 block text-[10px] text-white/30 text-right">
-                                    <%= msg.createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
-                                </span>
-                            </div>
+                        </header>
+
+                        <!-- Messages Container - Scrollable with proper padding -->
+                        <div id="chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-6 space-y-2 md:space-y-6">
+                            <% for(let msg of messages) { %>
+                                <% if(msg.sender.equals(currentUser._id)) { %>
+                                    <!-- Sent Message -->
+                                    <div class="flex flex-col items-end mb-2 md:mb-4 group" id="msg-<%= msg._id %>">
+                                        <div class="relative flex items-center gap-2 max-w-[85%] md:max-w-[80%]">
+                                            
+                                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onclick="toggleMessageMenu('<%= msg._id %>')" class="text-slate-500 hover:text-white flex items-center">
+                                                    <span class="material-symbols-outlined text-[18px] md:text-[20px]">expand_more</span>
+                                                </button>
+                                                
+                                                <div id="menu-<%= msg._id %>" class="hidden absolute left-0 bottom-full mb-2 w-24 md:w-28 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                                                    <button onclick="editMessage('<%= msg._id %>', '<%= msg.content %>')" class="w-full text-left px-3 md:px-4 py-2 text-[11px] md:text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-xs md:text-sm">edit</span> Edit
+                                                    </button>
+                                                    <button onclick="deleteMessage('<%= msg._id %>')" class="w-full text-left px-3 md:px-4 py-2 text-[11px] md:text-xs text-red-400 hover:bg-slate-700 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-xs md:text-sm">delete</span> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="glass-purple rounded-2xl rounded-br-none px-3 md:px-4 py-2 md:py-3 shadow-lg">
+                                                <% if(msg.image && msg.image.url) { %>
+                                                    <div class="relative overflow-hidden rounded-xl mb-2">
+                                                        <img class="w-full h-auto max-h-48 md:max-h-60 object-cover" src="<%= msg.image.url %>" />
+                                                    </div>
+                                                <% } %>
+                                                
+                                                <p class="text-xs md:text-sm text-white leading-relaxed msg-content">
+                                                    <%= msg.content %>
+                                                </p>
+                                                
+                                                <div class="flex items-center justify-end gap-1 mt-1">
+                                                    <span class="text-[9px] md:text-[10px] text-white/40">
+                                                        <%= msg.createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                                    </span>
+                                                    <span class="tick material-symbols-outlined text-[12px] md:text-[14px] <%= msg.isRead ? 'text-blue-400' : 'text-white/40' %>">
+                                                        <%= msg.isRead ? 'done_all' : 'check' %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <% } else { %>
+                                    <!-- Received Message -->
+                                    <div class="flex items-end gap-2 md:gap-3 max-w-[85%] md:max-w-[80%] mb-2 md:mb-4">
+                                        <div class="size-7 md:size-8 rounded-full bg-cover bg-center shrink-0 mb-1"
+                                            style="background-image: url('<%= Receiver.profilePic.url %>');">
+                                        </div>
+                                        <div class="glass-neutral rounded-2xl rounded-bl-none px-3 md:px-4 py-2 md:py-3 shadow-lg">
+                                            <% if(msg.image && msg.image.url) { %>
+                                            <div class="relative overflow-hidden rounded-xl mb-2">
+                                                <img alt="Shared image" class="w-full h-auto max-h-48 md:max-h-60 object-cover" src="<%= msg.image.url %>"/>
+                                            </div>
+                                            <% } %>
+                                            <p class="text-xs md:text-sm leading-relaxed text-white/90"><%= msg.content %></p>
+                                            <span class="mt-1 block text-[9px] md:text-[10px] text-white/30 text-right">
+                                                <%= msg.createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% } %>
                         </div>
-                    <% } %>
-                <% } %>
-            </div>
 
-            <div id="edit-preview" class="hidden bg-primary/10 border-l-4 border-primary p-2 px-4 flex justify-between items-center transition-all mb-1 rounded-t-xl">
-    <div class="flex flex-col">
-        <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Editing Message</span>
-        <p id="editing-text-display" class="text-xs text-white/60 line-clamp-1"></p>
-    </div>
-    <button type="button" onclick="cancelEdit()" class="text-white/40 hover:text-white">
-        <span class="material-symbols-outlined text-sm">close</span>
-    </button>
-</div>
-                            <!-- Message Input Area -->
-    <form id="chat-form" class="p-4 bg-surface-dark border-t border-white/5" enctype="multipart/form-data">
-    <input type="hidden" id="edit-msg-id" value="">
-    
-    <div class="flex items-center gap-3 bg-white/5 rounded-2xl p-2 pl-4 border border-white/5 focus-within:border-primary/50 transition-all">
-        <div class="flex items-center">
-            <input type="file" id="file-upload" class="hidden" accept="image/*, .pdf, .doc, .docx" />
-            <button type="button" onclick="document.getElementById('file-upload').click()" class="flex size-9 items-center justify-center text-white/40 hover:text-primary transition-colors">
-                <span class="material-symbols-outlined">add_circle</span>
-            </button>
-        </div>
-        
-        <input id="message-input" name="content" required autocomplete="off"
-            class="flex-1 border-none bg-transparent py-2 text-sm focus:ring-0 text-white placeholder:text-white/20"
-            placeholder="Write to <%= Receiver.username %>..." type="text" />
-        
-        <div class="flex items-center gap-1">
-            <button type="submit" class="flex size-9 items-center justify-center rounded-xl bg-primary text-white shadow-[0_0_15px_rgba(159,31,239,0.4)] hover:brightness-110 transition-all">
-                <span class="material-symbols-outlined text-[20px]">send</span>
-            </button>
-        </div>
-    </div>
-</form>
+                        <!-- Edit Preview Bar - Fixed above input -->
+                        <div id="edit-preview" class="hidden bg-primary/10 border-l-4 border-primary p-2 px-3 md:px-4 flex justify-between items-center transition-all">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] md:text-[10px] text-primary font-bold uppercase tracking-wider">Editing Message</span>
+                                <p id="editing-text-display" class="text-[11px] md:text-xs text-white/60 line-clamp-1"></p>
+                            </div>
+                            <button type="button" onclick="cancelEdit()" class="text-white/40 hover:text-white">
+                                <span class="material-symbols-outlined text-sm">close</span>
+                            </button>
+                        </div>
+
+                        <!-- Message Input Area - Fixed at bottom -->
+                        <form id="chat-form" class="p-3 md:p-4 bg-surface-dark border-t border-white/5 shrink-0" enctype="multipart/form-data">
+                            <input type="hidden" id="edit-msg-id" value="">
+                            
+                            <div class="flex items-center gap-2 md:gap-3 bg-white/5 rounded-xl md:rounded-2xl p-2 pl-3 md:pl-4 border border-white/5 focus-within:border-primary/50 transition-all">
+                                <div class="flex items-center">
+                                    <input type="file" id="file-upload" class="hidden" accept="image/*, .pdf, .doc, .docx" />
+                                    <button type="button" onclick="document.getElementById('file-upload').click()" class="flex size-8 md:size-9 items-center justify-center text-white/40 hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined text-xl md:text-2xl">add_circle</span>
+                                    </button>
+                                </div>
+                                
+                                <input id="message-input" name="content" required autocomplete="off"
+                                    class="flex-1 border-none bg-transparent py-2 text-xs md:text-sm focus:ring-0 text-white placeholder:text-white/20"
+                                    placeholder="Write to <%= Receiver.username %>..." type="text" />
+                                
+                                <div class="flex items-center gap-1">
+                                    <button type="submit" class="flex size-8 md:size-9 items-center justify-center rounded-lg md:rounded-xl bg-primary text-white shadow-[0_0_15px_rgba(159,31,239,0.4)] hover:brightness-110 transition-all">
+                                        <span class="material-symbols-outlined text-[18px] md:text-[20px]">send</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </section>
                 <% } %>
             </main>
@@ -284,7 +302,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         let isEditing = false;
-    // --- YOUR EXISTING SCRIPT (Do not change) ---
     const chatMessages = document.getElementById('chat-messages');
     if (chatMessages) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -303,18 +320,16 @@
     chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const content = messageInput.value.trim();
-    const msgId = document.getElementById('edit-msg-id').value; // Get the hidden ID
+    const msgId = document.getElementById('edit-msg-id').value;
 
     if (content && receiverId) {
         if (isEditing && msgId) {
-            // LOGIC: If editing, emit 'editMessage' instead of 'user-message'
             socket.emit('editMessage', { 
                 msgId: msgId, 
                 newContent: content 
             });
-            cancelEdit(); // Reset the UI after editing
+            cancelEdit();
         } else {
-            // LOGIC: Regular new message
             socket.emit('user-message', {
                 content: content,
                 senderId: currentUserId,
@@ -334,33 +349,32 @@
     function appendMessage(data) {
     const isMe = data.sender === currentUserId;
     
-    // We use the same 'flex items-center gap-2' logic here
     const msgHtml = `
-        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-4 group" id="msg-${data._id || Date.now()}">
-            <div class="relative flex items-center gap-2 max-w-[80%]">
+        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-2 md:mb-4 group" id="msg-${data._id || Date.now()}">
+            <div class="relative flex items-center gap-2 max-w-[85%] md:max-w-[80%]">
                 
                 ${isMe ? `
                 <div class="opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="toggleMessageMenu('${data._id}')" class="text-slate-500 hover:text-white flex items-center">
-                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                        <span class="material-symbols-outlined text-[18px] md:text-[20px]">expand_more</span>
                     </button>
-                    <div id="menu-${data._id}" class="hidden absolute left-0 bottom-full mb-2 w-28 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
-                        <button onclick="editMessage('${data._id}', '${data.content}')" class="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">edit</span> Edit
+                    <div id="menu-${data._id}" class="hidden absolute left-0 bottom-full mb-2 w-24 md:w-28 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                        <button onclick="editMessage('${data._id}', '${data.content}')" class="w-full text-left px-3 md:px-4 py-2 text-[11px] md:text-xs text-slate-200 hover:bg-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-xs md:text-sm">edit</span> Edit
                         </button>
-                        <button onclick="deleteMessage('${data._id}')" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-slate-700 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">delete</span> Delete
+                        <button onclick="deleteMessage('${data._id}')" class="w-full text-left px-3 md:px-4 py-2 text-[11px] md:text-xs text-red-400 hover:bg-slate-700 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-xs md:text-sm">delete</span> Delete
                         </button>
                     </div>
                 </div>` : ''}
 
-                ${!isMe ? `<div class="size-8 rounded-full bg-cover bg-center shrink-0 mb-1" style="background-image: url('<%= Receiver ? Receiver.profilePic.url : '' %>');"></div>` : ''}
+                ${!isMe ? `<div class="size-7 md:size-8 rounded-full bg-cover bg-center shrink-0 mb-1" style="background-image: url('<%= Receiver ? Receiver.profilePic.url : '' %>');"></div>` : ''}
                 
-                <div class="${isMe ? 'glass-purple rounded-br-none' : 'glass-neutral rounded-bl-none'} rounded-2xl px-4 py-3 shadow-lg">
-                    <p class="text-sm leading-relaxed ${!isMe ? 'text-white/90' : 'text-white'} msg-content">${data.content}</p>
+                <div class="${isMe ? 'glass-purple rounded-br-none' : 'glass-neutral rounded-bl-none'} rounded-2xl px-3 md:px-4 py-2 md:py-3 shadow-lg">
+                    <p class="text-xs md:text-sm leading-relaxed ${!isMe ? 'text-white/90' : 'text-white'} msg-content">${data.content}</p>
                     <div class="flex items-center justify-end gap-1 mt-1">
-                        <span class="text-[10px] text-white/40 text-right">Just now</span>
-                        ${isMe ? `<span class="tick material-symbols-outlined text-[14px] text-white/40">check</span>` : ''}
+                        <span class="text-[9px] md:text-[10px] text-white/40 text-right">Just now</span>
+                        ${isMe ? `<span class="tick material-symbols-outlined text-[12px] md:text-[14px] text-white/40">check</span>` : ''}
                     </div>
                 </div>
             </div>
@@ -370,11 +384,8 @@
     messageFeed.insertAdjacentHTML('beforeend', msgHtml);
     messageFeed.scrollTop = messageFeed.scrollHeight; 
 }
-    // --- NEW ADDED FUNCTIONALITY ---
 
-    // 1. Toggle the Edit/Delete Menu
     function toggleMessageMenu(msgId) {
-        // Close all other open menus first
         document.querySelectorAll('[id^="menu-"]').forEach(menu => {
             if (menu.id !== `menu-${msgId}`) menu.classList.add('hidden');
         });
@@ -382,29 +393,24 @@
         if (menu) menu.classList.toggle('hidden');
     }
 
-    // 2. Delete Message Handler
     function deleteMessage(msgId) {
         if (confirm("Delete this message for everyone?")) {
             socket.emit("deleteMessage", msgId);
         }
     }
 
-    // 3. Edit Message Handler
     function editMessage(msgId, currentText) {
     isEditing = true;
     document.getElementById('edit-msg-id').value = msgId;
     document.getElementById('message-input').value = currentText;
     
-    // Show the preview bar
     document.getElementById('editing-text-display').innerText = currentText;
     document.getElementById('edit-preview').classList.remove('hidden');
     
     document.getElementById('message-input').focus();
-    // Close the dropdown menu
     toggleMessageMenu(msgId);
 }
 
-// NEW: Function to clear edit mode
 function cancelEdit() {
     isEditing = false;
     document.getElementById('edit-msg-id').value = "";
@@ -412,7 +418,6 @@ function cancelEdit() {
     document.getElementById('edit-preview').classList.add('hidden');
 }
 
-    // 4. Socket Listener for Real-time Deletion
     socket.on("messageDeleted", (msgId) => {
         const msgElement = document.getElementById(`msg-${msgId}`);
         if (msgElement) {
@@ -425,21 +430,18 @@ function cancelEdit() {
         }
     });
 
-    // 5. Socket Listener for Real-time Editing
     socket.on("messageEdited", (data) => {
         const msgElement = document.getElementById(`msg-${data.msgId}`);
         if (msgElement) {
             const contentPara = msgElement.querySelector('.msg-content');
             if (contentPara) {
                 contentPara.innerText = data.newContent;
-                // Highlight briefly to show change
                 contentPara.style.color = "#b954f8"; 
                 setTimeout(() => { contentPara.style.color = ""; }, 2000);
             }
         }
     });
 
-    // Close menus when clicking anywhere else
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.group')) {
             document.querySelectorAll('[id^="menu-"]').forEach(menu => menu.classList.add('hidden'));
