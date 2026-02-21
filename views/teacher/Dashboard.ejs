@@ -36,24 +36,46 @@
             }
 
             .custom-scrollbar::-webkit-scrollbar {
-                height: 6px;
+                height: 4px;
             }
             .custom-scrollbar::-webkit-scrollbar-track {
                 background: transparent;
             }
             .custom-scrollbar::-webkit-scrollbar-thumb {
-                background: #e2e8f0;
+                background: #cbd5e1;
                 border-radius: 10px;
             }
             .dark .custom-scrollbar::-webkit-scrollbar-thumb {
                 background: #334155;
             }
 
+            /* Hide scrollbar for mobile nav but keep functionality */
+            .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .hide-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
             /* Reserve space at bottom on mobile so content isn't hidden behind bottom nav */
             @media (max-width: 1023px) {
                 #main-content-area {
-                    padding-bottom: 72px;
+                    padding-bottom: 80px;
                 }
+            }
+
+            /* Active tab indicator */
+            .mobile-nav-active::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 32px;
+                height: 3px;
+                background: currentColor;
+                border-radius: 3px 3px 0 0;
             }
         </style>
     </head>
@@ -117,25 +139,26 @@
                     </a>
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Applications' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
                         href="/teacher?tab=Applications">
-                        <span class="material-symbols-outlined text-[22px]">quiz</span>
+                        <span class="material-symbols-outlined text-[22px]">description</span>
                         <span class="text-sm font-medium">Applications</span>
                     </a>
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Applications' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                    
+                </nav>
+                <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'QRCode' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
                         href="/teacher/QrCode">
                         <span class="material-symbols-outlined text-[22px]">qr_code</span>
                         <span class="text-sm font-medium">Class QR Code</span>
                     </a>
-                </nav>
-                <div class="p-4 border-t border-slate-200 dark:border-slate-800">
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        href="/teacher?activeTab=Settings">
-                        <span class="material-symbols-outlined text-[22px]">settings</span>
-                        <span class="text-sm font-medium">Settings</span>
+                        href="/home">
+                        <span class="material-symbols-outlined text-[22px]">exit_to_app</span>
+                        <span class="text-sm font-medium">Exit Teacher Panel</span>
                     </a>
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        href="/teacher?tab=HelpCenter">
-                        <span class="material-symbols-outlined text-[22px]">help</span>
-                        <span class="text-sm font-medium">Help Center</span>
+                        href="/user/logout">
+                        <span class="material-symbols-outlined text-[22px]">logout</span>
+                        <span class="text-sm font-medium">Logout</span>
                     </a>
                 </div>
             </aside>
@@ -164,105 +187,116 @@
             </div>
         </div>
 
-        <%# MOBILE BOTTOM NAVIGATION — only visible on mobile/tablet (hidden on lg+) %>
-        <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 flex items-stretch">
+        <%# MOBILE BOTTOM NAVIGATION — horizontal scrollable, only visible on mobile %>
+        <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#1a1a2e] border-t border-slate-200 dark:border-slate-700 shadow-2xl">
+            <div class="flex overflow-x-auto hide-scrollbar px-2 py-2">
+                
+                <a href="/teacher?tab=Overview"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Overview' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px] <%= activeTab === 'Overview' ? 'font-variation-settings-fill' : '' %>" style="<%= activeTab === 'Overview' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">dashboard</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Overview</span>
+                </a>
 
-            <%# Row 1 of nav tabs: Overview, Attendance, Students, Assignments %>
-            <a href="/teacher?tab=Overview"
-               class="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors <%= activeTab === 'Overview' ? 'text-primary' : 'text-slate-500 dark:text-slate-400' %>">
-                <span class="material-symbols-outlined text-[22px]">dashboard</span>
-                <span class="text-[9px] font-semibold leading-none">Overview</span>
-            </a>
+                <a href="/teacher?tab=Attendance"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Attendance' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Attendance' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">how_to_reg</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Attendance</span>
+                </a>
 
-            <a href="/teacher?tab=Attendance"
-               class="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors <%= activeTab === 'Attendance' ? 'text-primary' : 'text-slate-500 dark:text-slate-400' %>">
-                <span class="material-symbols-outlined text-[22px]">how_to_reg</span>
-                <span class="text-[9px] font-semibold leading-none">Attendance</span>
-            </a>
+                <a href="/teacher?tab=Students"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Students' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Students' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">group</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Students</span>
+                </a>
 
-            <a href="/teacher?tab=Students"
-               class="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors <%= activeTab === 'Students' ? 'text-primary' : 'text-slate-500 dark:text-slate-400' %>">
-                <span class="material-symbols-outlined text-[22px]">group</span>
-                <span class="text-[9px] font-semibold leading-none">Students</span>
-            </a>
+                <a href="/teacher?tab=Assignments"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Assignments' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Assignments' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">assignment</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Assignments</span>
+                </a>
 
-            <a href="/teacher?tab=Assignments"
-               class="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors <%= activeTab === 'Assignments' ? 'text-primary' : 'text-slate-500 dark:text-slate-400' %>">
-                <span class="material-symbols-outlined text-[22px]">assignment</span>
-                <span class="text-[9px] font-semibold leading-none">Assignments</span>
-            </a>
+                <a href="/teacher?tab=Resources"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Resources' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Resources' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">topic</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Resources</span>
+                </a>
 
-            <a href="/teacher?tab=Resources"
-               class="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors <%= activeTab === 'Resources' ? 'text-primary' : 'text-slate-500 dark:text-slate-400' %>">
-                <span class="material-symbols-outlined text-[22px]">Topic</span>
-                <span class="text-[9px] font-semibold leading-none">Resources</span>
-            </a>
+                <a href="/teacher?tab=Timetable"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Timetable' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Timetable' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">calendar_today</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Timetable</span>
+                </a>
 
-            <%# "More" button opens a slide-up drawer for the remaining tabs %>
-            <button onclick="document.getElementById('mobile-more-drawer').classList.toggle('translate-y-full')"
-               class="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors text-slate-500 dark:text-slate-400">
-                <span class="material-symbols-outlined text-[22px]">more_horiz</span>
-                <span class="text-[9px] font-semibold leading-none">More</span>
-            </button>
+                <a href="/teacher?tab=Form"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Form' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Form' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">forms_add_on</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Forms</span>
+                </a>
+
+                <a href="/teacher?tab=Exam"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Exam' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Exam' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">quiz</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Exam</span>
+                </a>
+
+                <a href="/teacher?tab=Applications"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'Applications' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'Applications' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">description</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">Applications</span>
+                </a>
+
+                <a href="/teacher/QrCode"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors <%= activeTab === 'QRCode' ? 'text-primary mobile-nav-active' : 'text-slate-500 dark:text-slate-400' %>">
+                    <span class="material-symbols-outlined text-[24px]" style="<%= activeTab === 'QRCode' ? 'font-variation-settings: \"FILL\" 1;' : '' %>">qr_code</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">QR Code</span>
+                </a>
+
+                <button onclick="document.getElementById('mobile-settings-drawer').classList.toggle('translate-y-full')"
+                   class="relative flex flex-col items-center justify-center gap-1 px-4 py-2 min-w-[70px] transition-colors text-slate-500 dark:text-slate-400">
+                    <span class="material-symbols-outlined text-[24px]">more_vert</span>
+                    <span class="text-[10px] font-bold leading-none whitespace-nowrap">More</span>
+                </button>
+
+            </div>
         </nav>
 
-        <%# MOBILE "MORE" DRAWER — slide up from bottom for secondary nav items %>
-        <div id="mobile-more-drawer"
+        <%# MOBILE SETTINGS DRAWER — slide up for logout/exit options %>
+        <div id="mobile-settings-drawer"
              class="lg:hidden fixed inset-0 z-[60] flex flex-col justify-end translate-y-full transition-transform duration-300 ease-in-out">
             <%# Backdrop %>
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
-                 onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"></div>
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                 onclick="document.getElementById('mobile-settings-drawer').classList.add('translate-y-full')"></div>
             <%# Drawer panel %>
-            <div class="relative bg-white dark:bg-[#1a1a2e] rounded-t-2xl border-t border-slate-200 dark:border-slate-700 p-5 pb-8">
-                <div class="w-10 h-1 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto mb-5"></div>
-                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">More Sections</p>
-                <div class="grid grid-cols-3 gap-3">
-
-                    <a href="/teacher?tab=Timetable"
-                       onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
-                       class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors <%= activeTab === 'Timetable' ? 'bg-primary/10 text-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' %>">
-                        <span class="material-symbols-outlined text-[24px]">calendar_today</span>
-                        <span class="text-xs font-semibold">Timetable</span>
+            <div class="relative bg-white dark:bg-[#1a1a2e] rounded-t-3xl border-t border-slate-200 dark:border-slate-700 p-6 pb-8 shadow-2xl">
+                <div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto mb-6"></div>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-5 px-1">Settings & Options</p>
+                
+                <div class="space-y-2">
+                    <a href="/home"
+                       onclick="document.getElementById('mobile-settings-drawer').classList.add('translate-y-full')"
+                       class="flex items-center gap-4 px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <span class="material-symbols-outlined text-slate-600 dark:text-slate-300 text-[26px]">exit_to_app</span>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">Exit Teacher Panel</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Return to main dashboard</p>
+                        </div>
                     </a>
 
-                    <a href="/teacher?tab=Form"
-                       onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
-                       class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors <%= activeTab === 'Form' ? 'bg-primary/10 text-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' %>">
-                        <span class="material-symbols-outlined text-[24px]">forms_add_on</span>
-                        <span class="text-xs font-semibold">Form</span>
+                    <a href="/user/logout"
+                       onclick="document.getElementById('mobile-settings-drawer').classList.add('translate-y-full')"
+                       class="flex items-center gap-4 px-4 py-3.5 rounded-xl bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
+                        <span class="material-symbols-outlined text-red-600 dark:text-red-400 text-[26px]">logout</span>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-red-900 dark:text-red-300">Logout</p>
+                            <p class="text-xs text-red-600 dark:text-red-400">Sign out of your account</p>
+                        </div>
                     </a>
-
-                    <a href="/teacher?tab=Exam"
-                       onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
-                       class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors <%= activeTab === 'Exam' ? 'bg-primary/10 text-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' %>">
-                        <span class="material-symbols-outlined text-[24px]">quiz</span>
-                        <span class="text-xs font-semibold">Exam</span>
-                    </a>
-
-                    <a href="/teacher?tab=Applications"
-                       onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
-                       class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors <%= activeTab === 'Applications' ? 'bg-primary/10 text-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' %>">
-                        <span class="material-symbols-outlined text-[24px]">quiz</span>
-                        <span class="text-xs font-semibold">Applications</span>
-                    </a>
-
-                    <a href="/teacher?activeTab=Settings"
-                       onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
-                       class="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
-                        <span class="material-symbols-outlined text-[24px]">settings</span>
-                        <span class="text-xs font-semibold">Settings</span>
-                    </a>
-
-                    <a href="/teacher/QrCode"
-                       onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
-                       class="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
-                        <span class="material-symbols-outlined text-[24px]">qr_code</span>
-                        <span class="text-xs font-semibold">Class QR Code</span>
-                    </a>
-
-                    
-
                 </div>
+
+                <button onclick="document.getElementById('mobile-settings-drawer').classList.add('translate-y-full')"
+                        class="w-full mt-4 py-3 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
+                    Cancel
+                </button>
             </div>
         </div>
 

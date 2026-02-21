@@ -1,0 +1,5 @@
+# Sensitive Information
+.env
+
+# Node Dependencies
+node_modules/

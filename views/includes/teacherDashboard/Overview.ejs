@@ -2,119 +2,117 @@
 <main class="flex-1 flex flex-col overflow-hidden">
     <!-- Top Navigation Bar -->
     <header
-        class="h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-6">
-            <h2 class="text-lg font-bold">Welcome, <%= currUser.name%>
+        class="h-14 md:h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3 md:gap-6 min-w-0 flex-1">
+            <h2 class="text-base md:text-lg font-bold truncate">Welcome, <%= currUser.name%>
             </h2>
-            <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20 shrink-0">
                 <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span class="text-xs font-bold text-primary uppercase tracking-wide">Class <%= currClass.className%>-<%=
+                <span class="text-xs font-bold text-primary uppercase tracking-wide whitespace-nowrap">Class <%= currClass.className%>-<%=
                             currClass.section%></span>
             </div>
         </div>
-        <div class="flex items-center gap-4">
-            <div class="relative hidden sm:block">
-                <span
-                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
-                <input
-                    class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary w-64"
-                    placeholder="Search students, notes..." type="text" />
-            </div>
-            <button
-                class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors relative">
-                <span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
-                <span
-                    class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
-            </button>
+        <div class="flex items-center gap-3 md:gap-4 shrink-0">
+            
             <div
-                class="h-10 w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800">
+                class="h-9 w-9 md:h-10 md:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800">
                 <img alt="Profile" data-alt="Teacher professional profile headshot avatar"
                     src="<%= currUser.profilePic.url%>" />
             </div>
         </div>
     </header>
+    
     <!-- Content Scrollable -->
-    <div class="flex-1 overflow-y-auto p-6 space-y-8">
+    <div class="flex-1 overflow-y-auto p-3 md:p-6 space-y-6 md:space-y-8">
+        <!-- Mobile Class Badge -->
+        <div class="sm:hidden flex items-center justify-center">
+            <div class="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span class="text-xs font-bold text-primary uppercase tracking-wide">Class <%= currClass.className%>-<%= currClass.section%></span>
+            </div>
+        </div>
+
         <!-- Stats / Metrics Section -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-500 text-sm font-medium">Today's Attendance</span>
-            <span class="material-symbols-outlined text-primary">groups</span>
-        </div>
-        <div class="flex items-baseline gap-2">
-            <h3 class="text-3xl font-bold">
-                <%= isMarked ? `${attendancePercent}%` : '0%' %>
-            </h3>
-            <span class="text-xs font-bold <%= isMarked ? 'text-emerald-500' : 'text-slate-400' %> flex items-center">
-                <%= isMarked ? 'Completed' : 'Pending' %>
-                <span class="material-symbols-outlined text-xs ml-1">
-                    <%= isMarked ? 'check_circle' : 'pending' %>
-                </span>
-            </span>
-        </div>
-    </div>
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <a href="/teacher?tab=Attendance" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-500 text-xs md:text-sm font-medium">Today's Attendance</span>
+                    <span class="material-symbols-outlined text-primary text-xl md:text-2xl">groups</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl md:text-3xl font-bold">
+                        <%= isMarked ? `${attendancePercent}%` : '0%' %>
+                    </h3>
+                    <span class="text-[10px] md:text-xs font-bold <%= isMarked ? 'text-emerald-500' : 'text-slate-400' %> flex items-center">
+                        <%= isMarked ? 'Completed' : 'Pending' %>
+                        <span class="material-symbols-outlined text-xs ml-1">
+                            <%= isMarked ? 'check_circle' : 'pending' %>
+                        </span>
+                    </span>
+                </div>
+            </a>
 
-    <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-500 text-sm font-medium">Class Assignments</span>
-            <span class="material-symbols-outlined text-amber-500">pending_actions</span>
-        </div>
-        <div class="flex items-baseline gap-2">
-            <h3 class="text-3xl font-bold"><%= assignments.length %></h3>
-            <span class="text-sm text-slate-400">Total Active</span>
-        </div>
-    </div>
+            <a href="/teacher?tab=Assignments" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-500 text-xs md:text-sm font-medium">Class Assignments</span>
+                    <span class="material-symbols-outlined text-amber-500 text-xl md:text-2xl">pending_actions</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl md:text-3xl font-bold"><%= assignments.length %></h3>
+                    <span class="text-xs md:text-sm text-slate-400">Total Active</span>
+                </div>
+            </a>
 
-    <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-500 text-sm font-medium">Current Status</span>
-            <span class="material-symbols-outlined text-primary">schedule</span>
-        </div>
-        <div class="flex items-baseline gap-2">
-            <h3 class="text-3xl font-bold">
-                <%= new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
-            </h3>
-            <span class="text-xs font-bold text-rose-500 flex items-center">Live Updates</span>
-        </div>
-    </div>
-</section>
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <a href="/teacher?tab=Timetable" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-500 text-xs md:text-sm font-medium">Current Status</span>
+                    <span class="material-symbols-outlined text-primary text-xl md:text-2xl">schedule</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-xl md:text-3xl font-bold">
+                        <%= new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                    </h3>
+                    <span class="text-[10px] md:text-xs font-bold text-rose-500 flex items-center">Live Updates</span>
+                </div>
+            </a>
+        </section>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
             <!-- Middle Column: Feed -->
-            <div class="xl:col-span-2 space-y-6">
+            <div class="xl:col-span-2 space-y-4 md:space-y-6">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold">Add a Notice</h3>
+                    <h3 class="text-lg md:text-xl font-bold">Add a Notice</h3>
                     <div class="flex gap-2">
                         <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"><span
-                                class="material-symbols-outlined">filter_list</span></button>
+                                class="material-symbols-outlined text-xl">filter_list</span></button>
                     </div>
                 </div>
                 <form action="/teacher/addNotice" method="POST"
                     class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm"
                     method="POST">
-                    <div class="p-5 space-y-4">
-                        <div class="flex gap-4">
-                            <img class="w-10 h-10 rounded-full shrink-0" data-alt="Small circular teacher avatar icon"
+                    <div class="p-4 md:p-5 space-y-4">
+                        <div class="flex gap-3 md:gap-4">
+                            <img class="w-9 h-9 md:w-10 md:h-10 rounded-full shrink-0" data-alt="Small circular teacher avatar icon"
                                 src="<%=currUser.profilePic.url%>" />
-                            <div class="flex-1 space-y-4">
+                            <div class="flex-1 space-y-3 md:space-y-4 min-w-0">
                                 <div>
                                     <input
-                                        class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400"
+                                        class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400"
                                         name="title" placeholder="Notice Title (e.g., Upcoming Field Trip)" required=""
                                         type="text" />
                                 </div>
                                 <textarea
-                                    class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 resize-none p-4"
+                                    class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-xs md:text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 resize-none p-3 md:p-4"
                                     name="content" placeholder="Write the content of your notice here..." required=""
                                     rows="3"></textarea>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                                     <div class="space-y-1.5">
                                         <label
-                                            class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm">groups</span> Audience
+                                            class="text-[9px] md:text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-xs md:text-sm">groups</span> Audience
                                         </label>
                                         <select
-                                            class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium focus:ring-primary transition-all"
+                                            class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-[11px] md:text-xs font-medium focus:ring-primary transition-all py-2"
                                             name="audience">
                                             <option value="all">All Members</option>
                                             <option value="teachers">Teachers Only</option>
@@ -124,13 +122,13 @@
                                     </div>
                                     <div class="space-y-1.5">
                                         <label
-                                            class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm">priority_high</span>
+                                            class="text-[9px] md:text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-xs md:text-sm">priority_high</span>
                                             Priority
                                         </label>
                                         <div class="relative">
                                             <select
-                                                class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium focus:ring-primary transition-all appearance-none"
+                                                class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-[11px] md:text-xs font-medium focus:ring-primary transition-all appearance-none py-2"
                                                 name="priority">
                                                 <option value="low">Low Priority</option>
                                                 <option value="medium">Medium Priority</option>
@@ -140,143 +138,147 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                    class="flex items-center justify-between mt-4 md:mt-6 pt-3 md:pt-4 border-t border-slate-100 dark:border-slate-800">
                                     
                                     <button
-                                        class="px-8 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md active:scale-95"
+                                        class="w-full sm:w-auto px-6 md:px-8 py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md active:scale-95"
                                         type="submit">Post Notice</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div class="space-y-4 mt-8">
-    <div class="flex items-center justify-between">
-        <h3 class="text-xl font-bold flex items-center gap-2">
-            Student Pending Requests
-            <% if (request && request.length > 0) { %>
-                <span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    <%= request.length %>
-                </span>
-            <% } %>
-        </h3>
-    </div>
+                
+                <div class="space-y-4 mt-6 md:mt-8">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                            Student Pending Requests
+                            <% if (request && request.length > 0) { %>
+                                <span class="bg-rose-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                    <%= request.length %>
+                                </span>
+                            <% } %>
+                        </h3>
+                    </div>
 
-    <% if (request && request.length > 0) { %>
-        <div class="space-y-3">
-    <% request.forEach(function(reqItem) { %>
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow gap-4 sm:gap-0">
-            
-            <div class="flex items-center gap-4">
-                <img 
-                    class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 bg-slate-100" 
-                    alt="Student Avatar" 
-                    src="<%= reqItem.sender.profilePic ? reqItem.sender.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>" 
-                />
-                <div>
-                    <h4 class="text-sm font-bold text-slate-900 dark:text-white">
-                        <%= reqItem.sender.name || reqItem.sender.username %>
-                    </h4>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                        Requested to join this class
-                    </p>
+                    <% if (request && request.length > 0) { %>
+                        <div class="space-y-3">
+                    <% request.forEach(function(reqItem) { %>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 md:p-4 bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow gap-3 sm:gap-4">
+                            
+                            <div class="flex items-center gap-3 md:gap-4 min-w-0">
+                                <img 
+                                    class="w-9 h-9 md:w-10 md:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 shrink-0" 
+                                    alt="Student Avatar" 
+                                    src="<%= reqItem.sender.profilePic ? reqItem.sender.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>" 
+                                />
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">
+                                        <%= reqItem.sender.name || reqItem.sender.username %>
+                                    </h4>
+                                    <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 font-medium">
+                                        Requested to join this class
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 shrink-0">
+                                
+                                <form action="/teacher/request/accept" method="POST" class="m-0 flex items-center gap-2">
+                                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
+                                    <input type="hidden" name="studentId" value="<%= reqItem.sender._id %>">
+                                    <input type="hidden" name="classId" value="<%= currClass._id %>">
+                                    
+                                    <input 
+                                        type="number" 
+                                        name="rollNumber" 
+                                        placeholder="Roll No." 
+                                        required
+                                        class="w-16 sm:w-20 md:w-24 px-2 py-1.5 text-[11px] md:text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white"
+                                    >
+
+                                    <button type="submit" title="Accept" class="w-8 h-8 flex items-center justify-center bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
+                                        <span class="material-symbols-outlined text-sm font-bold">check</span>
+                                    </button>
+                                </form>
+
+                                <form action="/teacher/request/reject" method="POST" class="m-0">
+                                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
+                                    <button type="submit" title="Reject" class="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
+                                        <span class="material-symbols-outlined text-sm font-bold">close</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    <% }) %>
+                </div>
+                    <% } else { %>
+                        <div class="flex flex-col items-center justify-center p-6 md:p-8 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 border-dashed rounded-xl text-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+                                <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-lg md:text-xl">inbox</span>
+                            </div>
+                            <h4 class="text-xs md:text-sm font-bold text-slate-700 dark:text-slate-300">No Pending Requests</h4>
+                            <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-[200px]">
+                                When students scan the QR code to join, their requests will appear here.
+                            </p>
+                        </div>
+                    <% } %>
                 </div>
             </div>
-
-            <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-                
-                <form action="/teacher/request/accept" method="POST" class="m-0 flex items-center gap-2">
-                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
-                    <input type="hidden" name="studentId" value="<%= reqItem.sender._id %>">
-                    <input type="hidden" name="classId" value="<%= currClass._id %>">
-                    
-                    <input 
-                        type="number" 
-                        name="rollNumber" 
-                        placeholder="Roll No." 
-                        required
-                        class="w-20 sm:w-24 px-2 py-1.5 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white"
-                    >
-
-                    <button type="submit" title="Accept" class="w-8 h-8 flex items-center justify-center bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
-                        <span class="material-symbols-outlined text-sm font-bold">check</span>
-                    </button>
-                </form>
-
-                <form action="/teacher/request/reject" method="POST" class="m-0">
-                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
-                    <button type="submit" title="Reject" class="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
-                        <span class="material-symbols-outlined text-sm font-bold">close</span>
-                    </button>
-                </form>
-            </div>
-
-        </div>
-    <% }) %>
-</div>
-    <% } else { %>
-        <div class="flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 border-dashed rounded-xl text-center">
-            <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
-                <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-xl">inbox</span>
-            </div>
-            <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">No Pending Requests</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-[200px]">
-                When students scan the QR code to join, their requests will appear here.
-            </p>
-        </div>
-    <% } %>
-</div>
-            </div>
+            
             <!-- Right Column: My Classes -->
-            <div class="space-y-6">
+            <div class="space-y-4 md:space-y-6">
                 <div
-                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm space-y-3 md:space-y-4">
                     <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">add_circle</span>
-                        <h4 class="text-sm font-bold">Register New Subject</h4>
+                        <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
+                        <h4 class="text-xs md:text-sm font-bold">Register New Subject</h4>
                     </div>
                     <form action="/teacher/addSubject" class="space-y-3" method="POST">
                         <div>
                             <input
-                                class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
+                                class="w-full px-3 md:px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs md:text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
                                 name="subjectName" placeholder="Subject Name" type="text" />
                         </div>
                         <div>
                             <input
-                                class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
+                                class="w-full px-3 md:px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs md:text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
                                 name="teacherId" placeholder="Teacher to Assign" type="text" />
                         </div>
                         <button
-                            class="w-full py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                            class="w-full py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                             type="submit">
-                            <span class="material-symbols-outlined text-lg">add</span>
+                            <span class="material-symbols-outlined text-base md:text-lg">add</span>
                             Add Subject
                         </button>
                     </form>
                 </div>
+                
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold">My Assigned Classes</h3>
+                    <h3 class="text-lg md:text-xl font-bold">My Assigned Classes</h3>
                 </div>
+                
                 <div
                     class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-sm">
                     <% for(let Subject of currClass.subjects) { %>
-                        <div class="p-4 bg-primary/5 hover:bg-primary/10 transition-colors">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white">
+                        <div class="p-3 md:p-4 bg-primary/5 hover:bg-primary/10 transition-colors">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">
                                         <%=Subject.name %>
                                     </h4>
-                                    <p class="text-xs text-primary font-semibold mt-0.5">Class <%=currClass.className%>-
+                                    <p class="text-[10px] md:text-xs text-primary font-semibold mt-0.5">Class <%=currClass.className%>-
                                             <%=currClass.section%>
                                     </p>
                                 </div>
                                 <span
-                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded uppercase">Active</span>
+                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] md:text-[10px] font-bold rounded uppercase shrink-0">Active</span>
                             </div>
-                            <div class="flex items-center gap-2 mt-4">
-                                <img class="w-6 h-6 rounded-full border border-slate-200"
+                            <div class="flex items-center gap-2 mt-3 md:mt-4">
+                                <img class="w-5 h-5 md:w-6 md:h-6 rounded-full border border-slate-200 shrink-0"
                                     data-alt="Small teacher avatar" src="<%=Subject.teacher.profilePic.url%>" />
-                                <span class="text-xs text-slate-600 dark:text-slate-400 font-medium">Prof.
+                                <span class="text-[10px] md:text-xs text-slate-600 dark:text-slate-400 font-medium truncate">Prof.
                                     <%=Subject.teacher.name%>
                                 </span>
                             </div>
