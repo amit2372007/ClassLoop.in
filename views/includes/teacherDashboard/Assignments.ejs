@@ -2,38 +2,63 @@
 
     <main class="flex-1 flex flex-col overflow-hidden">
         <header
-            class="h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-6">
-                <h2 class="text-lg font-bold">Assignment Center</h2>
-                <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+            class="h-14 md:h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 flex items-center justify-between shrink-0 gap-2">
+            <div class="flex items-center gap-2 md:gap-6 min-w-0 flex-1">
+                <h2 class="text-base md:text-lg font-bold truncate">Assignment Center</h2>
+                <div class="hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-1 bg-primary/10 rounded-full border border-primary/20 shrink-0">
                     <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                    <span class="text-xs font-bold text-primary uppercase tracking-wide">
+                    <span class="text-[10px] md:text-xs font-bold text-primary uppercase tracking-wide whitespace-nowrap">
                         <%= currClass.className %>
                     </span>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 md:gap-4 shrink-0">
                 <a href="/teacher/addAssignment"
-                    class="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors">
+                    class="hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-lg md:text-xl">add</span>
+                    <span class="hidden md:inline">New Assignment</span>
+                    <span class="md:hidden">New</span>
+                </a>
+                <a href="/teacher/addAssignment"
+                    class="sm:hidden flex items-center justify-center w-9 h-9 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors">
                     <span class="material-symbols-outlined text-xl">add</span>
-                    New Assignment
                 </a>
                 <div
-                    class="h-10 w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800">
+                    class="h-9 w-9 md:h-10 md:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800 shrink-0">
                     <img alt="Profile" src="<%= currUser.profilePic.url %>" />
                 </div>
             </div>
         </header>
 
+        <!-- Mobile Class Badge -->
+        <div class="sm:hidden px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 flex justify-center">
+            <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span class="text-xs font-bold text-primary uppercase tracking-wide">
+                    <%= currClass.className %>
+                </span>
+            </div>
+        </div>
+
+        <!-- Mobile: Show/Hide Assignments Button -->
+        <div class="lg:hidden px-3 py-2 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800">
+            <button onclick="document.getElementById('mobile-assignments-drawer').classList.toggle('translate-x-full')"
+                class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <span class="material-symbols-outlined text-xl">list</span>
+                View All Assignments (<%= assignments ? assignments.length : 0 %>)
+            </button>
+        </div>
+
         <div class="flex-1 flex overflow-hidden">
+            <!-- Desktop Sidebar -->
             <aside
-                class="w-80 border-r border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-background-dark/50 flex flex-col">
+                class="hidden lg:flex w-80 border-r border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-background-dark/50 flex-col">
                 <div class="p-4 border-b border-slate-200 dark:border-slate-800">
                     <div class="relative">
                         <span
                             class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
                         <input
-                            class="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary"
+                            class="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none"
                             placeholder="Search assignments..." type="text" />
                     </div>
                 </div>
@@ -44,7 +69,8 @@
 
                     <% if(assignments && assignments.length> 0) { %>
                         <% for(let assignment of assignments) { %>
-                            <div class="relative group"> <button onclick="showAssignmentDetails(this)"
+                            <div class="relative group"> 
+                                <button onclick="showAssignmentDetails(this)"
                                     data-info='<%= JSON.stringify(assignment) %>'
                                     class="assignment-card w-full text-left p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/50 transition-all shadow-sm">
                                     <div class="flex justify-between items-start mb-2">
@@ -79,40 +105,101 @@
                 </div>
             </aside>
 
+            <!-- Mobile Assignments Drawer -->
+            <div id="mobile-assignments-drawer"
+                class="lg:hidden fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-background-dark border-l border-slate-200 dark:border-slate-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+                
+                <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <h3 class="text-lg font-bold">All Assignments</h3>
+                    <button onclick="document.getElementById('mobile-assignments-drawer').classList.add('translate-x-full')"
+                        class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-xl">close</span>
+                    </button>
+                </div>
+
+                <div class="p-3 border-b border-slate-200 dark:border-slate-800">
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                        <input
+                            class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none"
+                            placeholder="Search assignments..." type="text" />
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-3 space-y-3">
+                    <% if(assignments && assignments.length> 0) { %>
+                        <% for(let assignment of assignments) { %>
+                            <button onclick="showAssignmentDetails(this); document.getElementById('mobile-assignments-drawer').classList.add('translate-x-full')"
+                                data-info='<%= JSON.stringify(assignment) %>'
+                                class="assignment-card w-full text-left p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-primary/50 transition-all shadow-sm active:scale-95">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span
+                                        class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase">
+                                        <%= assignment.subject %>
+                                    </span>
+                                    <span class="text-[10px] font-bold text-slate-500">
+                                        <%= assignment.submissions.length %>/<%= currClass.students.length %>
+                                    </span>
+                                </div>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-1 line-clamp-2">
+                                    <%= assignment.title %>
+                                </h4>
+                                <p class="text-xs text-slate-500 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">event</span>
+                                    <%= new Date(assignment.dueDate).toDateString() %>
+                                </p>
+                            </button>
+                            <% } %>
+                    <% } else { %>
+                        <div class="flex flex-col items-center justify-center py-12 text-center">
+                            <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-700 mb-3">assignment</span>
+                            <p class="text-sm text-slate-500 font-medium">No assignments yet</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Backdrop for Mobile Drawer -->
+            <div onclick="document.getElementById('mobile-assignments-drawer').classList.add('translate-x-full')"
+                class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden"
+                id="mobile-drawer-backdrop"></div>
+
             <div id="detail-view-container"
                 class="flex-1 flex flex-col bg-slate-50 dark:bg-background-dark overflow-hidden">
-                <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-slate-500">
-                    <span class="material-symbols-outlined text-6xl mb-4 opacity-20">description</span>
-                    <p class="font-medium">Select an assignment to view submissions and grade</p>
+                <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-slate-500 p-4">
+                    <span class="material-symbols-outlined text-5xl md:text-6xl mb-4 opacity-20">description</span>
+                    <p class="font-medium text-sm md:text-base text-center">Select an assignment to view submissions and grade</p>
                 </div>
 
                 <div id="details-content" class="hidden flex-1 flex flex-col overflow-hidden">
                     <div
-                        class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-background-dark">
-                        <div>
-                            <div class="flex items-center gap-3 mb-1">
-                                <h3 id="view-title" class="text-xl font-bold"></h3>
+                        class="p-4 md:p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-background-dark">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 md:gap-3 mb-1 flex-wrap">
+                                <h3 id="view-title" class="text-lg md:text-xl font-bold truncate"></h3>
                                 <span
-                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded uppercase">Active</span>
+                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded uppercase shrink-0">Active</span>
                             </div>
-                            <p id="view-meta" class="text-sm text-slate-500"></p>
+                            <p id="view-meta" class="text-xs md:text-sm text-slate-500"></p>
                         </div>
 
                         <form id="detail-delete-form" method="POST"
-                            onsubmit="return confirm('Permanently delete this assignment and all submissions?');">
+                            onsubmit="return confirm('Permanently delete this assignment and all submissions?');"
+                            class="w-full sm:w-auto shrink-0">
                             <button type="submit"
-                                class="flex items-center gap-2 px-4 py-2 border border-rose-200 text-rose-500 text-sm font-bold rounded-xl hover:bg-rose-50 transition-colors">
+                                class="w-full sm:w-auto flex items-center justify-center gap-2 px-3 md:px-4 py-2 border border-rose-200 text-rose-500 text-xs md:text-sm font-bold rounded-xl hover:bg-rose-50 transition-colors">
                                 <span class="material-symbols-outlined text-lg">delete</span>
                                 Delete Assignment
                             </button>
                         </form>
                     </div>
 
-                    <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
-                        <div class="max-w-4xl mx-auto space-y-6">
-                            <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    <div class="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-6">
+                        <div class="max-w-4xl mx-auto space-y-4 md:space-y-6">
+                            <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider px-1">
                                 Student Submissions</h4>
-                            <div id="submissions-list" class="space-y-4"></div>
+                            <div id="submissions-list" class="space-y-3 md:space-y-4"></div>
                         </div>
                     </div>
                 </div>
@@ -121,6 +208,20 @@
     </main>
 
     <script>
+        // Show/hide backdrop when drawer opens/closes
+        const drawer = document.getElementById('mobile-assignments-drawer');
+        const backdrop = document.getElementById('mobile-drawer-backdrop');
+        
+        const observer = new MutationObserver(() => {
+            if (drawer.classList.contains('translate-x-full')) {
+                backdrop.classList.add('hidden');
+            } else {
+                backdrop.classList.remove('hidden');
+            }
+        });
+        
+        observer.observe(drawer, { attributes: true, attributeFilter: ['class'] });
+
         window.showAssignmentDetails = function (element) {
             try {
                 const data = JSON.parse(element.getAttribute('data-info'));
@@ -138,34 +239,34 @@
                 // Render Submissions logic remains same...
                 const list = document.getElementById('submissions-list');
                 if (data.submissions.length === 0) {
-                    list.innerHTML = '<div class="p-10 text-center text-slate-500 border-2 border-dashed rounded-2xl">No submissions yet for this task.</div>';
+                    list.innerHTML = '<div class="p-6 md:p-10 text-center text-slate-500 border-2 border-dashed rounded-xl md:rounded-2xl text-sm"><span class="material-symbols-outlined text-4xl opacity-20 mb-2 block">inbox</span>No submissions yet for this task.</div>';
                     return;
                 }
 
                 list.innerHTML = data.submissions.map(sub => `
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
+                <div class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-400 shrink-0">
                     ${sub.student ? sub.student.name.charAt(0) : 'S'}
                 </div>
-                <div>
-                    <p class="text-sm font-bold text-slate-900 dark:text-white">${sub.student ? sub.student.name : 'Unknown Student'}</p>
-                    <a href="${sub.fileUrl}" target="_blank" class="text-xs text-primary font-bold hover:underline mt-1 block">VIEW FILE</a>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-bold text-slate-900 dark:text-white truncate">${sub.student ? sub.student.name : 'Unknown Student'}</p>
+                    <a href="${sub.fileUrl}" target="_blank" class="text-xs text-primary font-bold hover:underline mt-0.5 block">VIEW FILE</a>
                 </div>
             </div>
 
             ${sub.grade ? `
-                <div class="flex flex-col items-end">
+                <div class="flex flex-col items-start sm:items-end w-full sm:w-auto shrink-0">
                     <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-black rounded-lg border border-emerald-200 uppercase tracking-wider">
                         Graded: ${sub.grade} Marks
                     </span>
                     <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Points Saved</p>
                 </div>
             ` : `
-                <form onsubmit="submitGrade(event, '${data._id}', '${sub._id}')" class="flex items-center gap-2">
-                    <input name="grade" type="number" class="w-20 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm" placeholder="Marks" required />
-                    <button type="submit" class="bg-slate-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800 transition-all">Save</button>
+                <form onsubmit="submitGrade(event, '${data._id}', '${sub._id}')" class="flex items-center gap-2 w-full sm:w-auto">
+                    <input name="grade" type="number" class="flex-1 sm:flex-none w-full sm:w-20 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm" placeholder="Marks" required />
+                    <button type="submit" class="bg-slate-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800 transition-all active:scale-95 shrink-0">Save</button>
                 </form>
             `}
         </div>
@@ -201,7 +302,7 @@
                     form.remove();
 
                     const badgeHTML = `
-                <div class="flex flex-col items-end">
+                <div class="flex flex-col items-start sm:items-end w-full sm:w-auto shrink-0">
                     <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-black rounded-lg border border-emerald-200 uppercase tracking-wider">
                         Graded: ${grade} Marks
                     </span>

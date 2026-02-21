@@ -2,111 +2,177 @@
     <% if (!isMarked) { %>
     <form action="/teacher/submitAttendance" method="POST" class="flex-1 flex flex-col overflow-hidden">
         <header
-            class="h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-6">
-                <h2 class="text-lg font-bold">Attendance Management</h2>
-                <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+            class="h-14 md:h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3 md:gap-6 min-w-0 flex-1">
+                <h2 class="text-base md:text-lg font-bold truncate">Attendance Management</h2>
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20 shrink-0">
                     <span class="w-2 h-2 rounded-full bg-primary"></span>
-                    <span class="text-xs font-bold text-primary uppercase tracking-wide">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wide whitespace-nowrap">
                         Class <%=currClass.className%>-<%=currClass.section%>
                     </span>
                 </div>
             </div>
             <a href="/teacher/Attendance-Insights"
-                class="flex items-center gap-2 px-4 py-1.5 text-xs font-bold text-primary border border-primary/40 hover:bg-primary/5 transition-all rounded-lg">
+                class="hidden md:flex items-center gap-2 px-4 py-1.5 text-xs font-bold text-primary border border-primary/40 hover:bg-primary/5 transition-all rounded-lg shrink-0">
                 <span class="material-symbols-outlined text-lg">analytics</span>
-                Attendance Insights
+                <span class="hidden lg:inline">Attendance Insights</span>
+                <span class="lg:hidden">Insights</span>
+            </a>
+            <a href="/teacher/Attendance-Insights"
+                class="md:hidden flex items-center justify-center w-9 h-9 text-primary border border-primary/40 hover:bg-primary/5 transition-all rounded-lg shrink-0">
+                <span class="material-symbols-outlined text-xl">analytics</span>
             </a>
         </header>
-        <div class="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-6 pb-24">
+
+        <!-- Mobile Class Badge -->
+        <div class="sm:hidden px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 flex justify-center">
+            <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                <span class="text-xs font-bold text-primary uppercase tracking-wide">
+                    Class <%=currClass.className%>-<%=currClass.section%>
+                </span>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-3 md:p-6 pb-20 md:pb-24">
             <div
                 class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                            <th
-                                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-16 text-center">
-                                Roll</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Student Name
-                            </th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">
-                                Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                        <% currClass.students.forEach((Student, index)=> { %>
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                <td class="px-6 py-4 text-sm font-semibold text-slate-500 text-center">
-                                    <%= Student.rollNumber || (index + 1) %>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <img alt="profile" class="w-9 h-9 rounded-full object-cover"
-                                            src="<%=Student.profilePic.url%>" />
-                                        <div>
-                                            <p class="text-sm font-bold">
-                                                <%=Student.name%>
-                                            </p>
-                                            <input type="hidden" name="records[<%=index%>][student]"
-                                                value="<%=Student._id%>">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex justify-center">
-                                        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
-                                            <% // Define the color mapping for each status const
-                                                statusColors={ "Present"
-                                                : "peer-checked/Present:bg-emerald-500 peer-checked/Present:text-white"
-                                                , "Absent"
-                                                : "peer-checked/Absent:bg-rose-500 peer-checked/Absent:text-white"
-                                                , "Late" : "peer-checked/Late:bg-amber-500 peer-checked/Late:text-white"
-                                                , "Leave"
-                                                : "peer-checked/Leave:bg-orange-800 peer-checked/Leave:text-white" };
-                                                ["Present", "Absent" , "Late" , "Leave" ].forEach(status=> {
-                                                %>
-                                                <input type="radio" id="<%=status%>-<%=index%>"
-                                                    name="records[<%=index%>][status]" value="<%=status%>"
-                                                    class="hidden peer/<%=status%>" <%=status==='Present' ? 'checked'
-                                                    : '' %>>
-
-                                                <label for="<%=status%>-<%=index%>"
-                                                    class="px-3 py-1.5 text-[10px] font-bold rounded-md cursor-pointer transition-all hover:bg-slate-200 dark:hover:bg-slate-700 <%= statusColors[status] %> shadow-sm text-slate-600 dark:text-slate-400">
-                                                    <%=status%>
-                                                </label>
-                                                <% }) %>
-                                        </div>
-                                    </div>
-                                </td>
+                <!-- Desktop Table View -->
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                                <th
+                                    class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-16 text-center">
+                                    Roll</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Student Name
+                                </th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">
+                                    Status</th>
                             </tr>
-                            <% }) %>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                            <% currClass.students.forEach((Student, index)=> { %>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-semibold text-slate-500 text-center">
+                                        <%= Student.rollNumber || (index + 1) %>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <img alt="profile" class="w-9 h-9 rounded-full object-cover"
+                                                src="<%=Student.profilePic.url%>" />
+                                            <div>
+                                                <p class="text-sm font-bold">
+                                                    <%=Student.name%>
+                                                </p>
+                                                <input type="hidden" name="records[<%=index%>][student]"
+                                                    value="<%=Student._id%>">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex justify-center">
+                                            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                                                <% // Define the color mapping for each status const
+                                                    statusColors={ "Present"
+                                                    : "peer-checked/Present:bg-emerald-500 peer-checked/Present:text-white"
+                                                    , "Absent"
+                                                    : "peer-checked/Absent:bg-rose-500 peer-checked/Absent:text-white"
+                                                    , "Late" : "peer-checked/Late:bg-amber-500 peer-checked/Late:text-white"
+                                                    , "Leave"
+                                                    : "peer-checked/Leave:bg-orange-800 peer-checked/Leave:text-white" };
+                                                    ["Present", "Absent" , "Late" , "Leave" ].forEach(status=> {
+                                                    %>
+                                                    <input type="radio" id="<%=status%>-<%=index%>"
+                                                        name="records[<%=index%>][status]" value="<%=status%>"
+                                                        class="hidden peer/<%=status%>" <%=status==='Present' ? 'checked'
+                                                        : '' %>>
+
+                                                    <label for="<%=status%>-<%=index%>"
+                                                        class="px-3 py-1.5 text-[10px] font-bold rounded-md cursor-pointer transition-all hover:bg-slate-200 dark:hover:bg-slate-700 <%= statusColors[status] %> shadow-sm text-slate-600 dark:text-slate-400">
+                                                        <%=status%>
+                                                    </label>
+                                                    <% }) %>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+                    <% currClass.students.forEach((Student, index)=> { %>
+                        <div class="p-3 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                    <span class="text-xs font-bold text-slate-500">
+                                        <%= Student.rollNumber || (index + 1) %>
+                                    </span>
+                                </div>
+                                <img alt="profile" class="w-10 h-10 rounded-full object-cover shrink-0"
+                                    src="<%=Student.profilePic.url%>" />
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-bold truncate">
+                                        <%=Student.name%>
+                                    </p>
+                                </div>  
+                            </div>
+                            
+                            <div class="grid grid-cols-4 gap-1.5 bg-slate-50 dark:bg-slate-900 p-1.5 rounded-lg">
+                                <% // Define the color mapping for each status const
+                                    statusColors={ "Present"
+                                    : "peer-checked/Present:bg-emerald-500 peer-checked/Present:text-white"
+                                    , "Absent"
+                                    : "peer-checked/Absent:bg-rose-500 peer-checked/Absent:text-white"
+                                    , "Late" : "peer-checked/Late:bg-amber-500 peer-checked/Late:text-white"
+                                    , "Leave"
+                                    : "peer-checked/Leave:bg-orange-800 peer-checked/Leave:text-white" };
+                                    ["Present", "Absent" , "Late" , "Leave" ].forEach(status=> {
+                                    %>
+                                    <input type="radio" id="<%=status%>-mobile-<%=index%>"
+                                        name="records[<%=index%>][status]" value="<%=status%>"
+                                        class="hidden peer/<%=status%>" <%=status==='Present' ? 'checked'
+                                        : '' %>>
+
+                                    <label for="<%=status%>-mobile-<%=index%>"
+                                        class="px-2 py-2 text-[10px] font-bold rounded-md cursor-pointer transition-all active:scale-95 <%= statusColors[status] %> shadow-sm text-slate-600 dark:text-slate-400 text-center">
+                                        <%=status%>
+                                    </label>
+                                    <% }) %>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
             </div>
         </div>
 
         <div
-            class="absolute bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex justify-center z-10">
+            class="absolute bottom-0 left-0 right-0 p-3 md:p-4 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex justify-center z-10">
             <button type="submit"
-                class="w-full max-w-md bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined">how_to_reg</span>
+                class="w-full md:max-w-md bg-primary hover:bg-primary/90 text-white font-bold py-3 md:py-3.5 px-6 md:px-8 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base active:scale-95">
+                <span class="material-symbols-outlined text-xl md:text-2xl">how_to_reg</span>
                 Submit Daily Attendance
             </button>
         </div>
     </form>
     <% } else { %>
-        <div class="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-900/50">
-            <div class="bg-white dark:bg-background-dark p-10 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 text-center max-w-lg">
-                <div class="w-20 h-20 bg-emerald-100 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span class="material-symbols-outlined text-emerald-500 text-5xl">task_alt</span>
+        <div class="flex-1 flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50 dark:bg-slate-900/50">
+            <div class="bg-white dark:bg-background-dark p-6 md:p-10 rounded-2xl md:rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 text-center max-w-lg w-full">
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-emerald-100 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                    <span class="material-symbols-outlined text-emerald-500 text-4xl md:text-5xl">task_alt</span>
                 </div>
-                <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Attendance Completed!</h2>
-                <p class="text-slate-500 dark:text-slate-400 mb-8">
+                <h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-2">Attendance Completed!</h2>
+                <p class="text-sm md:text-base text-slate-500 dark:text-slate-400 mb-6 md:mb-8">
                     Daily attendance for <b>Class <%=currClass.className%>-<%=currClass.section%></b> has already been submitted for today.
                 </p>
-                <div class="flex gap-4 justify-center">
-                    <a href="/teacher/Attendance-Insights" class="px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 flex items-center gap-2">
-                        <span class="material-symbols-outlined">analytics</span> View Insights
+                <div class="flex gap-3 md:gap-4 justify-center">
+                    <a href="/teacher/Attendance-Insights" class="px-5 md:px-6 py-2.5 md:py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 flex items-center gap-2 text-sm md:text-base hover:bg-primary/90 transition-all">
+                        <span class="material-symbols-outlined text-xl">analytics</span> 
+                        <span class="hidden sm:inline">View Insights</span>
+                        <span class="sm:hidden">Insights</span>
                     </a>
                 </div>
             </div>

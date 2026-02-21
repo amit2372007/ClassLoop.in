@@ -1,83 +1,83 @@
 <main class="flex-1 flex flex-col overflow-hidden">
 
-    <header class="h-auto min-h-[64px] bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-3 flex items-center justify-between gap-3 shrink-0 flex-wrap">
-        <div class="flex items-center gap-2 sm:gap-6 flex-wrap">
-            <h2 class="text-base sm:text-lg font-bold">All Students</h2>
-            <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+    <header class="h-auto min-h-[56px] md:min-h-[64px] bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 py-2 md:py-3 flex items-center justify-between gap-2 md:gap-3 shrink-0 flex-wrap">
+        <div class="flex items-center gap-2 md:gap-6 flex-wrap min-w-0">
+            <h2 class="text-base md:text-lg font-bold">All Students</h2>
+            <div class="flex items-center gap-2 px-2.5 md:px-3 py-1 bg-primary/10 rounded-full border border-primary/20 shrink-0">
                 <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span class="text-xs font-bold text-primary uppercase tracking-wide">Class
+                <span class="text-[10px] md:text-xs font-bold text-primary uppercase tracking-wide whitespace-nowrap">Class
                     <%=currClass.className%>-<%=currClass.section%></span>
             </div>
         </div>
-        <div class="flex items-center gap-2 sm:gap-4">
+        <div class="flex items-center gap-2 md:gap-4 shrink-0">
             
-            <div class="h-9 w-9 sm:h-10 sm:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800 flex-shrink-0">
+            <div class="h-9 w-9 md:h-10 md:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800 flex-shrink-0">
                 <img alt="Profile" src="<%=currUser.profilePic.url%>" />
             </div>
         </div>
     </header>
 
-    <div class="p-3 sm:p-6 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 flex flex-col gap-3">
+    <div class="p-3 md:p-6 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 flex flex-col gap-3">
         <div class="relative w-full">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg md:text-xl">search</span>
             <input
                 id="searchInput"
                 oninput="filterStudents()"
-                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                class="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                 placeholder="Search by name or roll number..." type="text" />
         </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-            <form action="/teacher/addStudent" method="GET" class="flex-1 sm:flex-none">
-                <button class="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-primary/90 transition-shadow shadow-sm">
-                    <span class="material-symbols-outlined text-base sm:text-lg">person_add</span>
+        <div class="flex items-center gap-2 md:gap-3">
+            <form action="/teacher/addStudent" method="GET" class="flex-1 md:flex-none">
+                <button class="w-full flex items-center justify-center gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-shadow shadow-sm active:scale-95">
+                    <span class="material-symbols-outlined text-base md:text-lg">person_add</span>
                     Add Student
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-3 sm:p-6 bg-slate-50/50 dark:bg-background-dark/50">
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6" id="studentGrid">
+    <div class="flex-1 overflow-y-auto p-3 md:p-6 bg-slate-50/50 dark:bg-background-dark/50">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6" id="studentGrid">
             <% for(Student of currClass.students) { %>
-            <div class="student-card bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-3 sm:p-5 rounded-xl hover:shadow-lg transition-all group" 
+            <div class="student-card bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-5 rounded-xl hover:shadow-lg transition-all group" 
                  data-name="<%= Student.name ? Student.name.toLowerCase() : '' %>" 
                  data-roll="<%= Student.rollNumber || '' %>">
                 
-                <div class="flex flex-col items-center text-center space-y-3 sm:space-y-4">
+                <div class="flex flex-col items-center text-center space-y-3 md:space-y-4">
                     <div class="relative">
                         <img alt="<%=Student.name%>"
-                            class="w-14 h-14 sm:w-20 sm:h-20 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-800"
+                            class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-800"
                             src="<%=Student.profilePic ? Student.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'%>" />
                         <% if(Student.isActive == true) { %>
-                        <span class="absolute bottom-0 right-0 w-4 h-4 sm:w-5 sm:h-5 bg-emerald-500 border-2 border-white dark:border-background-dark rounded-full"></span>
+                        <span class="absolute bottom-0 right-0 w-4 h-4 md:w-5 md:h-5 bg-emerald-500 border-2 sm:border-[3px] border-white dark:border-background-dark rounded-full"></span>
                         <% } %>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-tight"><%=Student.name%></h3>
-                        <p class="text-[10px] sm:text-xs font-semibold text-primary uppercase tracking-wider mt-0.5">
+                    <div class="min-w-0 w-full">
+                        <h3 class="font-bold text-slate-900 dark:text-white text-sm md:text-base leading-tight truncate"><%=Student.name%></h3>
+                        <p class="text-[11px] md:text-xs font-semibold text-primary uppercase tracking-wider mt-1">
                             Roll No: <%=Student.rollNumber%></p>
                     </div>
                     <div class="w-full space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                        <div class="flex items-center justify-center gap-1.5 sm:gap-2 text-slate-500 dark:text-slate-400">
-                            <span class="material-symbols-outlined text-sm sm:text-base">call</span>
-                            <span class="text-[10px] sm:text-xs font-medium">+91 <%=Student.phone || 'N/A'%></span>
+                        <div class="flex items-center justify-center gap-1.5 md:gap-2 text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-sm md:text-base">call</span>
+                            <span class="text-[11px] md:text-xs font-medium truncate">+91 <%=Student.phone || 'N/A'%></span>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center gap-1.5 sm:gap-2 w-full pt-2 sm:pt-4">
+                    <div class="flex items-center justify-center gap-2 w-full pt-2 md:pt-4">
                         <a href="/user/<%=Student._id%>"
-                            class="p-2 sm:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors"
+                            class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95"
                             title="View Performance">
-                            <span class="material-symbols-outlined text-base sm:text-lg">account_circle</span>
+                            <span class="material-symbols-outlined text-lg md:text-xl">account_circle</span>
                         </a>
                         <button
-                            class="p-2 sm:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors"
+                            class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95"
                             title="Message Parent">
-                            <span class="material-symbols-outlined text-base sm:text-lg">mail</span>
+                            <span class="material-symbols-outlined text-lg md:text-xl">mail</span>
                         </button>
                         <button
-                            class="p-2 sm:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors"
+                            class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95"
                             title="Edit Details">
-                            <span class="material-symbols-outlined text-base sm:text-lg">edit</span>
+                            <span class="material-symbols-outlined text-lg md:text-xl">edit</span>
                         </button>
                     </div>
                 </div>
@@ -86,8 +86,8 @@
         </div>
     </div>
 
-    <div class="h-auto min-h-[56px] bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-2 sm:py-0 flex items-center justify-start gap-2 shrink-0 flex-wrap">
-        <span id="studentCountText" class="text-xs sm:text-sm text-slate-500 font-medium">
+    <div class="h-auto min-h-[48px] md:min-h-[56px] bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 px-3 md:px-6 py-2 md:py-0 flex items-center justify-start gap-2 shrink-0 flex-wrap">
+        <span id="studentCountText" class="text-xs md:text-sm text-slate-500 font-medium">
             Showing <%= currClass.students.length %> students
         </span>
     </div>

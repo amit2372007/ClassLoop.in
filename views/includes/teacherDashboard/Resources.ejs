@@ -1,106 +1,119 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Icons+Outlined&display=swap" rel="stylesheet" />
 <main class="flex-1 flex flex-col">
-    <header class="h-20 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-40">
-        <div class="relative w-96">
-            <span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+    <header class="h-auto min-h-[64px] md:h-20 p-3 md:p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-0 px-3 md:px-8 sticky top-0 z-40">
+        <div class="relative w-full md:w-96 order-2 md:order-1">
+            <span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg md:text-xl">search</span>
             <input id="resourceSearch" onkeyup="filterResources()"
-                class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-full text-sm focus:ring-2 focus:ring-primary transition-all dark:text-slate-200"
+                class="w-full pl-9 md:pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-full text-xs md:text-sm focus:ring-2 focus:ring-primary transition-all dark:text-slate-200"
                 placeholder="Search by title or subject..." type="text" />
         </div>
         
-        <div class="flex items-center space-x-6">
-            <button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-                onclick="document.documentElement.classList.toggle('dark')">
-                <span class="material-icons-outlined">dark_mode</span>
-            </button>
-            <div class="flex items-center space-x-3">
-                <div class="text-right">
-                    <p class="text-sm font-semibold leading-none"><%=currUser.name%></p>
-                    <p class="text-[11px] text-slate-500 mt-1 uppercase font-bold tracking-tight">
+        <div class="flex items-center justify-between md:justify-end md:space-x-6 order-1 md:order-2">
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <div class="text-left md:text-right">
+                    <p class="text-xs md:text-sm font-semibold leading-none truncate max-w-[120px] md:max-w-none"><%=currUser.name%></p>
+                    <p class="text-[10px] md:text-[11px] text-slate-500 mt-0.5 md:mt-1 uppercase font-bold tracking-tight whitespace-nowrap">
                         Class <%=currClass.className%>-<%=currClass.section%>
                     </p>
                 </div>
-                <img alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-100 object-cover" src="<%=currUser.profilePic.url%>" />
+                <img alt="Profile" class="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-slate-100 object-cover shrink-0" src="<%=currUser.profilePic.url%>" />
             </div>
+            <button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                onclick="document.documentElement.classList.toggle('dark')">
+                <span class="material-icons-outlined text-xl md:text-2xl">dark_mode</span>
+            </button>
         </div>
     </header>
 
-    <div class="p-8">
-        <div class="flex items-center justify-between mb-8">
+    <div class="p-4 md:p-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-0 mb-6 md:mb-8">
             <div>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Academic Resources</h2>
-                <p class="text-slate-500 dark:text-slate-400 mt-1">Manage materials for your students</p>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Academic Resources</h2>
+                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">Manage materials for your students</p>
             </div>
-            <a href="/teacher/addResource" class="bg-primary hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center space-x-2 transition-all shadow-lg shadow-indigo-200">
-                <span class="material-icons-outlined">add</span>
+            <a href="/teacher/addResource" class="w-full sm:w-auto bg-primary hover:bg-indigo-700 text-white px-4 md:px-5 py-2 md:py-2.5 rounded-xl font-semibold flex items-center justify-center space-x-2 transition-all shadow-lg shadow-indigo-200 text-sm md:text-base active:scale-95">
+                <span class="material-icons-outlined text-xl">add</span>
                 <span>Upload Resource</span>
             </a>
         </div>
 
-        <div class="flex items-center space-x-2 mb-8 bg-white/50 dark:bg-slate-800/50 p-1.5 rounded-2xl w-fit">
-            <button onclick="filterType('all')" class="type-btn px-6 py-2 rounded-xl bg-white dark:bg-slate-700 text-primary shadow-sm font-semibold text-sm transition-all">All</button>
-            <button onclick="filterType('Notes')" class="type-btn px-6 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white font-medium text-sm transition-all">Notes</button>
-            <button onclick="filterType('PYQs')" class="type-btn px-6 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white font-medium text-sm transition-all">PYQs</button>
-            <button onclick="filterType('Video')" class="type-btn px-6 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white font-medium text-sm transition-all">Video Lectures</button>
+        <div class="flex items-center gap-2 mb-6 md:mb-8 bg-white/50 dark:bg-slate-800/50 p-1 md:p-1.5 rounded-xl md:rounded-2xl w-full overflow-x-auto hide-scrollbar">
+            <button onclick="filterType('all')" class="type-btn px-4 md:px-6 py-2 rounded-lg md:rounded-xl bg-white dark:bg-slate-700 text-primary shadow-sm font-semibold text-xs md:text-sm transition-all whitespace-nowrap shrink-0">All</button>
+            <button onclick="filterType('Notes')" class="type-btn px-4 md:px-6 py-2 rounded-lg md:rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white font-medium text-xs md:text-sm transition-all whitespace-nowrap shrink-0">Notes</button>
+            <button onclick="filterType('PYQs')" class="type-btn px-4 md:px-6 py-2 rounded-lg md:rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white font-medium text-xs md:text-sm transition-all whitespace-nowrap shrink-0">PYQs</button>
+            <button onclick="filterType('Video')" class="type-btn px-4 md:px-6 py-2 rounded-lg md:rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white font-medium text-xs md:text-sm transition-all whitespace-nowrap shrink-0">Video Lectures</button>
         </div>
 
-        <div id="resourceGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="resourceGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <% if(resources.length > 0) { %>
                 <% for(let resource of resources) { %>
-                    <div class="resource-card bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group" 
+                    <div class="resource-card bg-white dark:bg-slate-900 p-4 md:p-6 rounded-xl md:rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group" 
                          data-type="<%= resource.resourceType %>" 
                          data-title="<%= resource.title.toLowerCase() %>"
                          data-subject="<%= resource.subject.toLowerCase() %>">
                         
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center 
+                        <div class="flex justify-between items-start mb-4 md:mb-6">
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0
                                 <%= resource.resourceType === 'Notes' ? 'bg-red-50 text-red-600' : 
                                    resource.resourceType === 'Video' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600' %>">
-                                <span class="material-icons-outlined text-3xl">
+                                <span class="material-icons-outlined text-2xl md:text-3xl">
                                     <%= resource.resourceType === 'Notes' ? 'picture_as_pdf' : 
                                        resource.resourceType === 'Video' ? 'play_circle' : 'link' %>
                                 </span>
                             </div>
-                            <span class="bg-indigo-50 dark:bg-indigo-900/30 text-primary text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">
+                            <span class="bg-indigo-50 dark:bg-indigo-900/30 text-primary text-[9px] md:text-[10px] font-bold px-2 md:px-2.5 py-1 rounded-lg uppercase tracking-wider shrink-0">
                                 <%= resource.subject %>
                             </span>
                         </div>
 
-                        <h3 class="font-bold text-lg mb-2 text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                        <h3 class="font-bold text-base md:text-lg mb-2 text-slate-900 dark:text-white group-hover:text-primary transition-colors line-clamp-2">
                             <%= resource.title %>
                         </h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2">
+                        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-4 md:mb-6 line-clamp-2">
                             <%= resource.description %>
                         </p>
 
-                        <div class="flex items-center justify-between mt-auto">
+                        <div class="flex items-center justify-between mt-auto pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
                             <div class="flex flex-col">
-                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-tight">Uploaded</span>
-                                <span class="text-sm font-medium text-slate-700 dark:text-slate-300">
+                                <span class="text-[9px] md:text-[10px] uppercase font-bold text-slate-400 tracking-tight">Uploaded</span>
+                                <span class="text-xs md:text-sm font-medium text-slate-700 dark:text-slate-300">
                                     <%= resource.createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %>
                                 </span>
                             </div>
                             
                             <% if(resource.resourceType === 'Video' || resource.resourceType === 'Link') { %>
-                                <a href="<%= resource.externalLink %>" target="_blank" class="flex items-center space-x-1 text-primary font-semibold text-sm hover:underline">
-                                    <span>Visit</span> <span class="material-icons-outlined text-sm">open_in_new</span>
+                                <a href="<%= resource.externalLink %>" target="_blank" class="flex items-center space-x-1 text-primary font-semibold text-xs md:text-sm hover:underline active:scale-95 transition-transform">
+                                    <span>Visit</span> <span class="material-icons-outlined text-sm md:text-base">open_in_new</span>
                                 </a>
                             <% } else { %>
-                                <a href="<%= resource.externalLink%>" target="_blank" download class="flex items-center space-x-1 text-primary font-semibold text-sm hover:underline">
-                                    <span>Download</span> <span class="material-icons-outlined text-sm">download</span>
+                                <a href="<%= resource.externalLink%>" target="_blank" download class="flex items-center space-x-1 text-primary font-semibold text-xs md:text-sm hover:underline active:scale-95 transition-transform">
+                                    <span>Download</span> <span class="material-icons-outlined text-sm md:text-base">download</span>
                                 </a>
                             <% } %>
                         </div>
                     </div>
                 <% } %>
             <% } else { %>
-                <div class="col-span-full text-center py-20">
-                    <p class="text-slate-500">No resources found for this class yet.</p>
+                <div class="col-span-full text-center py-12 md:py-20">
+                    <div class="flex flex-col items-center">
+                        <span class="material-icons-outlined text-5xl md:text-6xl text-slate-300 dark:text-slate-700 mb-3 md:mb-4">folder_open</span>
+                        <p class="text-sm md:text-base text-slate-500">No resources found for this class yet.</p>
+                    </div>
                 </div>
             <% } %>
         </div>
     </div>
 </main>
+
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
 
 <script>
     // 1. Search Logic

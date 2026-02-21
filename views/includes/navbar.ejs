@@ -7,9 +7,13 @@
 
       <!-- Logo -->
       <a href="/home" class="flex pr-5 items-center gap-2 md:gap-3 group transition-all duration-300 ease-in-out flex-shrink-0">
-        <div class="size-8 md:size-10 bg-primary rounded-lg md:rounded-xl flex items-center justify-center text-white">
-          <span class="material-symbols-outlined text-xl md:text-2xl fill">all_inclusive</span>
-        </div>
+  
+        <img 
+          src="https://ik.imagekit.io/xcrdwi6be/classLoop_icons/classloop%20logo.svg" 
+          alt="ClassLoop Logo" 
+          class="size-8 md:size-10 object-cover rounded-full overflow-hidden transition-transform group-hover:scale-105 duration-300"
+        >
+  
         <h2 class="text-lg md:text-xl text-white font-extrabold tracking-tighter hidden sm:block transition-colors duration-300 group-hover:text-primary">
           ClassLoop<span class="text-primary group-hover:text-white transition-colors">.in</span>
         </h2>
@@ -63,16 +67,14 @@
 
             <!-- Chat Icon -->
             <% if(currUser) { %>
-              <a href="/chat" class="hidden md:block"
-                title="Messages">
-                <span class="material-symbols-outlined text-[22px] md:text-[28px] text-white/70 group-hover:text-primary transition-colors">
-                  chat
-                </span>
-              </a>
+              <a href="/chat" class="flex flex-col items-center gap-1 text-white/60 hover:text-primary transition-colors px-2 py-1">
+        <span class="material-symbols-outlined text-xl">forum</span>
+        
+      </a>
             <% } %>
 
             <!-- Notifications -->
-            <a href="/notifications" class="ml-5 mr-5 relative group p-1.5 md:p-2 hover:bg-white/5 rounded-lg md:rounded-xl transition-all">
+            <a href="/notifications" class="ml-3 mr-5 relative group p-1.5 md:p-2 hover:bg-white/5 rounded-lg md:rounded-xl transition-all">
               <span
                 class="material-symbols-outlined text-xl md:text-2xl text-white/70 group-hover:text-primary transition-colors">
                 notifications
