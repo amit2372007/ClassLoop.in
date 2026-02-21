@@ -141,24 +141,7 @@
                                 </div>
                                 <div
                                     class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                    <div class="flex items-center gap-1">
-                                        <button
-                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
-                                            title="Attach Files" type="button"><span
-                                                class="material-symbols-outlined text-[20px]">attach_file</span></button>
-                                        <button
-                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
-                                            title="Add Image" type="button"><span
-                                                class="material-symbols-outlined text-[20px]">image</span></button>
-                                        <button
-                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
-                                            title="Schedule" type="button"><span
-                                                class="material-symbols-outlined text-[20px]">calendar_month</span></button>
-                                        <button
-                                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition-colors"
-                                            title="Add Poll" type="button"><span
-                                                class="material-symbols-outlined text-[20px]">poll</span></button>
-                                    </div>
+                                    
                                     <button
                                         class="px-8 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md active:scale-95"
                                         type="submit">Post Notice</button>
@@ -167,57 +150,82 @@
                         </div>
                     </div>
                 </form>
-                <div class="space-y-4">
-                    <div
-                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-5 rounded-xl space-y-3">
-                        <div class="flex justify-between items-start">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-sm">assignment</span>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold">New Assignment Posted</p>
-                                    <p class="text-[10px] text-slate-400 uppercase font-semibold">2 hours ago</p>
-                                </div>
-                            </div>
-                            <button class="text-slate-400 hover:text-slate-600"><span
-                                    class="material-symbols-outlined">more_vert</span></button>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-400">The chapter "Industrial Revolution" quiz
-                            is now live. Please ensure all students complete it before Friday's seminar.</p>
-                        <div
-                            class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 p-3 rounded-lg flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-rose-500">picture_as_pdf</span>
-                                <span class="text-sm font-medium">Assignment_Brief_v2.pdf</span>
-                            </div>
-                            <span class="text-xs text-slate-400">1.2 MB</span>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-5 rounded-xl space-y-3">
-                        <div class="flex justify-between items-start">
-                            <div class="flex items-center gap-3">
-                                <img class="w-8 h-8 rounded-full" data-alt="Circular student avatar thumbnail"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDin4CUWCZicVmrCTMAgA6taPtUXwBs5bpgMk_D8bSxdxor9Zmq6vEUfh8Dzy0vHW0LRPYawI8Tdu8m7NhDSnKpEyiXFTYPHxyfLoHboFR8IunPN7y5kk0Oaj3VqBT-rTVYbdJDwl-6M6x4fcPkeFOKKbnILziSlCPvj-WEOBlo_pCo6s-9dAidEI7e_-ymuYfvdrWqPQx87zGCcZGpAGsU-ZJ0klMFFpaoJN4hUJBAV9fImtrUmV2Ex0qEWTDZ3c6_9os5e9BVLjLi" />
-                                <div>
-                                    <p class="text-sm font-bold">Aryan Sharma <span
-                                            class="font-normal text-slate-400">asked a question</span></p>
-                                    <p class="text-[10px] text-slate-400 uppercase font-semibold">4 hours ago</p>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-400 italic">"Sir, will the upcoming History
-                            test include map work from Chapter 4 or is it just theoretical questions?"</p>
-                        <div class="flex gap-4">
-                            <button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline"><span
-                                    class="material-symbols-outlined text-sm">reply</span> Reply</button>
-                            <button class="text-xs font-bold text-slate-500 flex items-center gap-1"><span
-                                    class="material-symbols-outlined text-sm">favorite</span> 2 Likes</button>
-                        </div>
-                    </div>
+                <div class="space-y-4 mt-8">
+    <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+            Student Pending Requests
+            <% if (request && request.length > 0) { %>
+                <span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <%= request.length %>
+                </span>
+            <% } %>
+        </h3>
+    </div>
+
+    <% if (request && request.length > 0) { %>
+        <div class="space-y-3">
+    <% request.forEach(function(reqItem) { %>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow gap-4 sm:gap-0">
+            
+            <div class="flex items-center gap-4">
+                <img 
+                    class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 bg-slate-100" 
+                    alt="Student Avatar" 
+                    src="<%= reqItem.sender.profilePic ? reqItem.sender.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>" 
+                />
+                <div>
+                    <h4 class="text-sm font-bold text-slate-900 dark:text-white">
+                        <%= reqItem.sender.name || reqItem.sender.username %>
+                    </h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                        Requested to join this class
+                    </p>
                 </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                
+                <form action="/teacher/request/accept" method="POST" class="m-0 flex items-center gap-2">
+                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
+                    <input type="hidden" name="studentId" value="<%= reqItem.sender._id %>">
+                    <input type="hidden" name="classId" value="<%= currClass._id %>">
+                    
+                    <input 
+                        type="number" 
+                        name="rollNumber" 
+                        placeholder="Roll No." 
+                        required
+                        class="w-20 sm:w-24 px-2 py-1.5 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white"
+                    >
+
+                    <button type="submit" title="Accept" class="w-8 h-8 flex items-center justify-center bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
+                        <span class="material-symbols-outlined text-sm font-bold">check</span>
+                    </button>
+                </form>
+
+                <form action="/teacher/request/reject" method="POST" class="m-0">
+                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
+                    <button type="submit" title="Reject" class="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
+                        <span class="material-symbols-outlined text-sm font-bold">close</span>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    <% }) %>
+</div>
+    <% } else { %>
+        <div class="flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 border-dashed rounded-xl text-center">
+            <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-xl">inbox</span>
+            </div>
+            <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">No Pending Requests</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-[200px]">
+                When students scan the QR code to join, their requests will appear here.
+            </p>
+        </div>
+    <% } %>
+</div>
             </div>
             <!-- Right Column: My Classes -->
             <div class="space-y-6">

@@ -25,6 +25,8 @@ const notificationSchema = new Schema({
       "DOUBT_SOLVED",
       "EXAM",
       "APPLICATION",
+      "REQUEST_REJECT",
+      "REQUEST_APPROVED"
     ],
     required: true,
   },

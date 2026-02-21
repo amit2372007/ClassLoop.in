@@ -120,6 +120,11 @@
                         <span class="material-symbols-outlined text-[22px]">quiz</span>
                         <span class="text-sm font-medium">Applications</span>
                     </a>
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors <%= activeTab === 'Applications' ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' %>"
+                        href="/teacher/QrCode">
+                        <span class="material-symbols-outlined text-[22px]">qr_code</span>
+                        <span class="text-sm font-medium">Class QR Code</span>
+                    </a>
                 </nav>
                 <div class="p-4 border-t border-slate-200 dark:border-slate-800">
                     <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -248,12 +253,14 @@
                         <span class="text-xs font-semibold">Settings</span>
                     </a>
 
-                    <a href="/teacher?tab=HelpCenter"
+                    <a href="/teacher/QrCode"
                        onclick="document.getElementById('mobile-more-drawer').classList.add('translate-y-full')"
                        class="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
-                        <span class="material-symbols-outlined text-[24px]">help</span>
-                        <span class="text-xs font-semibold">Help</span>
+                        <span class="material-symbols-outlined text-[24px]">qr_code</span>
+                        <span class="text-xs font-semibold">Class QR Code</span>
                     </a>
+
+                    
 
                 </div>
             </div>

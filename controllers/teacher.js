@@ -15,6 +15,7 @@ const FormResponse = require("../model/school/formResponse.js");
 const LoopSpace = require("../model/loopSpace/loopSpace.js");
 const Exam = require("../model/school/exam.js");
 const Application = require("../model/school/application.js");
+const classRequest = require("../model/school/classRequest.js");
 const ImageKit = require("imagekit");
 
 // Initialize ImageKit
@@ -86,7 +87,7 @@ module.exports.teacherDashboard = async (req, res) => {
     const activeTab = req.query.tab || "Overview";
 
     // 4. Fetch the Class data and populate students
-    const classData = await Class.findById(classId)
+    const classData = await Class.findOne({ classTeacher: req.user._id })
       .populate({
         path: "students",
         select: "name phone profilePic rollNumber", // Add the fields you want to display in the roster
@@ -133,6 +134,8 @@ module.exports.teacherDashboard = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
+      const studentRequests = await classRequest.find({receiver: classId })
+      .populate("sender");
     // 6. Render the dashboard
     res.render("./teacher/Dashboard.ejs", {
       currClass: classData,
@@ -148,6 +151,7 @@ module.exports.teacherDashboard = async (req, res) => {
       selectedExam: selectedExam,
       selectedExamId: selectedExamId,
       application: application,
+      request: studentRequests,
     });
   } catch (err) {
     console.error("Teacher Dashboard Error:", err);
@@ -237,6 +241,112 @@ module.exports.addStudent = async (req, res) => {
       req.flash("error", `error: ${err}`);
       return res.redirect("/teacher?activeTab=Student");
     }
+  }
+};
+
+module.exports.addStudentRequest = async (req, res) => {
+  try {
+    // 1. Extract the exact properties from the objects
+    // (Assuming your route is something like /request/:classId)
+    const { classId } = req.params;
+
+    // (Assuming your frontend form sends an input named "studentId")
+    const studentId = req.user._id;
+
+    const newClassRequest = new classRequest({
+      receiver: classId,
+      sender: studentId,
+    });
+
+    // 2. Add 'await' to ensure the document actually saves to MongoDB
+    await newClassRequest.save();
+
+    req.flash("success", "Student request sent successfully.");
+    return res.redirect("/home");
+  } catch (error) {
+    console.error("Add Student Request Error:", error);
+    req.flash("error", "Something went wrong.");
+    return res.redirect("/home");
+  }
+};
+
+module.exports.requestReject = async (req, res) => {
+    try {
+        const { requestId } = req.body;
+        
+        // Ensure we have a valid logged-in teacher
+        if (!req.user) {
+            return res.status(401).send("Unauthorized: Please log in.");
+        }
+
+        const teacherName = req.user.name || req.user.username || "your teacher";
+
+        // 1. Find the request first so we know which student to notify
+        // (Assuming your model is named 'classRequest' based on your previous code)
+        const pendingRequest = await classRequest.findById(requestId);
+
+        if (!pendingRequest) {
+            console.log("Request already processed or doesn't exist.");
+            return res.redirect(req.back); 
+        }
+
+        const studentId = pendingRequest.sender;
+
+        // 2. Delete the request from the database
+        await classRequest.findByIdAndDelete(requestId);
+
+        // 3. Send the notification to the student
+        // (Adjust the fields below to perfectly match your Notification schema)
+        const newNotification = new Notification({
+          receiver: studentId, 
+          sender: req.user._id, 
+          type: "REQUEST_REJECT",
+          message: `Your request to join the class has been declined by ${teacherName}.`, // Fixed: changed 'content' to 'message'
+          link: "/home", // Fixed: changed 'url' to 'link'
+          isRead: false
+});
+        await newNotification.save();
+
+        req.flash("success" , "Request Reject Successfully!");
+        res.redirect(`/teacher?tab=Students`);
+
+    } catch (error) {
+        console.error("Error rejecting student request:", error);
+        req.flash("error" , "Error! in Rejecting Request");
+        res.redirect(`/teacher?tab=Students`);
+    }
+};
+
+module.exports.requestApprove = async (req, res) => {
+  try {
+    // 1. Extract the data sent from the EJS form
+    const { requestId, studentId, rollNumber } = req.body;
+
+    // 2. Delete the pending request from the database
+    await classRequest.findByIdAndDelete(requestId);
+
+    // 3. Send an approval notification to the student
+    const teacherName = req.user.name || req.user.username || "your teacher";
+    
+    const newNotification = new Notification({
+      receiver: studentId,
+      sender: req.user._id,
+      type: "REQUEST_APPROVED",
+      message: `Your request to join the class has been approved by ${teacherName}. Your Roll Number is ${rollNumber}.`,
+      link: "/home",
+      isRead: false
+    });
+    
+    await newNotification.save();
+
+    // 4. Forward the POST request directly to your addStudent controller
+    // The '307' status strictly maintains the POST method and passes req.body along
+    return res.redirect(307, "/teacher/addStudent");
+
+  } catch (error) {
+    console.error("Error approving student request:", error);
+    req.flash("error", "Something went wrong while approving the request.");
+    return res.redirect('/teacher');
   }
 };
 
@@ -1047,5 +1157,34 @@ module.exports.updateApplicationStatus = async (req, res) => {
     console.error(err);
     req.flash("error", "Failed to update application.");
     res.redirect(req.get("Referer"));
+  }
+};
+
+module.exports.getQrCode = async (req, res) => {
+  try {
+    // 1. Find the class where this user is the classTeacher
+    const currClass = await Class.findOne({ classTeacher: req.user._id });
+
+    // 2. Find the school and optionally populate the principal's details
+    const currSchool = await Schools.findById(
+      req.user.instituition.school,
+    ).populate("principle");
+
+    // 3. Safety check: Ensure the teacher actually has an assigned class
+    if (!currClass) {
+      req.flash("error", "You do not have a class assigned to you yet.");
+      return res.redirect("/teacher");
+    }
+
+    // 4. Render the view and pass all required data
+    res.render("./teacher/QrCode.ejs", {
+      currClass,
+      currSchool,
+      teacher: req.user, // Pass the currently logged-in user as the teacher
+    });
+  } catch (err) {
+    console.error("Error fetching QR Code:", err);
+    req.flash("error", "Failed to load the QR Code page.");
+    return res.redirect("/teacher");
   }
 };

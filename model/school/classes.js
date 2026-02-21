@@ -10,10 +10,15 @@ const classSchema = Schema({
     type: String,
     required: true,
   },
-  session: { // Essential for tracking different years
-    type: String, 
-    required: true, 
-    default: "2025-26" 
+  session: {
+    // Essential for tracking different years
+    type: String,
+    required: true,
+    default: "2025-26",
+  },
+  QRCode: {
+    url: String,
+    fileId: String,
   },
   students: [
     {
@@ -67,6 +72,6 @@ const classSchema = Schema({
   ],
 });
 
-const Class = mongoose.model("Class" , classSchema);
+const Class = mongoose.model("Class", classSchema);
 
 module.exports = Class;

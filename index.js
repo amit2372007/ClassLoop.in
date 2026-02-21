@@ -20,6 +20,7 @@ const LocalStrategy = require("passport-local");
 const flash = require("connect-flash");
 const session = require("express-session");
 const axios = require("axios");
+const QRCode = require("qrcode");
 const ExpressError = require("./utils/ExpressError");
 const wrapAsync = require("./utils/wrapAsync.js");
 

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ClassLoop - Join Class <%= currClass.className %></title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary-blue": "#1e3a8a",
+              "primary": "#9f1fef",
+              "primary-magenta": "#701a75",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            }
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .html2canvas-gradient {
+        background: linear-gradient(135deg, #1e3a8a 0%, #701a75 50%, #4c0519 100%);
+      }
+      .solid-glass {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .poster-wrapper {
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
+    
+    <div class="poster-wrapper flex flex-col items-center">
+      
+      <div id="poster-card" class="html2canvas-gradient w-full flex flex-col items-center py-10 px-6 sm:px-8 rounded-[2rem] shadow-2xl relative overflow-hidden">
+        
+        <header class="w-full text-center mb-8">
+          <div class="flex items-center justify-center gap-3 mb-5">
+            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+              <span class="material-symbols-outlined text-2xl">all_inclusive</span>
+            </div>
+            <h1 class="text-white text-2xl font-extrabold block">ClassLoop.in</h1>
+          </div>
+          <div class="space-y-1">
+            <h2 class="text-white text-xl font-bold block">
+              <%= currSchool.name || currSchool.schoolName %>
+            </h2>
+            <p class="text-white/70 font-semibold text-sm block pb-2">
+              Principal: <%= currSchool.principle ? (currSchool.principle.name || currSchool.principle.username) : "Admin" %>
+            </p>
+            <p class="text-white/90 text-sm font-medium mt-2 pt-2 border-t border-white/20 block">
+    Scan the QR below to submit a join request for this class.
+  </p>
+          </div>
+        </header>
+
+        <main class="w-full flex flex-col items-center gap-8">
+          
+          <div class="relative group">
+            <div class="absolute -top-3 -left-3 w-8 h-8 border-t-[3px] border-l-[3px] border-white/50 rounded-tl-xl"></div>
+            <div class="absolute -top-3 -right-3 w-8 h-8 border-t-[3px] border-r-[3px] border-white/50 rounded-tr-xl"></div>
+            <div class="absolute -bottom-3 -left-3 w-8 h-8 border-b-[3px] border-l-[3px] border-white/50 rounded-bl-xl"></div>
+            <div class="absolute -bottom-3 -right-3 w-8 h-8 border-b-[3px] border-r-[3px] border-white/50 rounded-br-xl"></div>
+            
+            <div class="w-60 h-60 sm:w-64 sm:h-64 bg-white rounded-3xl shadow-xl flex items-center justify-center p-2">
+              <div class="w-full h-full relative border-[6px] border-slate-100 rounded-2xl flex items-center justify-center bg-white overflow-hidden">
+                <% if (currClass.QRCode && currClass.QRCode.url) { %>
+                  <img src="<%= currClass.QRCode.url %>" alt="QR Code" class="w-[90%] h-[90%] object-contain block" crossorigin="anonymous" />
+                <% } else { %>
+                  <p class="text-slate-400 text-sm font-bold text-center block">No QR Code</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center w-full">
+            <h3 class="text-white text-3xl font-extrabold mb-1 drop-shadow-md block">Class <%= currClass.className %></h3>
+            <p class="text-white/80 text-xs font-bold tracking-widest uppercase block text-center w-full">
+              SECTION <%= currClass.section %> <%= currClass.session ? '• ' + currClass.session : '' %>
+            </p>
+          </div>
+
+          <div class="w-full solid-glass rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+            <div class="shrink-0">
+              <img
+                alt="Teacher Profile"
+                class="w-14 h-14 rounded-full object-cover border-2 border-white/40 bg-slate-200 block"
+                src="<%= teacher.profilePic ? teacher.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>"
+                crossorigin="anonymous"
+              />
+            </div>
+            <div class="flex flex-col flex-1 min-w-0">
+  <p class="text-white font-bold text-base leading-normal whitespace-nowrap pb-1 block">
+    <%= teacher.name || teacher.username || "Teacher" %>
+  </p>
+  <p class="text-white/80 text-sm font-medium block">Class Teacher</p>
+</div>
+            <div class="shrink-0 flex items-center">
+              <span class="material-symbols-outlined text-white/60 text-2xl inline-block">verified</span>
+            </div>
+          </div>
+        </main>
+
+        <footer class="mt-12 w-full">
+          <div class="flex flex-col items-center gap-5">
+            <div class="flex items-center gap-4 w-full px-4">
+              <div class="h-px flex-1 bg-white/20"></div>
+              <span class="text-[10px] text-white/60 font-bold uppercase tracking-widest whitespace-nowrap inline-block align-middle">Verified Portal</span>
+              <div class="h-px flex-1 bg-white/20"></div>
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      <div class="w-full mt-6 px-2">
+        <% if (currClass.QRCode && currClass.QRCode.url) { %>
+          <button 
+            id="download-btn"
+            onclick="downloadPoster('<%= currClass.className %>', '<%= currClass.section %>')"
+            class="w-full py-4 bg-primary hover:bg-primary/90 rounded-2xl text-white font-bold text-lg flex justify-center items-center gap-3 transition-all shadow-xl active:scale-95"
+          >
+            <span class="material-symbols-outlined">download</span>
+            Download Printable Poster
+          </button>
+        <% } %>
+      </div>
+
+    </div>
+
+    <script>
+      async function downloadPoster(className, section) {
+        const downloadBtn = document.getElementById('download-btn');
+        const posterElement = document.getElementById('poster-card');
+        
+        const originalText = downloadBtn.innerHTML;
+        downloadBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Generating...';
+        downloadBtn.disabled = true;
+
+        try {
+          await document.fonts.ready;
+          await new Promise(resolve => setTimeout(resolve, 500)); 
+
+          const canvas = await html2canvas(posterElement, {
+            scale: 3, 
+            useCORS: true, 
+            allowTaint: true,
+            backgroundColor: null, 
+            logging: false,
+            onclone: (clonedDoc) => {
+              const clonedPoster = clonedDoc.getElementById('poster-card');
+              clonedPoster.style.transform = 'none'; 
+            }
+          });
+
+          const image = canvas.toDataURL("image/png", 1.0);
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = `ClassLoop-Poster-${className}-${section}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+        } catch (error) {
+          console.error('Error generating poster:', error);
+          alert('Failed to generate poster. Make sure your browser allows downloads.');
+        } finally {
+          downloadBtn.innerHTML = originalText;
+          downloadBtn.disabled = false;
+        }
+      }
+    </script>
+  </body>
+</html>

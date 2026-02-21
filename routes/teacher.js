@@ -10,11 +10,25 @@ const { isLoggedIn, isTeacher } = require("../middleware.js");
 const teacherController = require("../controllers/teacher.js");
 
 router.get("/", isLoggedIn, isTeacher, teacherController.teacherDashboard);
+
+router.get("/QrCode", isLoggedIn, teacherController.getQrCode);
+
 router.get(
   "/addStudent",
   isLoggedIn,
   isTeacher,
   teacherController.addStudentPage,
+);
+router.post(
+  "/request/reject",
+  isLoggedIn,
+  isTeacher,
+  teacherController.requestReject
+);
+router.post('/request/accept',
+  isLoggedIn,
+  isTeacher,
+  teacherController.requestApprove
 );
 router.get(
   "/addAssignment",
@@ -58,6 +72,7 @@ router.post(
 );
 router.post("/addNotice", isLoggedIn, isTeacher, teacherController.addNotice);
 router.post("/createForm", isLoggedIn, isTeacher, teacherController.createForm);
+
 router.get(
   "/previewForms",
   isLoggedIn,
@@ -125,6 +140,12 @@ router.post(
   "/application/:id",
   isLoggedIn,
   teacherController.updateApplicationStatus,
+);
+
+router.get(
+  "/joinClass/:classId",
+  isLoggedIn,
+  teacherController.addStudentRequest,
 );
 
 module.exports = router;
