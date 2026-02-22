@@ -1,236 +1,334 @@
-<% layout("/layout/boilerplate.ejs") -%>
+<%- include("../includes/loader.ejs") -%> <% layout("/layout/boilerplate.ejs")
+-%>
 
-  <title>ClassLoop.in | Login</title>
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#9f1fef",
-            "background-light": "#f7f6f8",
-            "background-dark": "#1b1022",
-          },
-          fontFamily: {
-            "display": ["Inter"]
-          },
-          borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+<title>ClassLoop.in | Login</title>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#9f1fef",
+          "background-light": "#f7f6f8",
+          "background-dark": "#1b1022",
+        },
+        fontFamily: {
+          display: ["Inter"],
+        },
+        borderRadius: {
+          DEFAULT: "0.5rem",
+          lg: "1rem",
+          xl: "1.5rem",
+          full: "9999px",
         },
       },
-    }
-  </script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
+    },
+  };
+</script>
+<style>
+  body {
+    font-family: "Inter", sans-serif;
+  }
 
-    .login-btn-outline {
-      border: 2px solid #9f1fef;
-      color: #9f1fef;
-      transition: all 0.3s ease;
-    }
+  .login-btn-outline {
+    border: 2px solid #9f1fef;
+    color: #9f1fef;
+    transition: all 0.3s ease;
+  }
 
-    .login-btn-outline:hover {
-      background-color: #9f1fef;
-      color: white;
-    }
-  </style>
+  .login-btn-outline:hover {
+    background-color: #9f1fef;
+    color: white;
+  }
+</style>
 
-  <main class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center font-display">
-    <div class="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen overflow-hidden">
-      <!-- Left Section: Vibrant Brand Panel (Hidden on Mobile) -->
+<main
+  class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center font-display"
+>
+  <div
+    class="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen overflow-hidden"
+  >
+    <!-- Left Section: Vibrant Brand Panel (Hidden on Mobile) -->
+    <div
+      class="hidden lg:flex lg:w-1/2 lg:h-[100vh] bg-primary relative flex-col items-center justify-center p-12 overflow-hidden"
+    >
+      <!-- Decorative shapes -->
       <div
-        class="hidden lg:flex lg:w-1/2 lg:h-[100vh] bg-primary relative flex-col items-center justify-center p-12 overflow-hidden">
-        <!-- Decorative shapes -->
-        <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-black/20 rounded-full blur-3xl"></div>
-        <div class="relative z-10 flex flex-col items-center text-center max-w-md">
-          <div class="w-full aspect-square bg-white/5 backdrop-blur-md rounded-3xl mb-8 flex items-center justify-center p-8 shadow-2xl border border-white/10">
-  <div class="relative w-full h-full">
-    
-    <div class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-100 scale-100" 
-         style='background-image: url("https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_group-project_kow1.svg");'>
-    </div>
-
-    <div class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105" 
-         style='background-image: url("https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_social-post_qn03.svg");'>
-    </div>
-
-    <div class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105" 
-         style='background-image: url("https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_text-messages_978a.svg");'>
-    </div>
-
-    <div class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105" 
-         style='background-image: url("https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_online-community_3o0l.svg");'>
-    </div>
-
-    <div class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105" 
-         style='background-image: url("https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_my-notifications_fy5v.svg");'>
-    </div>
-
-    <div class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105" 
-         style='background-image: url("https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_friends-online_gvwz.svg");'>
-    </div>
-
-  </div>
-</div>
-          <h1 class="text-white text-5xl font-black leading-tight tracking-[-0.033em] mb-4">
-            Escape the WhatsApp Chaos
-          </h1>
-          <p class="text-white/80 text-lg font-normal leading-relaxed">
-            Say goodbye to lost notes and spam. Jump into your LoopSpace, drop questions in DoubtBin, and actually enjoy campus life.
-          </p>
-        </div>
-        
-      </div>
-      <!-- Right Section: Login Area -->
+        class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"
+      ></div>
       <div
-        class="w-full lg:w-1/2 min-h-screen lg:h-[98vh] flex flex-col bg-background-light dark:bg-background-dark p-5 sm:p-8 lg:p-20 overflow-y-auto">
-        <!-- Mobile Header Only -->
-        <div class="lg:hidden flex items-center gap-3 sm:gap-4 text-primary mb-8 sm:mb-12">
-          <div class="size-7 sm:size-8">
-            <div  class="flex pr-5 items-center gap-2 md:gap-3 group transition-all duration-300 ease-in-out flex-shrink-0">
-        <img 
-          src="https://ik.imagekit.io/xcrdwi6be/classLoop_icons/classloop%20logo.svg" 
-          alt="ClassLoop Logo" 
-          class="size-8 md:size-10 object-cover rounded-full overflow-hidden transition-transform group-hover:scale-105 duration-300"
-        >
-        </div>
-          </div>
-          <h2 class="text-xl sm:text-2xl font-bold tracking-tight">ClassLoop.in</h2>
-        </div>
-        <div class="max-w-md w-full mx-auto my-auto">
-          <div class="flex flex-col gap-2 mb-8 sm:mb-10">
-  <h2 class="text-slate-900 dark:text-white text-3xl sm:text-4xl font-bold leading-tight tracking-tight">Welcome Back ! Ready to Hustle?</h2>
-  <p class="text-slate-500 dark:text-[#b491ca] text-sm sm:text-base font-normal">Grab your virtual seat. Sign in to connect, share, and conquer the day.
-  </p>
-</div>
-          <form action="/user/login" method="POST" class="flex flex-col gap-5 sm:gap-6">
-            <!-- Email Field -->
-            <div class="flex flex-col gap-2">
-              <label class="text-slate-700 dark:text-white text-sm font-semibold">Username</label>
-              <div class="relative">
-                <input
-                  name="username"
-                  class="w-full rounded-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-[#533267] bg-white dark:bg-[#291934] h-12 sm:h-14 placeholder:text-slate-400 dark:placeholder:text-[#b491ca] px-3 sm:px-4 text-sm sm:text-base font-normal transition-all"
-                  placeholder="name1234" type="username" required/>
-              </div>
-            </div>
-            <!-- Password Field -->
-            <div class="flex flex-col gap-2">
-              <label class="text-slate-700 dark:text-white text-sm font-semibold">Password</label>
-              <div
-                class="flex w-full items-stretch rounded-xl overflow-hidden border border-slate-200 dark:border-[#533267] focus-within:ring-2 focus-within:ring-primary/50 transition-all">
-                <input
-                  id="passwordInput"
-                  name="password"
-                  class="flex-1 bg-white dark:bg-[#291934] text-slate-900 dark:text-white h-12 sm:h-14 px-3 sm:px-4 focus:outline-none placeholder:text-slate-400 dark:placeholder:text-[#b491ca] text-sm sm:text-base font-normal"
-                  placeholder="••••••••" type="password" required />
-                <button
-                  id="toggleBtn"
-                  class="bg-white dark:bg-[#291934] px-3 sm:px-4 flex items-center justify-center text-slate-400 dark:text-[#b491ca]"
-                  type="button">
-                  <span id="eyeIcon" class="material-symbols-outlined text-xl sm:text-2xl">visibility</span>
-                </button>
-              </div>
-            </div>
-            <!-- Remember Me & Forgot Password -->
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 py-2">
-              <label class="flex items-center gap-2 cursor-pointer group">
-                <input
-                  class="rounded border-slate-300 dark:border-[#533267] text-primary focus:ring-primary bg-white dark:bg-[#291934]"
-                  type="checkbox" />
-                <span
-                  class="text-xs sm:text-sm text-slate-600 dark:text-[#b491ca] group-hover:text-primary transition-colors">Remember
-                  for 30 days</span>
-              </label>
-              <a class="text-xs sm:text-sm font-semibold text-primary hover:underline" href="/user/forgetPassword">Forgot password?</a>
-              
-            </div>
-
-            <p class="text-center mt-2 text-slate-500 dark:text-[#b491ca] text-xs sm:text-sm">
-            Don't have an account?
-            <a class="text-primary font-bold hover:underline ml-1" href="/user/signup">Sign Up</a>
-          </p>
-
-            <!-- Login Button -->
-            <button
-              class="login-btn-outline w-full rounded-xl h-12 sm:h-14 text-sm sm:text-base font-bold tracking-wide flex items-center justify-center mt-2 sm:mt-4"
-              type="submit">
-              Login
-            </button>
-            <!-- Divider -->
-            <div class="flex items-center gap-2 py-3 sm:py-4">
-              <div class="flex-1 h-px bg-slate-200 dark:bg-[#3a2348]"></div>
-              <span class="text-xs font-bold text-slate-400 dark:text-[#533267] uppercase tracking-widest">or</span>
-              <div class="flex-1 h-px bg-slate-200 dark:bg-[#3a2348]"></div>
-            </div>
-            <!-- Google Login -->
-            <button
-              class="w-full flex items-center justify-center gap-2 rounded-xl h-12 sm:h-14 bg-white dark:bg-transparent border border-slate-200 dark:border-[#533267] text-slate-700 dark:text-white text-sm sm:text-base font-semibold hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
-              type="button">
-              <svg class="w-4 h-4 sm:w-5 sm:h-5" viewbox="0 0 24 24">
-                <path
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  fill="#4285F4"></path>
-                <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  fill="#34A853"></path>
-                <path
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                  fill="#FBBC05"></path>
-                <path
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  fill="#EA4335"></path>
-              </svg>
-              Sign in with Google
-            </button>
-          </form>
-          
-        </div>
-        <!-- Footer Small Links -->
+        class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-black/20 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="relative z-10 flex flex-col items-center text-center max-w-md"
+      >
         <div
-          class="mt-auto pt-6 sm:pt-10 flex flex-wrap justify-center gap-4 sm:gap-6 text-xs text-slate-400 dark:text-[#533267] font-medium uppercase tracking-wider">
-          <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
-          <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
-          <a class="hover:text-primary transition-colors" href="#">Help Center</a>
+          class="w-full aspect-square bg-white/5 backdrop-blur-md rounded-3xl mb-8 flex items-center justify-center p-8 shadow-2xl border border-white/10"
+        >
+          <div class="relative w-full h-full">
+            <div
+              class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-100 scale-100"
+              style="
+                background-image: url(&quot;https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_group-project_kow1.svg&quot;);
+              "
+            ></div>
+
+            <div
+              class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105"
+              style="
+                background-image: url(&quot;https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_social-post_qn03.svg&quot;);
+              "
+            ></div>
+
+            <div
+              class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105"
+              style="
+                background-image: url(&quot;https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_text-messages_978a.svg&quot;);
+              "
+            ></div>
+
+            <div
+              class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105"
+              style="
+                background-image: url(&quot;https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_online-community_3o0l.svg&quot;);
+              "
+            ></div>
+
+            <div
+              class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105"
+              style="
+                background-image: url(&quot;https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_my-notifications_fy5v.svg&quot;);
+              "
+            ></div>
+
+            <div
+              class="carousel-image absolute inset-0 bg-center bg-no-repeat bg-contain transition-all duration-1000 ease-in-out opacity-0 scale-105"
+              style="
+                background-image: url(&quot;https://ik.imagekit.io/xcrdwi6be/classLoop_icons/undraw_friends-online_gvwz.svg&quot;);
+              "
+            ></div>
+          </div>
         </div>
+        <h1
+          class="text-white text-5xl font-black leading-tight tracking-[-0.033em] mb-4"
+        >
+          Escape the WhatsApp Chaos
+        </h1>
+        <p class="text-white/80 text-lg font-normal leading-relaxed">
+          Say goodbye to lost notes and spam. Jump into your LoopSpace, drop
+          questions in DoubtBin, and actually enjoy campus life.
+        </p>
       </div>
     </div>
-  </main>
+    <!-- Right Section: Login Area -->
+    <div
+      class="w-full lg:w-1/2 min-h-screen lg:h-[98vh] flex flex-col bg-background-light dark:bg-background-dark p-5 sm:p-8 lg:p-20 overflow-y-auto"
+    >
+      <!-- Mobile Header Only -->
+      <div
+        class="lg:hidden flex items-center gap-3 sm:gap-4 text-primary mb-8 sm:mb-12"
+      >
+        <div class="size-7 sm:size-8">
+          <div
+            class="flex pr-5 items-center gap-2 md:gap-3 group transition-all duration-300 ease-in-out flex-shrink-0"
+          >
+            <img
+              src="https://ik.imagekit.io/xcrdwi6be/classLoop_icons/classloop%20logo.svg"
+              alt="ClassLoop Logo"
+              class="size-8 md:size-10 object-cover rounded-full overflow-hidden transition-transform group-hover:scale-105 duration-300"
+            />
+          </div>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight">
+          ClassLoop.in
+        </h2>
+      </div>
+      <div class="max-w-md w-full mx-auto my-auto">
+        <div class="flex flex-col gap-2 mb-8 sm:mb-10">
+          <h2
+            class="text-slate-900 dark:text-white text-3xl sm:text-4xl font-bold leading-tight tracking-tight"
+          >
+            Welcome Back ! Ready to Hustle?
+          </h2>
+          <p
+            class="text-slate-500 dark:text-[#b491ca] text-sm sm:text-base font-normal"
+          >
+            Grab your virtual seat. Sign in to connect, share, and conquer the
+            day.
+          </p>
+        </div>
+        <form
+          action="/user/login"
+          method="POST"
+          class="flex flex-col gap-5 sm:gap-6"
+        >
+          <!-- Email Field -->
+          <div class="flex flex-col gap-2">
+            <label class="text-slate-700 dark:text-white text-sm font-semibold"
+              >Username</label
+            >
+            <div class="relative">
+              <input
+                name="username"
+                class="w-full rounded-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-[#533267] bg-white dark:bg-[#291934] h-12 sm:h-14 placeholder:text-slate-400 dark:placeholder:text-[#b491ca] px-3 sm:px-4 text-sm sm:text-base font-normal transition-all"
+                placeholder="name1234"
+                type="username"
+                required
+              />
+            </div>
+          </div>
+          <!-- Password Field -->
+          <div class="flex flex-col gap-2">
+            <label class="text-slate-700 dark:text-white text-sm font-semibold"
+              >Password</label
+            >
+            <div
+              class="flex w-full items-stretch rounded-xl overflow-hidden border border-slate-200 dark:border-[#533267] focus-within:ring-2 focus-within:ring-primary/50 transition-all"
+            >
+              <input
+                id="passwordInput"
+                name="password"
+                class="flex-1 bg-white dark:bg-[#291934] text-slate-900 dark:text-white h-12 sm:h-14 px-3 sm:px-4 focus:outline-none placeholder:text-slate-400 dark:placeholder:text-[#b491ca] text-sm sm:text-base font-normal"
+                placeholder="••••••••"
+                type="password"
+                required
+              />
+              <button
+                id="toggleBtn"
+                class="bg-white dark:bg-[#291934] px-3 sm:px-4 flex items-center justify-center text-slate-400 dark:text-[#b491ca]"
+                type="button"
+              >
+                <span
+                  id="eyeIcon"
+                  class="material-symbols-outlined text-xl sm:text-2xl"
+                  >visibility</span
+                >
+              </button>
+            </div>
+          </div>
+          <!-- Remember Me & Forgot Password -->
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 py-2"
+          >
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input
+                class="rounded border-slate-300 dark:border-[#533267] text-primary focus:ring-primary bg-white dark:bg-[#291934]"
+                type="checkbox"
+              />
+              <span
+                class="text-xs sm:text-sm text-slate-600 dark:text-[#b491ca] group-hover:text-primary transition-colors"
+                >Remember for 30 days</span
+              >
+            </label>
+            <a
+              class="text-xs sm:text-sm font-semibold text-primary hover:underline"
+              href="/user/forgetPassword"
+              >Forgot password?</a
+            >
+          </div>
+
+          <p
+            class="text-center mt-2 text-slate-500 dark:text-[#b491ca] text-xs sm:text-sm"
+          >
+            Don't have an account?
+            <a
+              class="text-primary font-bold hover:underline ml-1"
+              href="/user/signup"
+              >Sign Up</a
+            >
+          </p>
+
+          <!-- Login Button -->
+          <button
+            class="login-btn-outline w-full rounded-xl h-12 sm:h-14 text-sm sm:text-base font-bold tracking-wide flex items-center justify-center mt-2 sm:mt-4"
+            type="submit"
+          >
+            Login
+          </button>
+          <!-- Divider -->
+          <div class="flex items-center gap-2 py-3 sm:py-4">
+            <div class="flex-1 h-px bg-slate-200 dark:bg-[#3a2348]"></div>
+            <span
+              class="text-xs font-bold text-slate-400 dark:text-[#533267] uppercase tracking-widest"
+              >or</span
+            >
+            <div class="flex-1 h-px bg-slate-200 dark:bg-[#3a2348]"></div>
+          </div>
+          <!-- Google Login -->
+          <button
+            class="w-full flex items-center justify-center gap-2 rounded-xl h-12 sm:h-14 bg-white dark:bg-transparent border border-slate-200 dark:border-[#533267] text-slate-700 dark:text-white text-sm sm:text-base font-semibold hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+            type="button"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" viewbox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              ></path>
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              ></path>
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                fill="#FBBC05"
+              ></path>
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              ></path>
+            </svg>
+            Sign in with Google
+          </button>
+        </form>
+      </div>
+      <!-- Footer Small Links -->
+      <div
+        class="mt-auto pt-6 sm:pt-10 flex flex-wrap justify-center gap-4 sm:gap-6 text-xs text-slate-400 dark:text-[#533267] font-medium uppercase tracking-wider"
+      >
+        <a class="hover:text-primary transition-colors" href="#"
+          >Privacy Policy</a
+        >
+        <a class="hover:text-primary transition-colors" href="#"
+          >Terms of Service</a
+        >
+        <a class="hover:text-primary transition-colors" href="#">Help Center</a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/loader.js"></script>
+</main>
 
 <script>
-  const passwordInput = document.getElementById('passwordInput');
-const toggleBtn = document.getElementById('toggleBtn');
-const eyeIcon = document.getElementById('eyeIcon');
+  const passwordInput = document.getElementById("passwordInput");
+  const toggleBtn = document.getElementById("toggleBtn");
+  const eyeIcon = document.getElementById("eyeIcon");
 
-toggleBtn.addEventListener('click', () => {
-  // 1. Check current type
-  const isPassword = passwordInput.getAttribute('type') === 'password';
-  
-  // 2. Toggle the input type
-  passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-  
-  // 3. Toggle the icon text
-  eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
-});
+  toggleBtn.addEventListener("click", () => {
+    // 1. Check current type
+    const isPassword = passwordInput.getAttribute("type") === "password";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const images = document.querySelectorAll('.carousel-image');
+    // 2. Toggle the input type
+    passwordInput.setAttribute("type", isPassword ? "text" : "password");
+
+    // 3. Toggle the icon text
+    eyeIcon.textContent = isPassword ? "visibility_off" : "visibility";
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll(".carousel-image");
     let currentIndex = 0;
 
     setInterval(() => {
       // 1. Fade OUT the current image and scale it up slightly
-      images[currentIndex].classList.remove('opacity-100', 'scale-100');
-      images[currentIndex].classList.add('opacity-0', 'scale-105');
+      images[currentIndex].classList.remove("opacity-100", "scale-100");
+      images[currentIndex].classList.add("opacity-0", "scale-105");
 
       // 2. Calculate the index of the next image
       currentIndex = (currentIndex + 1) % images.length;
 
       // 3. Fade IN the new image and settle it to normal scale
-      images[currentIndex].classList.remove('opacity-0', 'scale-105');
-      images[currentIndex].classList.add('opacity-100', 'scale-100');
-      
+      images[currentIndex].classList.remove("opacity-0", "scale-105");
+      images[currentIndex].classList.add("opacity-100", "scale-100");
     }, 3000); // 2000ms = 2 seconds
   });
 </script>

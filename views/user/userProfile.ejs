@@ -1,3 +1,4 @@
+<%- include("../includes/loader.ejs") -%>
 <% layout("/layout/boilerplate.ejs") -%>
 
 <!DOCTYPE html>
@@ -298,7 +299,7 @@
         </aside>
       </div>
     </main>
-
+    <script src="/js/loader.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();

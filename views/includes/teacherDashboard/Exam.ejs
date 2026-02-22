@@ -1,28 +1,38 @@
 <main class="flex-1 flex flex-col overflow-hidden">
-    <header class="bg-white dark:bg-[#1a192b] border-b border-gray-200 dark:border-gray-800 px-8 py-6">
-        <div class="flex flex-wrap justify-between items-center gap-4">
-            <div class="flex flex-col gap-1">
-                <div class="flex items-center gap-3">
-                    <h2 class="text-[#121117] dark:text-white text-3xl font-black tracking-tight">Exam Marking Center</h2>
-                    <div class="flex h-7 items-center justify-center rounded-full bg-primary/10 px-3 border border-primary/20">
-                        <p class="text-primary text-xs font-bold"><%= currClass.className %>-<%= currClass.section %></p>
+    <header class="bg-white dark:bg-[#1a192b] border-b border-gray-200 dark:border-gray-800 px-3 md:px-8 py-3 md:py-6">
+        <div class="flex flex-wrap justify-between items-center gap-2 md:gap-4">
+            <div class="flex flex-col gap-0.5 md:gap-1 min-w-0 flex-1">
+                <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+                    <h2 class="text-[#121117] dark:text-white text-xl md:text-3xl font-black tracking-tight">Exam Marking Center</h2>
+                    <div class="flex h-6 md:h-7 items-center justify-center rounded-full bg-primary/10 px-2 md:px-3 border border-primary/20 shrink-0">
+                        <p class="text-primary text-[10px] md:text-xs font-bold whitespace-nowrap"><%= currClass.className %>-<%= currClass.section %></p>
                     </div>
                 </div>
-                <p class="text-[#666487] dark:text-gray-400 text-sm">Manage and record student performance for current semester</p>
+                <p class="text-[#666487] dark:text-gray-400 text-xs md:text-sm">Manage and record student performance for current semester</p>
             </div>
-            <a href="/teacher/addExamPage" class="flex items-center gap-2 rounded-xl h-11 px-5 bg-primary text-white text-sm font-bold hover:shadow-lg transition-all">
+            <a href="/teacher/addExamPage" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl h-10 md:h-11 px-4 md:px-5 bg-primary text-white text-xs md:text-sm font-bold hover:shadow-lg transition-all active:scale-95 shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
                 <span>New Exam Record</span>
             </a>
         </div>
     </header>
 
+    <!-- Mobile: Show Exams Button -->
+    <div class="lg:hidden px-3 py-2 bg-white dark:bg-[#1a192b] border-b border-gray-200 dark:border-gray-800">
+        <button onclick="document.getElementById('mobile-exams-drawer').classList.toggle('translate-x-full')"
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+            <span class="material-symbols-outlined text-xl">list</span>
+            View All Exams (<%= exams ? exams.length : 0 %>)
+        </button>
+    </div>
+
     <div class="flex flex-1 overflow-hidden">
-        <div class="w-80 bg-white dark:bg-[#1a192b] border-r border-gray-200 dark:border-gray-800 flex flex-col">
+        <!-- Desktop Sidebar -->
+        <div class="hidden lg:flex w-80 bg-white dark:bg-[#1a192b] border-r border-gray-200 dark:border-gray-800 flex-col">
             <div class="p-4">
                 <label class="flex items-center w-full bg-[#f1f0f4] dark:bg-gray-800 rounded-xl px-3 h-10 border border-transparent focus-within:border-primary/30 transition-all">
                     <span class="material-symbols-outlined text-[#666487] text-xl">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-[#666487]" placeholder="Search past exams..." />
+                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-[#666487] outline-none" placeholder="Search past exams..." />
                 </label>
             </div>
             <div class="flex-1 overflow-y-auto px-4 pb-4 space-y-3 custom-scrollbar">
@@ -49,23 +59,115 @@
             </div>
         </div>
 
-        <div class="flex-1 flex flex-col bg-background-light dark:bg-background-dark p-6 overflow-hidden relative">
-            <% if (selectedExam) { %>
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">edit_note</span>
-                        <h3 class="text-lg font-bold"><%= selectedExam.examName %> - Marks Entry</h3>
+        <!-- Mobile Exams Drawer -->
+        <div id="mobile-exams-drawer"
+            class="lg:hidden fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-[#1a192b] border-l border-gray-200 dark:border-gray-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+            
+            <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+                <h3 class="text-lg font-bold">All Exams</h3>
+                <button onclick="document.getElementById('mobile-exams-drawer').classList.add('translate-x-full')"
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+
+            <div class="p-3 border-b border-gray-200 dark:border-gray-800">
+                <label class="flex items-center w-full bg-[#f1f0f4] dark:bg-gray-800 rounded-xl px-3 h-10 border border-transparent focus-within:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[#666487] text-lg">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-[#666487] outline-none" placeholder="Search past exams..." />
+                </label>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-3 space-y-3">
+                <% if(exams && exams.length > 0) { %>
+                    <% exams.forEach(exam => { %>
+                        <a href="?tab=Exam&examId=<%= exam._id %>" 
+                           onclick="document.getElementById('mobile-exams-drawer').classList.add('translate-x-full')"
+                           class="block p-4 rounded-xl border-2 transition-all active:scale-95 <%= selectedExamId == exam._id.toString() ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100' %>">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase <%= exam.results.length === currClass.students.length ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' %>">
+                                    <%= exam.results.length === currClass.students.length ? 'Completed' : 'Pending' %>
+                                </span>
+                                <span class="text-[10px] text-[#666487]"><%= new Date(exam.examDate).toLocaleDateString('en-IN', { month: 'short', day: '2-digit', year: 'numeric' }) %></span>
+                            </div>
+                            <p class="text-[#121117] dark:text-white text-sm font-bold mb-1 line-clamp-2"><%= exam.examName %> (<%= exam.subject %>)</p>
+                            <div class="flex items-center gap-2 text-[#666487] text-[11px]">
+                                <span class="material-symbols-outlined text-sm">assignment</span>
+                                <span><%= exam.totalMarks %> Marks Total</span>
+                            </div>
+                        </a>
+                    <% }) %>
+                <% } else { %>
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <span class="material-symbols-outlined text-5xl text-gray-300 dark:text-gray-700 mb-3">quiz</span>
+                        <p class="text-sm text-gray-500 font-medium">No exams yet</p>
                     </div>
-                    <div class="flex items-center gap-4 text-xs">
-                        <div class="flex items-center gap-1 text-primary font-semibold">
-                            <span class="material-symbols-outlined text-sm">group</span>
-                            <span><%= currClass.students.length %> Students</span>
-                        </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Backdrop for Mobile Drawer -->
+        <div onclick="document.getElementById('mobile-exams-drawer').classList.add('translate-x-full')"
+            class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden"
+            id="mobile-drawer-backdrop"></div>
+
+        <div class="flex-1 flex flex-col bg-background-light dark:bg-background-dark p-3 md:p-6 overflow-hidden relative">
+            <% if (selectedExam) { %>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="material-symbols-outlined text-primary text-xl shrink-0">edit_note</span>
+                        <h3 class="text-base md:text-lg font-bold truncate"><%= selectedExam.examName %> - Marks Entry</h3>
+                    </div>
+                    <div class="flex items-center gap-1 md:gap-2 text-xs text-primary font-semibold shrink-0">
+                        <span class="material-symbols-outlined text-sm">group</span>
+                        <span><%= currClass.students.length %> Students</span>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-[#1a192b] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col flex-1">
-                    <div class="overflow-x-auto overflow-y-auto custom-scrollbar">
+                <!-- Mobile Card View -->
+                <div class="lg:hidden flex-1 overflow-y-auto space-y-3">
+                    <form id="marks-form-mobile" action="/teacher/exams/save" method="POST" class="space-y-3">
+                        <input type="hidden" name="examId" value="<%= selectedExam._id %>">
+                        <% currClass.students.forEach((student, index) => { 
+                            const result = selectedExam.results.find(r => r.student._id.toString() === student._id.toString());
+                        %>
+                        <div class="bg-white dark:bg-[#1a192b] rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-400 shrink-0">
+                                    <%= student.rollNumber || index + 1 %>
+                                </div>
+                                <img src="<%= student.profilePic.url %>" class="size-10 rounded-full border-2 border-white shadow-sm shrink-0" />
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-bold text-[#121117] dark:text-white truncate"><%= student.name %></p>
+                                    <input type="hidden" name="results[<%= index %>][student]" value="<%= student._id %>">
+                                </div>
+                                <span class="material-symbols-outlined <%= result ? 'text-green-500' : 'text-amber-500' %> shrink-0">
+                                    <%= result ? 'check_circle' : 'pending' %>
+                                </span>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Marks (out of <%= selectedExam.totalMarks %>)</label>
+                                    <input name="results[<%= index %>][marksObtained]" type="number" max="<%= selectedExam.totalMarks %>" 
+                                           class="w-full h-10 bg-[#f1f0f4] dark:bg-gray-800 border-none rounded-lg text-sm font-bold text-center focus:ring-2 focus:ring-primary/50"
+                                           value="<%= result ? result.marksObtained : '' %>" required />
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Remarks (Optional)</label>
+                                    <input name="results[<%= index %>][remarks]" type="text" placeholder="Add a comment..."
+                                           class="w-full h-10 bg-[#f1f0f4] dark:bg-gray-800 border-none rounded-lg text-sm italic text-[#666487] dark:text-gray-400 focus:ring-2 focus:ring-primary/50 px-3"
+                                           value="<%= result ? result.remarks : '' %>" />
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </form>
+                </div>
+
+                <!-- Desktop Table View -->
+                <div class="hidden lg:block bg-white dark:bg-[#1a192b] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden flex-1">
+                    <div class="overflow-x-auto overflow-y-auto custom-scrollbar h-full">
                         <form id="marks-form" action="/teacher/exams/save" method="POST">
                             <input type="hidden" name="examId" value="<%= selectedExam._id %>">
                             <table class="w-full text-left border-collapse">
@@ -114,18 +216,43 @@
                     </div>
                 </div>
 
-                <div class="absolute bottom-10 right-10">
+                <!-- Mobile Save Button -->
+                <div class="lg:hidden fixed bottom-4 left-4 right-4 z-30 pb-10 mb-10">
+                    <button form="marks-form-mobile" type="submit" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary text-white rounded-xl shadow-2xl hover:scale-105 transition-transform active:scale-95 group">
+                        <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">save</span>
+                        <span class="font-bold tracking-wide">Save All Marks</span>
+                    </button>
+                </div>
+
+                <!-- Desktop Save Button -->
+                <div class="hidden lg:block absolute bottom-10 right-10">
                     <button form="marks-form" type="submit" class="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-full shadow-2xl hover:scale-105 transition-transform active:scale-95 group">
                         <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">save</span>
                         <span class="font-bold tracking-wide">Save All Marks</span>
                     </button>
                 </div>
             <% } else { %>
-                <div class="flex-1 flex flex-col items-center justify-center text-slate-400">
-                    <span class="material-symbols-outlined text-6xl opacity-20 mb-4">quiz</span>
-                    <p>Select an exam from the sidebar to start marking</p>
+                <div class="flex-1 flex flex-col items-center justify-center text-slate-400 p-4">
+                    <span class="material-symbols-outlined text-5xl md:text-6xl opacity-20 mb-4">quiz</span>
+                    <p class="text-sm md:text-base text-center">Select an exam from the sidebar to start marking</p>
                 </div>
             <% } %>
         </div>
     </div>
+
+    <script>
+        // Show/hide backdrop when drawer opens/closes
+        const drawer = document.getElementById('mobile-exams-drawer');
+        const backdrop = document.getElementById('mobile-drawer-backdrop');
+        
+        const observer = new MutationObserver(() => {
+            if (drawer.classList.contains('translate-x-full')) {
+                backdrop.classList.add('hidden');
+            } else {
+                backdrop.classList.remove('hidden');
+            }
+        });
+        
+        observer.observe(drawer, { attributes: true, attributeFilter: ['class'] });
+    </script>
 </main>

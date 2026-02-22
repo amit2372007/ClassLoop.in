@@ -1,133 +1,195 @@
 <% layout("/layout/boilerplate2.ejs") -%>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <header
-            class="h-auto min-h-[56px] md:h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 py-2 md:py-0 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 md:gap-0 shrink-0">
-            <div class="flex items-center gap-2 md:gap-4 min-w-0">
-                <h2 class="text-base md:text-lg font-bold truncate">Create New Form</h2>
-                <div class="hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-1 bg-primary/10 rounded-full border border-primary/20 shrink-0">
-                    <span class="w-2 h-2 rounded-full bg-primary"></span>
-                    <span class="text-[10px] md:text-xs font-bold text-primary uppercase tracking-wide whitespace-nowrap">Class 10-A</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-2 md:gap-4 overflow-x-auto">
-                <a href="/teacher/previewForms"
-                    class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs md:text-sm font-bold transition-all border border-white/10 whitespace-nowrap shrink-0">
-                    <span class="material-symbols-outlined text-base md:text-[20px]">visibility</span>
-                    <span class="hidden sm:inline">Preview All Forms</span>
-                    <span class="sm:hidden">Preview</span>
-                </a>
-                <button id="publishBtn"
-                    class="px-3 md:px-5 py-1.5 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-1.5 md:gap-2 shadow-lg shadow-primary/20 whitespace-nowrap shrink-0 active:scale-95">
-                    <span class="material-symbols-outlined text-sm">rocket_launch</span>
-                    <span class="hidden sm:inline">Publish to LoopSpace</span>
-                    <span class="sm:hidden">Publish</span>
-                </button>
-                <div class="h-9 w-9 md:h-10 md:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 shrink-0">
-                    <img alt="Profile" src="<%= currUser.profilePic.url %>" />
-                </div>
-            </div>
-        </header>
+<main class="flex-1 flex flex-col overflow-hidden">
+  <header
+    class="h-auto min-h-[56px] md:h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 py-2 md:py-0 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 md:gap-0 shrink-0"
+  >
+    <div class="flex items-center gap-2 md:gap-4 min-w-0">
+      <h2 class="text-base md:text-lg font-bold truncate">Create New Form</h2>
+      <div
+        class="hidden sm:flex items-center gap-2 px-2.5 md:px-3 py-1 bg-primary/10 rounded-full border border-primary/20 shrink-0"
+      >
+        <span class="w-2 h-2 rounded-full bg-primary"></span>
+        <span
+          class="text-[10px] md:text-xs font-bold text-primary uppercase tracking-wide whitespace-nowrap"
+          >Class 10-A</span
+        >
+      </div>
+    </div>
+    <div class="flex items-center gap-2 md:gap-4 overflow-x-auto">
+      <a
+        href="/teacher/previewForms"
+        class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs md:text-sm font-bold transition-all border border-white/10 whitespace-nowrap shrink-0"
+      >
+        <span class="material-symbols-outlined text-base md:text-[20px]"
+          >visibility</span
+        >
+        <span class="hidden sm:inline">Preview All Forms</span>
+        <span class="sm:hidden">Preview</span>
+      </a>
+      <button
+        id="publishBtn"
+        class="px-3 md:px-5 py-1.5 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-1.5 md:gap-2 shadow-lg shadow-primary/20 whitespace-nowrap shrink-0 active:scale-95"
+      >
+        <span class="material-symbols-outlined text-sm">rocket_launch</span>
+        <span class="hidden sm:inline">Publish to LoopSpace</span>
+        <span class="sm:hidden">Publish</span>
+      </button>
+      <div
+        class="h-9 w-9 md:h-10 md:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 shrink-0"
+      >
+        <img alt="Profile" src="<%= currUser.profilePic.url %>" />
+      </div>
+    </div>
+  </header>
 
-        <!-- Mobile Class Badge -->
-        <div class="sm:hidden px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 flex justify-center">
-            <div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-                <span class="w-2 h-2 rounded-full bg-primary"></span>
-                <span class="text-xs font-bold text-primary uppercase tracking-wide">Class 10-A</span>
+  <!-- Mobile Class Badge -->
+  <div
+    class="sm:hidden px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 flex justify-center"
+  >
+    <div
+      class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20"
+    >
+      <span class="w-2 h-2 rounded-full bg-primary"></span>
+      <span class="text-xs font-bold text-primary uppercase tracking-wide"
+        >Class 10-A</span
+      >
+    </div>
+  </div>
+
+  <div
+    class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-900/50 p-3 md:p-6"
+  >
+    <form
+      id="mainForm"
+      action="/teacher/createForm"
+      method="POST"
+      class="max-w-5xl mx-auto flex flex-col lg:flex-row gap-4 md:gap-8"
+    >
+      <div class="flex-1 space-y-4 md:space-y-6">
+        <div
+          class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-6 shadow-sm"
+        >
+          <div class="space-y-3 md:space-y-4">
+            <h2
+              class="text-xl md:text-2xl font-black tracking-tight text-black flex items-center gap-2 md:gap-3"
+            >
+              Create a New Form / Quiz
+            </h2>
+            <div>
+              <label
+                class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
+                >Form Title</label
+              >
+              <input
+                name="title"
+                required
+                class="w-full px-3 md:px-4 py-2 md:py-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-xl focus:ring-primary focus:border-primary text-base md:text-lg font-semibold"
+                placeholder="Enter form title here..."
+                type="text"
+              />
             </div>
+            <div>
+              <label
+                class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
+                >Description</label
+              >
+              <textarea
+                name="description"
+                class="w-full px-3 md:px-4 py-2 md:py-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-xl focus:ring-primary focus:border-primary text-xs md:text-sm resize-none"
+                placeholder="Explain the purpose of this form..."
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-900/50 p-3 md:p-6">
-            <form id="mainForm" action="/teacher/createForm" method="POST"
-                class="max-w-5xl mx-auto flex flex-col lg:flex-row gap-4 md:gap-8">
+        <div id="questionsContainer" class="space-y-3 md:space-y-4"></div>
 
-                <div class="flex-1 space-y-4 md:space-y-6">
-                    <div
-                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-6 shadow-sm">
-                        <div class="space-y-3 md:space-y-4">
-                            <h2 class="text-xl md:text-2xl font-black tracking-tight text-black flex items-center gap-2 md:gap-3">
-                                Create a New Form / Quiz
-                            </h2>
-                            <div>
-                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Form
-                                    Title</label>
-                                <input name="title" required
-                                    class="w-full px-3 md:px-4 py-2 md:py-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-xl focus:ring-primary focus:border-primary text-base md:text-lg font-semibold"
-                                    placeholder="Enter form title here..." type="text" />
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Description</label>
-                                <textarea name="description"
-                                    class="w-full px-3 md:px-4 py-2 md:py-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 rounded-xl focus:ring-primary focus:border-primary text-xs md:text-sm resize-none"
-                                    placeholder="Explain the purpose of this form..." rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
+        <button
+          type="button"
+          id="addQuestionBtn"
+          class="w-full py-4 md:py-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1.5 md:gap-2 group active:scale-95"
+        >
+          <span
+            class="material-symbols-outlined text-2xl md:text-3xl group-hover:scale-110 transition-transform"
+            >add_circle</span
+          >
+          <span class="text-xs md:text-sm font-bold uppercase tracking-wider"
+            >Add New Question</span
+          >
+        </button>
+      </div>
 
-                    <div id="questionsContainer" class="space-y-3 md:space-y-4">
-                    </div>
-
-                    <button type="button" id="addQuestionBtn"
-                        class="w-full py-4 md:py-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1.5 md:gap-2 group active:scale-95">
-                        <span
-                            class="material-symbols-outlined text-2xl md:text-3xl group-hover:scale-110 transition-transform">add_circle</span>
-                        <span class="text-xs md:text-sm font-bold uppercase tracking-wider">Add New Question</span>
-                    </button>
-                </div>
-
-                <div class="w-full lg:w-80 space-y-4 md:space-y-6">
-                    <div
-                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm">
-                        <div class="flex items-center gap-2 mb-3 md:mb-4">
-                            <span class="material-symbols-outlined text-primary text-lg md:text-xl">event_available</span>
-                            <h3 class="text-xs md:text-sm font-bold">Form Settings</h3>
-                        </div>
-                        <div class="space-y-3 md:space-y-4">
-                            <div>
-                                <label
-                                    class="block text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Due
-                                    Date</label>
-                                <input name="expiresAt"
-                                    class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-800 rounded-lg text-xs md:text-sm focus:ring-primary focus:border-primary"
-                                    type="date" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm">
-                        <div class="flex items-center gap-2 mb-3 md:mb-4">
-                            <span class="material-symbols-outlined text-primary text-lg md:text-xl">security</span>
-                            <h3 class="text-xs md:text-sm font-bold">Privacy</h3>
-                        </div>
-                        <div class="space-y-3 md:space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Anonymous
-                                    Responses</span>
-                                <input name="isAnonymous" class="rounded text-primary focus:ring-primary"
-                                    type="checkbox" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+      <div class="w-full lg:w-80 space-y-4 md:space-y-6">
+        <div
+          class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm"
+        >
+          <div class="flex items-center gap-2 mb-3 md:mb-4">
+            <span
+              class="material-symbols-outlined text-primary text-lg md:text-xl"
+              >event_available</span
+            >
+            <h3 class="text-xs md:text-sm font-bold">Form Settings</h3>
+          </div>
+          <div class="space-y-3 md:space-y-4">
+            <div>
+              <label
+                class="block text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5"
+                >Due Date</label
+              >
+              <input
+                name="expiresAt"
+                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-800 rounded-lg text-xs md:text-sm focus:ring-primary focus:border-primary"
+                type="date"
+              />
+            </div>
+          </div>
         </div>
-    </main>
 
-    <script>
-        const questionsContainer = document.getElementById('questionsContainer');
-        const addQuestionBtn = document.getElementById('addQuestionBtn');
-        let questionCount = 0;
+        <div
+          class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm"
+        >
+          <div class="flex items-center gap-2 mb-3 md:mb-4">
+            <span
+              class="material-symbols-outlined text-primary text-lg md:text-xl"
+              >security</span
+            >
+            <h3 class="text-xs md:text-sm font-bold">Privacy</h3>
+          </div>
+          <div class="space-y-3 md:space-y-4">
+            <div class="flex items-center justify-between">
+              <span
+                class="text-xs font-medium text-slate-600 dark:text-slate-400"
+                >Anonymous Responses</span
+              >
+              <input
+                name="isAnonymous"
+                class="rounded text-primary focus:ring-primary"
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
 
-        // Function to Create a New Question Card
-        function createQuestionCard() {
-            const id = questionCount++;
-            const card = document.createElement('div');
-            card.className = "bg-white dark:bg-background-dark border-l-4 border-l-primary border-y border-r border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-6 shadow-sm relative group animate-in slide-in-from-bottom-2 duration-300";
-            card.id = `question-${id}`;
+<script>
+  const questionsContainer = document.getElementById("questionsContainer");
+  const addQuestionBtn = document.getElementById("addQuestionBtn");
+  let questionCount = 0;
 
-            card.innerHTML = `
+  // Function to Create a New Question Card
+  function createQuestionCard() {
+    const id = questionCount++;
+    const card = document.createElement("div");
+    card.className =
+      "bg-white dark:bg-background-dark border-l-4 border-l-primary border-y border-r border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-6 shadow-sm relative group animate-in slide-in-from-bottom-2 duration-300";
+    card.id = `question-${id}`;
+
+    card.innerHTML = `
             <div class="flex flex-col md:flex-row gap-3 md:gap-4 mb-3 md:mb-4">
                 <div class="flex-1">
                     <input name="questions[${id}][questionText]" required
@@ -168,34 +230,37 @@
                 </button>
             </div>
         `;
-            questionsContainer.appendChild(card);
-        }
+    questionsContainer.appendChild(card);
+  }
 
-        // Handle Change in Question Type
-        function handleTypeChange(qId, type) {
-            const optionsContainer = document.getElementById(`options-container-${qId}`);
-            const textPlaceholder = document.getElementById(`text-placeholder-${qId}`);
+  // Handle Change in Question Type
+  function handleTypeChange(qId, type) {
+    const optionsContainer = document.getElementById(
+      `options-container-${qId}`,
+    );
+    const textPlaceholder = document.getElementById(`text-placeholder-${qId}`);
 
-            if (type === 'multiple_choice' || type === 'checkbox') {
-                optionsContainer.classList.remove('hidden');
-                textPlaceholder.classList.add('hidden');
-                // Add a default option if empty
-                const existingOptions = optionsContainer.querySelectorAll('.option-row');
-                if (existingOptions.length === 0) addOption(qId);
-            } else {
-                optionsContainer.classList.add('hidden');
-                textPlaceholder.classList.remove('hidden');
-            }
-        }
+    if (type === "multiple_choice" || type === "checkbox") {
+      optionsContainer.classList.remove("hidden");
+      textPlaceholder.classList.add("hidden");
+      // Add a default option if empty
+      const existingOptions = optionsContainer.querySelectorAll(".option-row");
+      if (existingOptions.length === 0) addOption(qId);
+    } else {
+      optionsContainer.classList.add("hidden");
+      textPlaceholder.classList.remove("hidden");
+    }
+  }
 
-        // Add Option to Choice Questions
-        function addOption(qId) {
-            const container = document.getElementById(`options-container-${qId}`);
-            const optionDiv = document.createElement('div');
-            const optionIndex = container.querySelectorAll('.option-row').length;
-            optionDiv.className = "flex items-center gap-2 md:gap-3 option-row animate-in fade-in slide-in-from-left-2";
+  // Add Option to Choice Questions
+  function addOption(qId) {
+    const container = document.getElementById(`options-container-${qId}`);
+    const optionDiv = document.createElement("div");
+    const optionIndex = container.querySelectorAll(".option-row").length;
+    optionDiv.className =
+      "flex items-center gap-2 md:gap-3 option-row animate-in fade-in slide-in-from-left-2";
 
-            optionDiv.innerHTML = `
+    optionDiv.innerHTML = `
             <span class="material-symbols-outlined text-slate-300 text-lg md:text-xl">radio_button_unchecked</span>
             <input name="questions[${qId}][options][]" required
                 class="flex-1 text-xs md:text-sm bg-transparent border-b border-transparent focus:border-primary focus:ring-0 p-1"
@@ -204,26 +269,25 @@
                 <span class="material-symbols-outlined text-sm">close</span>
             </button>
         `;
-            container.insertBefore(optionDiv, container.lastElementChild);
-        }
+    container.insertBefore(optionDiv, container.lastElementChild);
+  }
 
-        function removeQuestion(id) {
-            document.getElementById(`question-${id}`).remove();
-        }
+  function removeQuestion(id) {
+    document.getElementById(`question-${id}`).remove();
+  }
 
-        // Initialize with one question
-        addQuestionBtn.addEventListener('click', createQuestionCard);
-        window.onload = createQuestionCard;
+  // Initialize with one question
+  addQuestionBtn.addEventListener("click", createQuestionCard);
+  window.onload = createQuestionCard;
 
+  document.getElementById("publishBtn").addEventListener("click", () => {
+    const form = document.getElementById("mainForm");
 
-        document.getElementById('publishBtn').addEventListener('click', () => {
-            const form = document.getElementById('mainForm');
-
-            // Optional: Check if the form is valid before submitting
-            if (form.checkValidity()) {
-                form.submit();
-            } else {
-                form.reportValidity(); // Shows browser validation errors
-            }
-        });
-    </script>
+    // Optional: Check if the form is valid before submitting
+    if (form.checkValidity()) {
+      form.submit();
+    } else {
+      form.reportValidity(); // Shows browser validation errors
+    }
+  });
+</script>
