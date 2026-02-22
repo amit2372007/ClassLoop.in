@@ -27,11 +27,14 @@ module.exports.renderSchoolDashboard = async (req, res) => {
           select: "name profilePic", // Optional: only fetch specific fields like name and pic
         },
       });
+    const Principle = await Users.findById(req.user._id);
+    console.log(schoolData);
     const activeTab = req.query.tab || "Dashboard";
     res.render("./school/Dashboard.ejs", {
       School: schoolData,
       activeTab, // Pass as a string
       currUser: req.user,
+      Principle: Principle,
     });
   } catch (err) {
     console.error(err);

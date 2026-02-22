@@ -42,7 +42,7 @@ module.exports.isTeacher = (req, res, next) => {
   // 1. Check if user is logged in (using your existing logic)
   if (!req.isAuthenticated()) {
     req.flash("error", "You must be logged in first!");
-    return res.redirect("/login");
+    return res.redirect("/user/login");
   }
 
   // 2. Check for teacher designations
@@ -64,7 +64,7 @@ module.exports.isPrinciple = (req, res, next) => {
   // 1. Check if user is logged in (using your existing logic)
   if (!req.isAuthenticated()) {
     req.flash("error", "You must be logged in first!");
-    return res.redirect("/login");
+    return res.redirect("/user/login");
   }
 
   // 2. Check for teacher designations

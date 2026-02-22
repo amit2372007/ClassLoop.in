@@ -1,64 +1,64 @@
 <% layout("/layout/boilerplate2.ejs") -%>
 
-<main class="flex-1 overflow-y-auto h-screen custom-scrollbar">
-    <header class="bg-white border-b border-slate-200 px-8 py-6 sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div>
-                <div class="flex items-center gap-3 mb-1">
+<main class="flex-1 overflow-y-auto h-screen custom-scrollbar max-md:h-auto max-md:pb-24">
+    <header class="bg-white border-b border-slate-200 px-8 py-6 sticky top-0 z-10 max-md:px-4 max-md:py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div class="min-w-0">
+                <div class="flex items-center gap-3 mb-1 flex-wrap">
                     <a href="/teacher/previewForms"
-                        class="flex items-center gap-1 text-slate-500 hover:text-[var(--primary)] text-sm font-semibold transition-colors">
+                        class="flex items-center gap-1 text-slate-500 hover:text-[var(--primary)] text-sm font-semibold transition-colors whitespace-nowrap">
                         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-                        Back to Forms
+                        <span class="max-md:hidden">Back to Forms</span>
                     </a>
                     <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold tracking-wider uppercase">
                         Class <%= form.class.className %>-<%= form.class.section %>
                     </span>
                 </div>
-                <h1 class="text-2xl font-black text-slate-900">Form Analytics: <%= form.title %></h1>
+                <h1 class="text-2xl font-black text-slate-900 max-md:text-lg truncate">Form Analytics: <%= form.title %></h1>
             </div>
-            <div class="flex items-center gap-3">
-                <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2">
+            <div class="flex items-center gap-3 shrink-0">
+                <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2 max-md:px-3 max-md:py-1.5">
                     <span class="material-symbols-outlined text-[20px]">download</span>
-                    Export CSV
+                    <span class="max-md:hidden">Export CSV</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-8 py-8">
+    <div class="max-w-7xl mx-auto px-8 py-8 max-md:px-4 max-md:py-5">
         <% 
             const totalCount = responses.length + pendingStudents.length;
             const completionRate = totalCount > 0 ? ((responses.length / totalCount) * 100).toFixed(1) : 0;
         %>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5">
-                <div class="size-14 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
-                    <span class="material-symbols-outlined text-[32px]">groups</span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-md:gap-3 max-md:mb-5">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 max-md:p-4 max-md:gap-4">
+                <div class="size-14 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 max-md:size-11 shrink-0">
+                    <span class="material-symbols-outlined text-[32px] max-md:text-[26px]">groups</span>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Total Students</p>
-                    <h3 class="text-2xl font-black text-slate-900"><%= totalCount %></h3>
+                    <h3 class="text-2xl font-black text-slate-900 max-md:text-xl"><%= totalCount %></h3>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 border-l-4 border-l-[var(--primary)]">
-                <div class="size-14 bg-indigo-50 rounded-xl flex items-center justify-center text-[var(--primary)]">
-                    <span class="material-symbols-outlined text-[32px]">task_alt</span>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 border-l-4 border-l-[var(--primary)] max-md:p-4 max-md:gap-4">
+                <div class="size-14 bg-indigo-50 rounded-xl flex items-center justify-center text-[var(--primary)] max-md:size-11 shrink-0">
+                    <span class="material-symbols-outlined text-[32px] max-md:text-[26px]">task_alt</span>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Responses Received</p>
-                    <h3 class="text-2xl font-black text-slate-900"><%= responses.length %></h3>
+                    <h3 class="text-2xl font-black text-slate-900 max-md:text-xl"><%= responses.length %></h3>
                     <p class="text-[11px] text-green-600 font-bold mt-1 italic"><%= completionRate %>% Completion</p>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 border-l-4 border-l-amber-400">
-                <div class="size-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500">
-                    <span class="material-symbols-outlined text-[32px]">pending_actions</span>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5 border-l-4 border-l-amber-400 max-md:p-4 max-md:gap-4">
+                <div class="size-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 max-md:size-11 shrink-0">
+                    <span class="material-symbols-outlined text-[32px] max-md:text-[26px]">pending_actions</span>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pending Submissions</p>
-                    <h3 class="text-2xl font-black text-slate-900"><%= pendingStudents.length.toString().padStart(2, '0') %></h3>
+                    <h3 class="text-2xl font-black text-slate-900 max-md:text-xl"><%= pendingStudents.length.toString().padStart(2, '0') %></h3>
                     <p class="text-[11px] text-amber-600 font-bold mt-1">
                         <%= form.expiresAt ? 'Due ' + form.expiresAt.toLocaleDateString() : 'No Deadline' %>
                     </p>
@@ -66,42 +66,43 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-10 gap-8">
+        <div class="grid grid-cols-10 gap-8 max-md:gap-5">
+            <!-- Submissions Table -->
             <div class="col-span-10 lg:col-span-7 space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
-                        <h2 class="text-lg font-black text-slate-900">Submissions Table</h2>
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between max-md:p-4">
+                        <h2 class="text-lg font-black text-slate-900 max-md:text-base">Submissions Table</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+                        <table class="w-full text-left min-w-[520px]">
                             <thead class="bg-slate-50 border-b border-slate-100">
                                 <tr>
-                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest">Student Name</th>
-                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest">Roll No.</th>
-                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest">Submission Date</th>
-                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right">Action</th>
+                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest max-md:px-4 max-md:py-3">Student Name</th>
+                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest max-md:px-4 max-md:py-3">Roll No.</th>
+                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest max-md:px-4 max-md:py-3 max-md:hidden">Submission Date</th>
+                                    <th class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-widest text-right max-md:px-4 max-md:py-3">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 <% responses.forEach(res => { %>
                                 <tr class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4 max-md:px-4 max-md:py-3">
                                         <div class="flex items-center gap-3">
-                                            <img class="size-8 rounded-full bg-slate-100 object-cover"
+                                            <img class="size-8 rounded-full bg-slate-100 object-cover shrink-0"
                                                 src="<%= res.student.profilePic.url %>" />
-                                            <span class="text-sm font-semibold text-slate-700"><%= res.student.name %></span>
+                                            <span class="text-sm font-semibold text-slate-700 max-md:text-xs"><%= res.student.name %></span>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-slate-500"><%= res.student.rollNumber || 'N/A' %></td>
-                                    <td class="px-6 py-4 text-sm text-slate-500">
+                                    <td class="px-6 py-4 text-sm text-slate-500 max-md:px-4 max-md:py-3 max-md:text-xs"><%= res.student.rollNumber || 'N/A' %></td>
+                                    <td class="px-6 py-4 text-sm text-slate-500 max-md:hidden">
                                         <%= res.createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %> • 
                                         <%= res.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
                                     </td>
-                                    <td class="px-6 py-4 text-right">
+                                    <td class="px-6 py-4 text-right max-md:px-4 max-md:py-3">
                                         <button onclick="openSubmission('<%= res._id %>')" 
-        class="px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-[var(--primary)] hover:bg-indigo-50 rounded-lg transition-colors border border-indigo-100">
-    View Answers
-</button>
+                                            class="px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-[var(--primary)] hover:bg-indigo-50 rounded-lg transition-colors border border-indigo-100">
+                                            View Answers
+                                        </button>
                                     </td>
                                 </tr>
                                 <% }) %>
@@ -114,69 +115,67 @@
                 </div>
             </div>
 
+            <!-- Pending Students -->
             <div class="col-span-10 lg:col-span-3">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-lg font-black text-slate-900">Pending Students</h2>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-md:p-4">
+                    <div class="flex items-center justify-between mb-6 max-md:mb-4">
+                        <h2 class="text-lg font-black text-slate-900 max-md:text-base">Pending Students</h2>
                         <span class="px-2 py-1 bg-amber-50 text-amber-600 rounded text-[10px] font-bold uppercase">
                             <%= pendingStudents.length %> REMAINING
                         </span>
                     </div>
-                    <div class="space-y-4">
+                    <div class="space-y-4 max-md:space-y-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                         <% pendingStudents.forEach(student => { %>
-                        <div class="flex items-center justify-between group p-2 hover:bg-slate-50 rounded-xl transition-colors">
-                            <div class="flex items-center gap-3">
-                                <img class="size-10 rounded-full bg-slate-100 object-cover" src="<%= student.profilePic.url %>" />
-                                <div>
-                                    <p class="text-sm font-bold text-slate-700"><%= student.name %></p>
+                        <div class="flex items-center justify-between group p-2 hover:bg-slate-50 rounded-xl transition-colors max-md:p-2">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img class="size-10 rounded-full bg-slate-100 object-cover shrink-0 max-md:size-8" src="<%= student.profilePic.url %>" />
+                                <div class="min-w-0">
+                                    <p class="text-sm font-bold text-slate-700 truncate max-md:text-xs"><%= student.name %></p>
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Roll: <%= student.rollNo || 'N/A' %></p>
                                 </div>
                             </div>
-                            <button class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-amber-500 hover:bg-amber-50 transition-all">
-                                <span class="material-symbols-outlined text-[20px]">notifications</span>
+                            <button class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-amber-500 hover:bg-amber-50 transition-all shrink-0 max-md:size-7">
+                                <span class="material-symbols-outlined text-[20px] max-md:text-[16px]">notifications</span>
                             </button>
                         </div>
                         <% }) %>
                         <% if (pendingStudents.length === 0) { %>
-                            <p class="text-sm text-center text-green-500 font-bold py-4">All students have submitted! 🎉</p>
+                            <p class="text-sm text-center text-green-500 font-bold py-4 max-md:col-span-2">All students have submitted! 🎉</p>
                         <% } %>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="modal-container" class="hidden fixed inset-0 z-50">
-    <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"></div>
-    
-    <div id="modal-content-target" class="fixed top-0 right-0 h-full w-full max-w-[580px] bg-white flex flex-col shadow-2xl">
-        </div>
-</div>
+        <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"></div>
+        <div id="modal-content-target" class="fixed top-0 right-0 h-full w-full max-w-[580px] bg-white flex flex-col shadow-2xl max-md:max-w-full"></div>
+    </div>
 </main>
+
 
 
 <script>
     async function openSubmission(responseId) {
-    const container = document.getElementById('modal-container');
-    const contentTarget = document.getElementById('modal-content-target');
+        const container = document.getElementById('modal-container');
+        const contentTarget = document.getElementById('modal-content-target');
 
-    try {
-        // 1. Fetch data
-        const response = await fetch(`/teacher/response/${responseId}`);
-        const html = await response.text();
-        
-        // 2. Inject and Show Instantly
-        contentTarget.innerHTML = html;
-        container.classList.remove('hidden');
-        
-        // Prevent background scrolling while viewing
-        document.body.style.overflow = 'hidden'; 
-    } catch (err) {
-        console.error("Error loading submission:", err);
+        try {
+            const response = await fetch(`/teacher/response/${responseId}`);
+            const html = await response.text();
+            
+            contentTarget.innerHTML = html;
+            container.classList.remove('hidden');
+            
+            document.body.style.overflow = 'hidden'; 
+        } catch (err) {
+            console.error("Error loading submission:", err);
+        }
     }
-}
 
-function closeSubmission() {
-    document.getElementById('modal-container').classList.add('hidden');
-    document.body.style.overflow = 'auto'; // Restore scrolling
-}
+    function closeSubmission() {
+        document.getElementById('modal-container').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
 </script>

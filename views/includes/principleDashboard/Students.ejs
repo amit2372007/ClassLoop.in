@@ -1,0 +1,425 @@
+<main class="flex-1 ml-64 min-h-screen flex flex-col">
+  <header
+    class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10"
+  >
+    <div>
+      <h2 class="text-xl font-bold text-slate-800 dark:text-white">
+        Student Directory
+      </h2>
+      <p class="text-slate-500 text-sm">
+        Manage and monitor student information
+      </p>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button
+          class="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"
+        >
+          <span class="material-symbols-outlined text-lg">download</span>
+          Export CSV
+        </button>
+        <button
+          class="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 flex items-center gap-2"
+        >
+          <span class="material-symbols-outlined text-lg">add</span>
+          Add Student
+        </button>
+      </div>
+      <div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <p class="text-sm font-bold text-slate-800 dark:text-white">
+            Dr. Sarah Jenkins
+          </p>
+          <p class="text-xs text-slate-500">Principal Administrator</p>
+        </div>
+        <div
+          class="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/30"
+        >
+          <img
+            alt="Principal Profile"
+            class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb2WAnc_FKUMphUNEXoQjBFGWdc2kmXju1Bxv5RD68ylYJoryaarlD5HGGCI-FxpGsH0WCwsmjw7lbypPQCvNEkTBKPoKYbEoupIXC4zZGzzT2hhp58J1IkBGJFbB2WZemiuXxZmai-jeLSm8nG2aCSdkX_qJF83mHaqGIaENe68xcTU1WHtamUu2czL4fbN4ofemPs0MpjwX44xJ3gbu33Zr-5oc4I-Y7u9NMk-8r5RwP1vjelmjTq3JJPK_EuHEsjYGbEwlVqFU6"
+          />
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="p-8 space-y-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-primary"
+          >
+            <span class="material-symbols-outlined">groups</span>
+          </div>
+          <span
+            class="text-slate-500 text-xs font-bold bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full"
+            >Active</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Total Students</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
+            1,240
+          </h3>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"
+          >
+            <span class="material-symbols-outlined">fact_check</span>
+          </div>
+          <span
+            class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full"
+            >↑ 2.1%</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Overall Attendance</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
+            94.2%
+          </h3>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600"
+          >
+            <span class="material-symbols-outlined">warning</span>
+          </div>
+          <span
+            class="text-rose-600 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full"
+            >Action Required</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">
+            Alerts (Low Attendance)
+          </p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">12</h3>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden"
+    >
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800">
+        <div
+          class="flex flex-col md:flex-row gap-4 items-center justify-between"
+        >
+          <div class="relative w-full md:w-96">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              >search</span
+            >
+            <input
+              class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20"
+              placeholder="Search by name, roll no, or ID..."
+              type="text"
+            />
+          </div>
+          <div class="flex gap-3 w-full md:w-auto">
+            <select
+              class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 cursor-pointer min-w-[120px]"
+            >
+              <option>All Classes</option>
+              <option>Grade 10</option>
+              <option>Grade 9</option>
+              <option>Grade 8</option>
+            </select>
+            <select
+              class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 cursor-pointer min-w-[120px]"
+            >
+              <option>All Sections</option>
+              <option>Section A</option>
+              <option>Section B</option>
+              <option>Section C</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-slate-50 dark:bg-slate-800/50">
+            <tr>
+              <th
+                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              >
+                Student
+              </th>
+              <th
+                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              >
+                Class-Section
+              </th>
+              <th
+                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              >
+                Roll No
+              </th>
+              <th
+                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              >
+                Guardian Contact
+              </th>
+              <th
+                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              >
+                Attendance %
+              </th>
+              <th
+                class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            <tr
+              class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
+            >
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="Student"
+                    class="size-9 rounded-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbgzYAtAhCRiDInei5S9w50VgLgor7iai8DolSTqBl_E6dNyviyjzWHgXXXGC-HWzWvsemASFmhRnu-weYo6ZZ5sAaQss778hlHFYVhS6J4H-Aii8vAJA_SFALqi3EgdUayniIQQIPqVlicYpgWWkM-s4djICoQUYWN3xtzhR6GmG-aByH8ZCsi-7xWGhJ0Uzfgcb7vKmlZ0RcCg7LdcUN9ITPYId0o6-mPRs6vHxAnHNNjPrdWFnmOqT3v2VHkJw4Ldqn-ntXBKbX"
+                  />
+                  <div>
+                    <p
+                      class="text-sm font-semibold text-slate-800 dark:text-white"
+                    >
+                      Arjun Mehta
+                    </p>
+                    <p class="text-[10px] text-slate-500">ID: #ST-4022</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                10-A
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                #24
+              </td>
+              <td class="px-6 py-4">
+                <button
+                  class="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-lg">call</span>
+                  <span class="text-sm">+91 98765-43210</span>
+                </button>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden"
+                  >
+                    <div class="bg-emerald-500 h-full" style="width: 96%"></div>
+                  </div>
+                  <span class="text-sm font-bold text-slate-800 dark:text-white"
+                    >96%</span
+                  >
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  class="px-4 py-1.5 bg-primary/10 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all"
+                >
+                  View Profile
+                </button>
+              </td>
+            </tr>
+            <tr
+              class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
+            >
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="Student"
+                    class="size-9 rounded-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvj12zaQp9nJBbMOm7rFMJ3SN2yQoksfSAZ5rWBOU9DiLCZ09Mh7GFpNlsAU_M-XBX9-ZDrRF-QWEpRs_AGu14mRlAP9x9Kpo4VHXFRjHKEVmt4Qa8n2-No_1HOnlVRe2LcGligmB8oyzWPX3ews95yBX-ekNQzwezwplM342gguOCkw3fGucH4Oe-1npn9ZwT8enxx7PFzf9NjLnJNIyM1VELoEmDLyh3Bx0qrVZUuGdZW9SzGqyoKF1vaBfxaOsj8t46jD7BC5T-"
+                  />
+                  <div>
+                    <p
+                      class="text-sm font-semibold text-slate-800 dark:text-white"
+                    >
+                      Priya Sharma
+                    </p>
+                    <p class="text-[10px] text-slate-500">ID: #ST-4025</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                8-C
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                #12
+              </td>
+              <td class="px-6 py-4">
+                <button
+                  class="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-lg">call</span>
+                  <span class="text-sm">+91 98765-43211</span>
+                </button>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden"
+                  >
+                    <div class="bg-rose-500 h-full" style="width: 72%"></div>
+                  </div>
+                  <span class="text-sm font-bold text-rose-500">72%</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  class="px-4 py-1.5 bg-primary/10 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all"
+                >
+                  View Profile
+                </button>
+              </td>
+            </tr>
+            <tr
+              class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
+            >
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="Student"
+                    class="size-9 rounded-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSVM04Pl25fIfXkMHSgw6kZY9VlFuWQYMGtpHSILMrnvXeYmSjTbPoevH6hFfSMU3v8eCSh3XxvRsTPZ5e2bjwgd-6101oQRl1k7Bt-Pv3agxwnaQ_2LT9xGESCcMJp8pADo3LMEXY624qBN4XMcaz-goyRPV5E9x-5Slhc2UN8aD2kuSrjJP8UcddZxkz761wzB_Oivs0nK2mrBZFA0GlNC-0NkCV8YlnLu4TztN3Z_t70EPeo_vgIg4t7rcA09G0xDIbxhTRv0Ec"
+                  />
+                  <div>
+                    <p
+                      class="text-sm font-semibold text-slate-800 dark:text-white"
+                    >
+                      Siddharth R.
+                    </p>
+                    <p class="text-[10px] text-slate-500">ID: #ST-4028</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                12-B
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                #05
+              </td>
+              <td class="px-6 py-4">
+                <button
+                  class="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-lg">call</span>
+                  <span class="text-sm">+91 98765-43212</span>
+                </button>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden"
+                  >
+                    <div class="bg-emerald-500 h-full" style="width: 88%"></div>
+                  </div>
+                  <span class="text-sm font-bold text-slate-800 dark:text-white"
+                    >88%</span
+                  >
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  class="px-4 py-1.5 bg-primary/10 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all"
+                >
+                  View Profile
+                </button>
+              </td>
+            </tr>
+            <tr
+              class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
+            >
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="Student"
+                    class="size-9 rounded-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn1YIhTBbeHJYkxmEXNNED-M8whukkjrV9-ypqcHpFwqfuwccJaqkuAiCiwWALzemh-2rhoddlZLsQTioLcEV_-A1lVFSDKArGOqt5iWW6kTcv74yLzUC5Q7_M0p7JeMa4xPFAh1y8oIA2ac__0T2xYoky17rsAeKkFlPtZgDarVFobniCvtji9JeOdjBKae7MXOmLbRLmM0q7Qr2grtULMdUA7-F0PKV3E4Vom70AkhMVxKyGqgBYCrWAO9f_BVKL1vPESM-VJp1v"
+                  />
+                  <div>
+                    <p
+                      class="text-sm font-semibold text-slate-800 dark:text-white"
+                    >
+                      Ananya Iyer
+                    </p>
+                    <p class="text-[10px] text-slate-500">ID: #ST-4031</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                5-A
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                #44
+              </td>
+              <td class="px-6 py-4">
+                <button
+                  class="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-lg">call</span>
+                  <span class="text-sm">+91 98765-43213</span>
+                </button>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden"
+                  >
+                    <div class="bg-emerald-500 h-full" style="width: 92%"></div>
+                  </div>
+                  <span class="text-sm font-bold text-slate-800 dark:text-white"
+                    >92%</span
+                  >
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  class="px-4 py-1.5 bg-primary/10 text-primary text-xs font-bold rounded-lg hover:bg-primary hover:text-white transition-all"
+                >
+                  View Profile
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="p-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between"
+      >
+        <p class="text-sm text-slate-500">Showing 4 of 1,240 students</p>
+        <div class="flex gap-2">
+          <button
+            class="size-9 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            <span class="material-symbols-outlined text-lg">chevron_left</span>
+          </button>
+          <button
+            class="size-9 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            <span class="material-symbols-outlined text-lg">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

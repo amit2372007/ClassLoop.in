@@ -1,0 +1,554 @@
+<main class="flex-1 ml-64 min-h-screen flex flex-col">
+  <header
+    class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10"
+  >
+    <div>
+      <h2 class="text-xl font-bold text-slate-800 dark:text-white">
+        Teacher Directory
+      </h2>
+      <p class="text-slate-500 text-sm">Manage and oversee faculty members</p>
+    </div>
+    <div class="flex items-center gap-6">
+      <button
+        class="bg-primary text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+      >
+        <span class="material-symbols-outlined text-lg">add</span>
+        Add New Teacher
+      </button>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden md:block">
+          <p class="text-sm font-bold text-slate-800 dark:text-white">
+            Dr. Sarah Jenkins
+          </p>
+          <p class="text-xs text-slate-500">Principal Administrator</p>
+        </div>
+        <div
+          class="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/30"
+        >
+          <img
+            alt="Principal Profile"
+            class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb2WAnc_FKUMphUNEXoQjBFGWdc2kmXju1Bxv5RD68ylYJoryaarlD5HGGCI-FxpGsH0WCwsmjw7lbypPQCvNEkTBKPoKYbEoupIXC4zZGzzT2hhp58J1IkBGJFbB2WZemiuXxZmai-jeLSm8nG2aCSdkX_qJF83mHaqGIaENe68xcTU1WHtamUu2czL4fbN4ofemPs0MpjwX44xJ3gbu33Zr-5oc4I-Y7u9NMk-8r5RwP1vjelmjTq3JJPK_EuHEsjYGbEwlVqFU6"
+          />
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="p-8 space-y-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <div
+            class="size-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-primary"
+          >
+            <span class="material-symbols-outlined">groups</span>
+          </div>
+          <span
+            class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full"
+            >+4 this year</span
+          >
+        </div>
+        <p class="text-slate-500 text-sm font-medium">Total Teachers</p>
+        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">124</h3>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <div
+            class="size-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"
+          >
+            <span class="material-symbols-outlined">person_check</span>
+          </div>
+          <span class="text-slate-400 text-xs font-medium">Today</span>
+        </div>
+        <p class="text-slate-500 text-sm font-medium">Present Today</p>
+        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">118</h3>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <div
+            class="size-10 rounded-lg bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600"
+          >
+            <span class="material-symbols-outlined">person_off</span>
+          </div>
+          <span
+            class="text-rose-600 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full"
+            >6 Pending</span
+          >
+        </div>
+        <p class="text-slate-500 text-sm font-medium">On Leave</p>
+        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">06</h3>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <div
+            class="size-10 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600"
+          >
+            <span class="material-symbols-outlined">new_releases</span>
+          </div>
+          <span class="text-slate-400 text-xs font-medium">Last 30 days</span>
+        </div>
+        <p class="text-slate-500 text-sm font-medium">New Hires</p>
+        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">03</h3>
+      </div>
+    </div>
+    <div
+      class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row gap-4"
+    >
+      <div class="flex-1 relative">
+        <span
+          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          >search</span
+        >
+        <input
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 dark:text-slate-200"
+          placeholder="Search teacher by name or subject..."
+          type="text"
+        />
+      </div>
+      <div class="flex gap-4">
+        <select
+          class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm py-2 px-4 focus:ring-2 focus:ring-primary/20 text-slate-600 dark:text-slate-300 min-w-[160px]"
+        >
+          <option>All Departments</option>
+          <option>Mathematics</option>
+          <option>Sciences</option>
+          <option>Languages</option>
+          <option>Humanities</option>
+        </select>
+        <select
+          class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm py-2 px-4 focus:ring-2 focus:ring-primary/20 text-slate-600 dark:text-slate-300 min-w-[140px]"
+        >
+          <option>All Status</option>
+          <option>Active</option>
+          <option>On Leave</option>
+          <option>Full Time</option>
+          <option>Part Time</option>
+        </select>
+        <button
+          class="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+        >
+          <span
+            class="material-symbols-outlined text-xl leading-none align-middle"
+            >filter_list</span
+          >
+        </button>
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+    >
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <img
+              alt="Teacher"
+              class="size-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md mx-auto"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbgzYAtAhCRiDInei5S9w50VgLgor7iai8DolSTqBl_E6dNyviyjzWHgXXXGC-HWzWvsemASFmhRnu-weYo6ZZ5sAaQss778hlHFYVhS6J4H-Aii8vAJA_SFALqi3EgdUayniIQQIPqVlicYpgWWkM-s4djICoQUYWN3xtzhR6GmG-aByH8ZCsi-7xWGhJ0Uzfgcb7vKmlZ0RcCg7LdcUN9ITPYId0o6-mPRs6vHxAnHNNjPrdWFnmOqT3v2VHkJw4Ldqn-ntXBKbX"
+            />
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Arjun Mehta
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            Mathematics &amp; Statistics
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">school</span>
+            Class Teacher: Grade 10-A
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Full Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Active</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <img
+              alt="Teacher"
+              class="size-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md mx-auto"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvj12zaQp9nJBbMOm7rFMJ3SN2yQoksfSAZ5rWBOU9DiLCZ09Mh7GFpNlsAU_M-XBX9-ZDrRF-QWEpRs_AGu14mRlAP9x9Kpo4VHXFRjHKEVmt4Qa8n2-No_1HOnlVRe2LcGligmB8oyzWPX3ews95yBX-ekNQzwezwplM342gguOCkw3fGucH4Oe-1npn9ZwT8enxx7PFzf9NjLnJNIyM1VELoEmDLyh3Bx0qrVZUuGdZW9SzGqyoKF1vaBfxaOsj8t46jD7BC5T-"
+            />
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Priya Sharma
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            Biological Sciences
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">school</span>
+            Class Teacher: Grade 8-C
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Part Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Active</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <img
+              alt="Teacher"
+              class="size-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md mx-auto"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSVM04Pl25fIfXkMHSgw6kZY9VlFuWQYMGtpHSILMrnvXeYmSjTbPoevH6hFfSMU3v8eCSh3XxvRsTPZ5e2bjwgd-6101oQRl1k7Bt-Pv3agxwnaQ_2LT9xGESCcMJp8pADo3LMEXY624qBN4XMcaz-goyRPV5E9x-5Slhc2UN8aD2kuSrjJP8UcddZxkz761wzB_Oivs0nK2mrBZFA0GlNC-0NkCV8YlnLu4TztN3Z_t70EPeo_vgIg4t7rcA09G0xDIbxhTRv0Ec"
+            />
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-amber-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Siddharth R.
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            History &amp; Geography
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">school</span>
+            Class Teacher: Grade 12-B
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Full Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/20 text-amber-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >On Leave</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <img
+              alt="Teacher"
+              class="size-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md mx-auto"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn1YIhTBbeHJYkxmEXNNED-M8whukkjrV9-ypqcHpFwqfuwccJaqkuAiCiwWALzemh-2rhoddlZLsQTioLcEV_-A1lVFSDKArGOqt5iWW6kTcv74yLzUC5Q7_M0p7JeMa4xPFAh1y8oIA2ac__0T2xYoky17rsAeKkFlPtZgDarVFobniCvtji9JeOdjBKae7MXOmLbRLmM0q7Qr2grtULMdUA7-F0PKV3E4Vom70AkhMVxKyGqgBYCrWAO9f_BVKL1vPESM-VJp1v"
+            />
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Ananya Iyer
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            English Literature
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">school</span>
+            Class Teacher: Grade 5-A
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Full Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Active</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <div
+              class="size-24 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mx-auto border-4 border-white dark:border-slate-800 shadow-md"
+            >
+              <span class="material-symbols-outlined text-4xl text-slate-400"
+                >person</span
+              >
+            </div>
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Robert Wilson
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            Physical Education
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">sports_soccer</span>
+            Sports Coordinator
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Full Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Active</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <div
+              class="size-24 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center mx-auto border-4 border-white dark:border-slate-800 shadow-md"
+            >
+              <span class="material-symbols-outlined text-4xl text-primary"
+                >person</span
+              >
+            </div>
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Elena Rodriguez
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            Physics &amp; Mechanics
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">school</span>
+            Class Teacher: Grade 11-B
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Full Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Active</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <div
+              class="size-24 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mx-auto border-4 border-white dark:border-slate-800 shadow-md"
+            >
+              <span class="material-symbols-outlined text-4xl text-slate-400"
+                >person</span
+              >
+            </div>
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Marcus Thorne
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            Computer Science
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">code</span>
+            IT Coordinator
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Contract</span
+            >
+            <span
+              class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Active</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col"
+      >
+        <div class="p-6 text-center flex-1">
+          <div class="relative inline-block mb-4">
+            <div
+              class="size-24 rounded-full bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center mx-auto border-4 border-white dark:border-slate-800 shadow-md"
+            >
+              <span class="material-symbols-outlined text-4xl text-rose-600"
+                >person</span
+              >
+            </div>
+            <span
+              class="absolute bottom-1 right-1 size-5 bg-rose-500 border-4 border-white dark:border-slate-900 rounded-full"
+            ></span>
+          </div>
+          <h4 class="text-lg font-bold text-slate-800 dark:text-white">
+            Sophie Dubois
+          </h4>
+          <p
+            class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4"
+          >
+            Foreign Languages
+          </p>
+          <div
+            class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-6"
+          >
+            <span class="material-symbols-outlined text-sm">language</span>
+            French &amp; Spanish
+          </div>
+          <div class="flex justify-center gap-2">
+            <span
+              class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >Full Time</span
+            >
+            <span
+              class="px-2.5 py-1 bg-rose-50 dark:bg-rose-900/20 text-rose-600 text-[10px] font-bold uppercase tracking-wider rounded-md"
+              >On Leave</span
+            >
+          </div>
+        </div>
+        <button
+          class="w-full py-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-sm font-bold border-t border-slate-100 dark:border-slate-800 hover:bg-primary hover:text-white dark:hover:bg-primary transition-all"
+        >
+          View Profile
+        </button>
+      </div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+      <p class="text-sm text-slate-500">
+        Showing
+        <span class="font-bold text-slate-800 dark:text-white">8</span> of
+        <span class="font-bold text-slate-800 dark:text-white">124</span>
+        teachers
+      </p>
+      <div class="flex gap-2">
+        <button
+          class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50"
+          disabled=""
+        >
+          Previous
+        </button>
+        <button
+          class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold"
+        >
+          1
+        </button>
+        <button
+          class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+        >
+          2
+        </button>
+        <button
+          class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+        >
+          3
+        </button>
+        <button
+          class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</main>

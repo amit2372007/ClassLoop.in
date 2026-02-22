@@ -1,0 +1,241 @@
+<!-- Main Content -->
+<main class="flex-1 ml-64 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header
+    class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10"
+  >
+    <div>
+      <h2 class="text-xl font-bold text-slate-800 dark:text-white">
+        <%= School.name %>
+      </h2>
+      <p class="text-slate-500 text-sm">Overview of institutional operations</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <button
+          class="size-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 relative"
+        >
+          <span class="material-symbols-outlined">notifications</span>
+          <span
+            class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"
+          ></span>
+        </button>
+        <div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
+        <div class="flex items-center gap-3">
+          <div class="text-right">
+            <p class="text-sm font-bold text-slate-800 dark:text-white">
+              <%= Principle.name%>
+            </p>
+            <p class="text-xs text-slate-500">Principal Administrator</p>
+          </div>
+          <div
+            class="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/30"
+          >
+            <img
+              alt="Principal Profile"
+              class="w-full h-full object-cover"
+              data-alt="Professional portrait of a female principal administrator"
+              src="<%= Principle.profilePic.url%>"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Dashboard Content -->
+  <div class="p-8 space-y-8">
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Total Students -->
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-primary"
+          >
+            <span class="material-symbols-outlined">groups</span>
+          </div>
+          <span
+            class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full"
+            >+2.5%</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Total Students</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
+            1,240
+          </h3>
+        </div>
+      </div>
+      <!-- Active Teachers -->
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600"
+          >
+            <span class="material-symbols-outlined">diversity_3</span>
+          </div>
+          <span
+            class="text-rose-500 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full"
+            >-1.2%</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Active Teachers</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
+            <%=School.teachers.length%>
+          </h3>
+        </div>
+      </div>
+      <!-- Attendance -->
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"
+          >
+            <span class="material-symbols-outlined">event_available</span>
+          </div>
+          <span
+            class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full"
+            >+0.5%</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Attendance</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">92%</h3>
+        </div>
+      </div>
+      <!-- Pending Complaints -->
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600"
+          >
+            <span class="material-symbols-outlined">priority_high</span>
+          </div>
+          <span
+            class="text-rose-600 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full"
+            >8 Urgent</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Pending Complaints</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">8</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Section: Attendance Trend & Distribution -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div
+        class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-bold text-slate-800 dark:text-white">
+            Attendance Analytics
+          </h3>
+          <select
+            class="bg-background-light dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm rounded-lg py-1 px-3"
+          >
+            <option>Last 7 Days</option>
+            <option>Last 30 Days</option>
+          </select>
+        </div>
+        <div class="h-64 flex items-end gap-2 px-2">
+          <div
+            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[85%] rounded-t-lg group relative"
+          >
+            <span
+              class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              >92%</span
+            >
+          </div>
+          <div
+            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[88%] rounded-t-lg group relative"
+          ></div>
+          <div
+            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[92%] rounded-t-lg group relative"
+          ></div>
+          <div
+            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[90%] rounded-t-lg group relative"
+          ></div>
+          <div
+            class="flex-1 bg-primary h-[94%] rounded-t-lg group relative"
+          ></div>
+          <div
+            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[82%] rounded-t-lg group relative"
+          ></div>
+          <div
+            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[89%] rounded-t-lg group relative"
+          ></div>
+        </div>
+        <div
+          class="flex justify-between mt-4 text-xs font-bold text-slate-400 uppercase tracking-widest px-2"
+        >
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span
+          ><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col"
+      >
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6">
+          Student Distribution
+        </h3>
+        <div class="flex-1 flex flex-col justify-center gap-6">
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600 dark:text-slate-400"
+                >Primary (K-5)</span
+              >
+              <span class="font-bold text-slate-800 dark:text-white">450</span>
+            </div>
+            <div
+              class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
+            >
+              <div class="h-full bg-primary" style="width: 36%"></div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600 dark:text-slate-400"
+                >Middle (6-8)</span
+              >
+              <span class="font-bold text-slate-800 dark:text-white">380</span>
+            </div>
+            <div
+              class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
+            >
+              <div class="h-full bg-amber-500" style="width: 31%"></div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600 dark:text-slate-400"
+                >Senior (9-12)</span
+              >
+              <span class="font-bold text-slate-800 dark:text-white">410</span>
+            </div>
+            <div
+              class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
+            >
+              <div class="h-full bg-emerald-500" style="width: 33%"></div>
+            </div>
+          </div>
+        </div>
+        <button
+          class="mt-8 w-full py-3 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-shadow shadow-lg shadow-primary/20"
+        >
+          Generate Report
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
