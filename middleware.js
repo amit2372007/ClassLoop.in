@@ -81,3 +81,14 @@ module.exports.isPrinciple = (req, res, next) => {
 
   next(); // User is a teacher, proceed to the controller
 };
+
+module.exports.isNotDemo = (req, res, next) => {
+  if (req.user._id.toString() === "699eab879571b658bb87c8a3") {
+    req.flash(
+      "error",
+      "This is a demo account for preview purposes. Create a account for full access.",
+    );
+    return res.redirect(req.get("Referer") || "/home");
+  }
+  next();
+};

@@ -22,8 +22,14 @@ const classSchema = Schema({
   },
   students: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      student: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      admissionId: {
+        type: String,
+        required: true,
+      },
     },
   ],
   teachers: [

@@ -48,7 +48,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Total Students -->
       <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
       >
         <div class="flex justify-between items-start">
           <div
@@ -64,13 +64,13 @@
         <div>
           <p class="text-slate-500 text-sm font-medium">Total Students</p>
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-            1,240
+            <%=Students.length%>
           </h3>
         </div>
       </div>
       <!-- Active Teachers -->
       <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
       >
         <div class="flex justify-between items-start">
           <div
@@ -86,13 +86,53 @@
         <div>
           <p class="text-slate-500 text-sm font-medium">Active Teachers</p>
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-            <%=School.teachers.length%>
+            <%=Teachers.length%>
+          </h3>
+        </div>
+      </div>
+      <!-- All Classes -->
+      <div
+        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"
+          >
+            <span class="material-symbols-outlined">school</span>
+          </div>
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Active Classes</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
+            <%=allClasses.length%>
+          </h3>
+        </div>
+      </div>
+      <!-- pending Dues -->
+      <div
+        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+      >
+        <div class="flex justify-between items-start">
+          <div
+            class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600"
+          >
+            <span class="material-symbols-outlined">hourglass_empty</span>
+          </div>
+          <span
+            class="text-amber-600 text-xs font-bold bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded-full"
+            >Attention Needed</span
+          >
+        </div>
+        <div>
+          <p class="text-slate-500 text-sm font-medium">Pending Dues</p>
+          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
+            ₹<%= stats.pendingDues.toLocaleString('en-IN') %>
           </h3>
         </div>
       </div>
       <!-- Attendance -->
       <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
       >
         <div class="flex justify-between items-start">
           <div
@@ -110,9 +150,10 @@
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">92%</h3>
         </div>
       </div>
+
       <!-- Pending Complaints -->
       <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
+        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
       >
         <div class="flex justify-between items-start">
           <div

@@ -19,7 +19,7 @@ const schoolSchema = Schema({
   phone: {
     type: Number,
   },
-  principal: {
+  principle: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

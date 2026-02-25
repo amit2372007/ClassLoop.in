@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Fee Structure Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#5048e5",
+              "background-light": "#f6f6f8",
+              "background-dark": "#121121",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", sans-serif; }
+      .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+      /* Hide scrollbar for drawer */
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+  </head>
+
+  <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+      
+      <header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3 sticky top-0 z-40">
+        <div class="flex items-center gap-3 text-primary">
+            <a href="/school">
+                <span class="material-symbols-outlined">
+                    arrow_back
+                </span>
+            </a>
+            <h2 class="text-slate-900 dark:text-white text-lg font-bold tracking-tight">ClassLoop ERP</h2>
+        </div>
+      </header>
+
+      <main class="flex-1 px-10 py-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Fee Structures</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Configure fee templates for your classes.</p>
+          </div>
+          <button onclick="toggleDrawer(true)" class="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+            <span class="material-symbols-outlined">add</span>
+            <span>Create New Structure</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <% if(feeStructures && feeStructures.length > 0) { %>
+            <% feeStructures.forEach(structure => { %>
+              
+              <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
+    
+    <div class="flex justify-between items-start mb-4">
+        <div>
+            <span class="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                <%= structure.classLink ? `Class ${structure.classLink.className}-${structure.classLink.section}` : 'General' %>
+            </span>
+            <h3 class="text-lg font-bold mt-2 text-slate-900 dark:text-white"><%= structure.name %></h3>
+        </div>
+        <div class="flex gap-1">
+            <span class="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md"><%= structure.frequency %></span>
+        </div>
+    </div>
+
+    <ul class="space-y-3 mb-6 flex-1">
+        <% structure.components.slice(0, 3).forEach(comp => { %>
+        <li class="flex justify-between text-sm">
+            <span class="text-slate-500"><%= comp.name %></span>
+            <span class="font-medium text-slate-700 dark:text-slate-300">₹<%= comp.amount %></span>
+        </li>
+        <% }) %>
+        <% if(structure.components.length > 3) { %>
+        <li class="text-xs text-slate-400 italic">+ <%= structure.components.length - 3 %> more...</li>
+        <% } %>
+    </ul>
+
+    <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mb-4">
+        <div>
+            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Total Amount</p>
+            <p class="text-2xl font-black text-primary">₹<%= structure.totalAmount %></p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-medium <%= structure.isActive ? 'text-emerald-500' : 'text-rose-500' %>">
+                <%= structure.isActive ? 'Active' : 'Inactive' %>
+            </span>
+        </div>
+    </div>
+
+    <form action="/school/generate-monthly-fees" method="POST" class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3 border border-slate-100 dark:border-slate-700">
+        
+        <input type="hidden" name="structureId" value="<%= structure._id %>">
+
+        <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Generate Bills</label>
+
+        <div class="flex gap-2 mb-2">
+            <select name="month" required class="flex-1 rounded-md border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs py-1.5 focus:ring-primary focus:border-primary">
+                <% const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; %>
+                <% const currentMonth = new Date().toLocaleString('default', { month: 'long' }); %>
+                <% months.forEach(m => { %>
+                    <option value="<%= m %>" <%= m === currentMonth ? 'selected' : '' %>><%= m %></option>
+                <% }) %>
+            </select>
+
+            <input type="number" name="year" value="<%= new Date().getFullYear() %>" required class="w-20 rounded-md border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs py-1.5 focus:ring-primary focus:border-primary">
+        </div>
+
+        <button type="submit" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold py-2 rounded-md hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-colors flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">receipt_long</span>
+            Generate for All Students
+        </button>
+    </form>
+
+</div>
+
+            <% }) %>
+          <% } else { %>
+            <div class="col-span-full py-12 text-center text-slate-400">
+                <span class="material-symbols-outlined text-4xl mb-2">folder_off</span>
+                <p>No Fee Structures created yet.</p>
+            </div>
+          <% } %>
+
+        </div>
+      </main>
+
+      <div id="drawer-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end hidden">
+        
+        <form action="/school/create-fee-structure" method="POST" id="feeForm" class="w-full max-w-lg bg-white dark:bg-slate-900 h-full shadow-2xl overflow-hidden flex flex-col transform transition-transform duration-300 translate-x-full" style="transform: translateX(100%);">
+          
+          <div class="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 z-10">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Create New Fee Structure</h2>
+            <button type="button" onclick="toggleDrawer(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+
+          <div class="p-8 space-y-8 flex-1 overflow-y-auto no-scrollbar">
+            
+            <div class="space-y-4">
+              <h3 class="text-sm font-bold uppercase tracking-widest text-primary">General Details</h3>
+              <div class="grid gap-4">
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Structure Name</label>
+                  <input name="name" required class="rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" placeholder="e.g., Class 10 Standard 2025" type="text" />
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="flex flex-col gap-1.5">
+                    <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Target Class</label>
+                    <select name="classLink" required class="rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary">
+                      <% classes.forEach(cls => { %>
+                        <option value="<%= cls._id %>">Class <%= cls.className %> - <%= cls.section %></option>
+                      <% }) %>
+                    </select>
+                  </div>
+                  
+                  <div class="flex flex-col gap-1.5">
+                    <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Frequency</label>
+                    <select name="frequency" class="rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary">
+                        <option value="Monthly">Monthly</option>
+                        <option value="Yearly">Yearly</option>
+                        <option value="One-Time">One-Time</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-primary">Fee Components</h3>
+                <button type="button" onclick="addRow()" class="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+                  <span class="material-symbols-outlined text-[16px]">add_circle</span> Add Row
+                </button>
+              </div>
+              
+              <div id="components-container" class="space-y-3">
+                <div class="flex gap-3 component-row">
+                    <input type="text" placeholder="Tuition Fee" class="comp-name flex-1 rounded-lg border-slate-200 text-sm" required>
+                    <input type="number" placeholder="0" class="comp-amount w-32 rounded-lg border-slate-200 text-sm" oninput="calculateTotal()" required>
+                    <button type="button" onclick="deleteRow(this)" class="text-slate-300 hover:text-red-500"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-primary/5 rounded-xl p-6 border border-primary/10">
+              <div class="flex items-center justify-between">
+                <span class="text-lg font-black text-slate-900 dark:text-white">Total Amount</span>
+                <span id="display-total" class="text-2xl font-black text-primary">₹0</span>
+              </div>
+            </div>
+            
+            <input type="hidden" name="components" id="hidden-components">
+            <input type="hidden" name="totalAmount" id="hidden-total">
+
+          </div>
+
+          <div class="p-8 pt-0 border-t border-slate-100 dark:border-slate-800 flex gap-4 bg-white dark:bg-slate-900 sticky bottom-0 py-4">
+            <button type="button" onclick="toggleDrawer(false)" class="flex-1 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 py-3 rounded-xl font-bold hover:bg-slate-50 transition-colors">Cancel</button>
+            <button type="submit" onclick="prepareSubmission()" class="flex-1 bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">Save Structure</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+    <script>
+      // 1. Drawer Toggle Logic
+      function toggleDrawer(show) {
+        const overlay = document.getElementById('drawer-overlay');
+        const form = document.getElementById('feeForm');
+        
+        if (show) {
+          overlay.classList.remove('hidden');
+          // Small delay to allow display:block to apply before animating transform
+          setTimeout(() => {
+            form.style.transform = 'translateX(0)';
+          }, 10);
+        } else {
+          form.style.transform = 'translateX(100%)';
+          setTimeout(() => {
+            overlay.classList.add('hidden');
+          }, 300);
+        }
+      }
+
+      // 2. Dynamic Rows Logic
+      function addRow() {
+        const container = document.getElementById('components-container');
+        const div = document.createElement('div');
+        div.className = 'flex gap-3 component-row';
+        div.innerHTML = `
+            <input type="text" placeholder="Component Name" class="comp-name flex-1 rounded-lg border-slate-200 text-sm" required>
+            <input type="number" placeholder="0" class="comp-amount w-32 rounded-lg border-slate-200 text-sm" oninput="calculateTotal()" required>
+            <button type="button" onclick="deleteRow(this)" class="text-slate-300 hover:text-red-500"><span class="material-symbols-outlined">delete</span></button>
+        `;
+        container.appendChild(div);
+      }
+
+      function deleteRow(btn) {
+        btn.closest('.component-row').remove();
+        calculateTotal();
+      }
+
+      // 3. Calculation Logic
+      function calculateTotal() {
+        const amounts = document.querySelectorAll('.comp-amount');
+        let total = 0;
+        amounts.forEach(input => {
+            total += Number(input.value) || 0;
+        });
+        document.getElementById('display-total').innerText = '₹' + total;
+        document.getElementById('hidden-total').value = total;
+      }
+
+      // 4. Form Submission Prep
+      function prepareSubmission() {
+        const rows = document.querySelectorAll('.component-row');
+        const components = [];
+        
+        rows.forEach(row => {
+            const name = row.querySelector('.comp-name').value;
+            const amount = row.querySelector('.comp-amount').value;
+            if(name && amount) {
+                components.push({ name, amount: Number(amount) });
+            }
+        });
+
+        document.getElementById('hidden-components').value = JSON.stringify(components);
+      }
+    </script>
+  </body>
+</html>

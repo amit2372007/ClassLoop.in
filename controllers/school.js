@@ -2,6 +2,8 @@ const Schools = require("../model/school/school.js");
 const Class = require("../model/school/classes.js");
 const Users = require("../model/User.js");
 const LoopSpace = require("../model/loopSpace/loopSpace.js");
+const FeeStructure = require("../model/school/principle/feeStructure.js");
+const MonthlyFee = require("../model/school/principle/StudentMonthlyFee.js");
 const QRCode = require("qrcode");
 const ImageKit = require("imagekit");
 
@@ -14,27 +16,120 @@ const imagekit = new ImageKit({
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
 module.exports.renderSchoolDashboard = async (req, res) => {
   try {
-    // .populate("classes") allows you to see the list of classes in the dashboard
-    const schoolData = await Schools.findOne({ principle: req.user._id })
-      .populate("teachers")
-      .populate({
-        path: "classes",
-        populate: {
-          path: "classTeacher", // This field is inside the Class model
-          model: "User", // Explicitly mention the model if needed
-          select: "name profilePic", // Optional: only fetch specific fields like name and pic
-        },
-      });
+    const activeTab = req.query.tab || "Dashboard"; // Default to Dashboard
     const Principle = await Users.findById(req.user._id);
-    console.log(schoolData);
-    const activeTab = req.query.tab || "Dashboard";
+
+    // 1. Global Data
+    const schoolData = await Schools.findOne({ principle: req.user._id });
+
+    // Initialize variables (Default Safe Values)
+    let stats = { totalCollected: 0, pendingDues: 0, collectionPercentage: 0 }; // Initialize with 0s
+    let defaulters = [];
+    let recentPayments = [];
+    let allStudents = [];
+    let allTeachers = [];
+    let allClasses = [];
+
+    // === HELPER: Fee Calculation Logic (Used in both Dashboard & Fees) ===
+    const calculateFeeStats = async () => {
+      const fees = await MonthlyFee.find({ school: schoolData._id })
+        .populate("student", "name profilePic")
+        .populate("class", "className section")
+        .sort({ updatedAt: -1 });
+
+      let totalCollected = 0;
+      let totalTarget = 0;
+      let pendingDues = 0;
+
+      fees.forEach((fee) => {
+        const feeTotal =
+          fee.totalAmount +
+          (fee.fine?.amount || 0) -
+          (fee.discount?.amount || 0);
+        const balance = Math.max(0, feeTotal - (fee.amountPaid || 0));
+
+        totalTarget += feeTotal;
+        totalCollected += fee.amountPaid || 0;
+        pendingDues += balance;
+
+        fee.calculatedBalance = balance; // Attach for EJS usage
+      });
+
+      const collectionPercentage =
+        totalTarget > 0 ? Math.round((totalCollected / totalTarget) * 100) : 0;
+
+      return {
+        fees,
+        stats: { totalCollected, pendingDues, collectionPercentage },
+      };
+    };
+
+    // 2. CONDITIONAL DATA FETCHING
+    switch (activeTab) {
+      case "Dashboard":
+        // A. Fetch School Structure
+        await schoolData.populate("teachers");
+        await schoolData.populate("classes");
+        await schoolData.populate({
+          path: "classes",
+          populate: { path: "students.student", model: "User" },
+        });
+        allStudents = schoolData.classes.flatMap((c) => c.students);
+        allTeachers = schoolData.teachers;
+        allClasses = schoolData.classes;
+
+        // B. Fetch Fee Stats (Needed for Dashboard Widgets)
+        const dashFeeData = await calculateFeeStats();
+        stats = dashFeeData.stats;
+        break;
+
+      case "Fees":
+        // A. Fetch Full Fee Data
+        const feeData = await calculateFeeStats();
+        stats = feeData.stats; // Update the stats object
+        const allFees = feeData.fees;
+
+        // B. Generate Specific Lists
+        defaulters = allFees.filter((f) => f.calculatedBalance > 0).slice(0, 5);
+        recentPayments = allFees.filter((f) => f.amountPaid > 0).slice(0, 4);
+        break;
+
+      case "Teachers":
+        await schoolData.populate("teachers");
+        allTeachers = schoolData.teachers;
+        break;
+
+      case "Students":
+        await schoolData.populate({
+          path: "classes",
+          populate: { path: "students.student", model: "User" },
+        });
+        allStudents = schoolData.classes.flatMap((c) => c.students);
+        break;
+
+      default:
+        break;
+    }
+
+    // 3. Render
     res.render("./school/Dashboard.ejs", {
       School: schoolData,
-      activeTab, // Pass as a string
+      activeTab: activeTab,
       currUser: req.user,
-      Principle: Principle,
+      Principle,
+
+      // Data will be populated based on the switch case above
+      allTeachers,
+      allClasses,
+      allStudents,
+      stats, // Now available in BOTH Dashboard and Fees
+      defaulters,
+      recentPayments,
+      Teachers: allTeachers,
+      Students: allStudents,
     });
   } catch (err) {
     console.error(err);
@@ -149,3 +244,124 @@ module.exports.createClass = async (req, res) => {
     return res.redirect("/school?tab=ManageClasses");
   }
 };
+
+module.exports.renderFeeStructurePage = async (req, res) => {
+  try {
+    // 1. Find the School
+    const school = await Schools.findOne({ principle: req.user._id });
+
+    // 2. Find Classes for this school
+    const classes = await Class.find({ school: school._id });
+
+    // 3. Find Existing Fee Structures (Populate classLink to get class name)
+    const feeStructures = await FeeStructure.find({
+      school: school._id,
+    }).populate("classLink");
+
+    res.render("./school/monthlyFeeStructure.ejs", {
+      school,
+      classes,
+      feeStructures, // Passed to EJS
+      currUser: req.user,
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect("/home");
+  }
+};
+
+module.exports.createFeeStructure = async (req, res) => {
+  try {
+    const { name, classLink, frequency, components, totalAmount } = req.body;
+
+    const school = await Schools.findOne({ principle: req.user._id });
+
+    const newStructure = new FeeStructure({
+      name,
+      school: school._id,
+      classLink,
+      frequency,
+      components: JSON.parse(components), // Expecting JSON string from frontend
+      totalAmount,
+    });
+
+    await newStructure.save();
+    req.flash("success", "Fee Structure Created Successfully!");
+    res.redirect("/school"); // Redirect back to the page
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Error creating fee structure.");
+    res.redirect("/school/feeStructure");
+  }
+};
+
+module.exports.generateMonthlyFees = async (req, res) => {
+  try {
+    // You need to pass the month explicitly (e.g., from a dropdown "Generate for November")
+    const { structureId, month, year } = req.body;
+
+    // 1. Get the Template
+    const structure = await FeeStructure.findById(structureId);
+
+    // 2. Get the Class and populate student details
+    const classData = await Class.findById(structure.classLink);
+
+    const school = await Schools.findOne({ principle: req.user._id });
+
+    // 3. Loop correctly through the class.students array
+    // Remember: classData.students is [{ student: ObjectId, admissionId: String }, ...]
+    for (let i = 0; i < classData.students.length; i++) {
+      const studentObj = classData.students[i]; // This is the wrapper object
+
+      const newFee = new MonthlyFee({
+        student: studentObj.student,
+        admissionNo: studentObj.admissionId,
+        class: classData._id,
+        school: school._id,
+        month: month, // e.g., "November"
+        year: year || new Date().getFullYear(),
+        feeComponents: structure.components,
+        totalAmount: structure.totalAmount,
+        status: "Pending",
+        dueDate: new Date(year, getMonthIndex(month), 10),
+      });
+
+      try {
+        await newFee.save();
+      } catch (e) {
+        if (e.code === 11000)
+          req.flash(
+            "error",
+            `Bill already exists for student ${studentObj.admissionId}`,
+          );
+        else throw e;
+      }
+    }
+
+    req.flash("success", `Generated fees for ${month}!`);
+    res.redirect("/school/feeStructure");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Error generating fees.");
+    res.redirect("/school/feeStructure");
+  }
+};
+
+// Helper for Date Object
+function getMonthIndex(monthName) {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return months.indexOf(monthName);
+}

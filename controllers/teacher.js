@@ -100,7 +100,11 @@ module.exports.teacherDashboard = async (req, res) => {
           select: "name profilePic",
         },
       });
-
+    const schoolIdfromClass = classData.school;
+    const currSchool = await Schools.findById(schoolIdfromClass).populate(
+      "principle",
+      "name profilePic",
+    );
     // 5. Fetch Class Announcements (Notice model)
     const announcements = await Notice.find({
       $or: [
@@ -134,7 +138,8 @@ module.exports.teacherDashboard = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-      const studentRequests = await classRequest.find({receiver: classId })
+    const studentRequests = await classRequest
+      .find({ receiver: classId })
       .populate("sender");
     // 6. Render the dashboard
     res.render("./teacher/Dashboard.ejs", {
@@ -145,7 +150,7 @@ module.exports.teacherDashboard = async (req, res) => {
       assignments: assignments,
       activeTab: activeTab,
       currUser: req.user,
-      School: req.user.instituition.school, // Needed for the school name in header
+      currSchool: currSchool, // Needed for the school name in header
       exams: exams,
       resources: resources,
       selectedExam: selectedExam,
@@ -177,8 +182,10 @@ module.exports.addStudent = async (req, res) => {
   }
 
   try {
-    const { studentId, rollNumber } = req.body;
-    const teacherClassId = req.user.instituition.class;
+    const { studentId, rollNumber, admissionId } = req.body;
+    const teacherClassId = await Class.findOne({
+      classTeacher: req.user._id,
+    }).select("_id");
 
     // 2. Find the student in the User collection
     let student = await Users.findById(studentId);
@@ -220,7 +227,7 @@ module.exports.addStudent = async (req, res) => {
 
     // 4. Link Student to the Class Model
     await Class.findByIdAndUpdate(teacherClassId, {
-      $addToSet: { students: student._id },
+      $addToSet: { students: { student: student._id, admissionId } },
     });
 
     await LoopSpace.findOneAndUpdate(
@@ -271,50 +278,49 @@ module.exports.addStudentRequest = async (req, res) => {
 };
 
 module.exports.requestReject = async (req, res) => {
-    try {
-        const { requestId } = req.body;
-        
-        // Ensure we have a valid logged-in teacher
-        if (!req.user) {
-            return res.status(401).send("Unauthorized: Please log in.");
-        }
+  try {
+    const { requestId } = req.body;
 
-        const teacherName = req.user.name || req.user.username || "your teacher";
-
-        // 1. Find the request first so we know which student to notify
-        // (Assuming your model is named 'classRequest' based on your previous code)
-        const pendingRequest = await classRequest.findById(requestId);
-
-        if (!pendingRequest) {
-            console.log("Request already processed or doesn't exist.");
-            return res.redirect(req.back); 
-        }
-
-        const studentId = pendingRequest.sender;
-
-        // 2. Delete the request from the database
-        await classRequest.findByIdAndDelete(requestId);
-
-        // 3. Send the notification to the student
-        // (Adjust the fields below to perfectly match your Notification schema)
-        const newNotification = new Notification({
-          receiver: studentId, 
-          sender: req.user._id, 
-          type: "REQUEST_REJECT",
-          message: `Your request to join the class has been declined by ${teacherName}.`, // Fixed: changed 'content' to 'message'
-          link: "/home", // Fixed: changed 'url' to 'link'
-          isRead: false
-});
-        await newNotification.save();
-
-        req.flash("success" , "Request Reject Successfully!");
-        res.redirect(`/teacher?tab=Students`);
-
-    } catch (error) {
-        console.error("Error rejecting student request:", error);
-        req.flash("error" , "Error! in Rejecting Request");
-        res.redirect(`/teacher?tab=Students`);
+    // Ensure we have a valid logged-in teacher
+    if (!req.user) {
+      return res.status(401).send("Unauthorized: Please log in.");
     }
+
+    const teacherName = req.user.name || req.user.username || "your teacher";
+
+    // 1. Find the request first so we know which student to notify
+    // (Assuming your model is named 'classRequest' based on your previous code)
+    const pendingRequest = await classRequest.findById(requestId);
+
+    if (!pendingRequest) {
+      console.log("Request already processed or doesn't exist.");
+      return res.redirect(req.back);
+    }
+
+    const studentId = pendingRequest.sender;
+
+    // 2. Delete the request from the database
+    await classRequest.findByIdAndDelete(requestId);
+
+    // 3. Send the notification to the student
+    // (Adjust the fields below to perfectly match your Notification schema)
+    const newNotification = new Notification({
+      receiver: studentId,
+      sender: req.user._id,
+      type: "REQUEST_REJECT",
+      message: `Your request to join the class has been declined by ${teacherName}.`, // Fixed: changed 'content' to 'message'
+      link: "/home", // Fixed: changed 'url' to 'link'
+      isRead: false,
+    });
+    await newNotification.save();
+
+    req.flash("success", "Request Reject Successfully!");
+    res.redirect(`/teacher?tab=Students`);
+  } catch (error) {
+    console.error("Error rejecting student request:", error);
+    req.flash("error", "Error! in Rejecting Request");
+    res.redirect(`/teacher?tab=Students`);
+  }
 };
 
 module.exports.requestApprove = async (req, res) => {
@@ -327,26 +333,25 @@ module.exports.requestApprove = async (req, res) => {
 
     // 3. Send an approval notification to the student
     const teacherName = req.user.name || req.user.username || "your teacher";
-    
+
     const newNotification = new Notification({
       receiver: studentId,
       sender: req.user._id,
       type: "REQUEST_APPROVED",
       message: `Your request to join the class has been approved by ${teacherName}. Your Roll Number is ${rollNumber}.`,
       link: "/home",
-      isRead: false
+      isRead: false,
     });
-    
+
     await newNotification.save();
 
     // 4. Forward the POST request directly to your addStudent controller
     // The '307' status strictly maintains the POST method and passes req.body along
     return res.redirect(307, "/teacher/addStudent");
-
   } catch (error) {
     console.error("Error approving student request:", error);
     req.flash("error", "Something went wrong while approving the request.");
-    return res.redirect('/teacher');
+    return res.redirect("/teacher");
   }
 };
 
