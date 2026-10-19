@@ -1,81 +1,119 @@
 <style type="text/tailwindcss">
-    .glass-card {
-            background: rgba(26, 26, 26, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .material-symbols-outlined.fill {
-            font-variation-settings: 'FILL' 1;
-        }
-        .notification-dropdown {
-            display: none;
-        }
-        .notification-trigger:focus-within .notification-dropdown {
-            display: block;
-        }
-        @keyframes shrink {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
-        .animate-progress {
-            animation: shrink 5s linear forwards;
-        }
-    </style>
+  .glass-card {
+    background: rgba(26, 26, 26, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .material-symbols-outlined.fill {
+    font-variation-settings: 'FILL' 1;
+  }
 
+  /* Left-to-Right Progress Bar Keyframe */
+  @keyframes progressLtr {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  .animate-progress {
+    animation: progressLtr 5s linear forwards;
+  }
+</style>
 <body>
-    <% if(error && error.length) { %>
-        <div id="error-flash" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4">
-        <div class="glass-card border-red-500/30 rounded-xl shadow-2xl overflow-hidden relative">
-            <div class="p-4 flex items-center gap-3">
-                <div class="size-8 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 shrink-0">
-                    <span class="material-symbols-outlined text-xl font-bold">error</span>
-                </div>
-                
-                <div class="flex-1">
-                    <p class="text-sm font-semibold text-white">
-                        <%= error %>
-                    </p>
-                </div>
-                
-                <button onclick="dismissError()" class="text-white/40 hover:text-white transition-colors">
-                    <span class="material-symbols-outlined text-lg">close</span>
-                </button>
-            </div>
-            
-            <div class="h-1 bg-white/5 w-full">
-                <div class="h-full bg-red-500 animate-progress"></div>
-            </div>
-        </div>
-    </div>
-        <% } %>
+   <div id="flash-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4 flex flex-col gap-3">
 
-            <% if(success && success.length) { %>
-                <div id="flash-message" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4">
-                    <div class="glass-card border-brand-purple/30 rounded-xl shadow-2xl overflow-hidden relative">
-                        <div class="p-4 flex items-center gap-3">
-                            <div
-                                class="size-8 bg-brand-purple/20 rounded-full flex items-center justify-center text-brand-purple shrink-0">
-                                <span class="material-symbols-outlined text-xl font-bold">check_circle</span>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-semibold text-white">
-                                    <%=success%>
-                                </p>
-                            </div>
-                            <button onclick="dismissFlash()" class="text-white/40 hover:text-white transition-colors">
-                                <span class="material-symbols-outlined text-lg">close</span>
-                            </button>
-                        </div>
-                        <div class="h-1 bg-white/5 w-full">
-                            <div class="h-full bg-brand-purple animate-progress"></div>
-                        </div>
-                    </div>
-                </div>
-                <% } %>
+  <!-- 1. ERROR FLASH -->
+  <% if (typeof error !== 'undefined' && error && error.length) { %>
+    <div id="flash-error" class="flash-toast glass-card border-red-500/30 rounded-xl shadow-2xl overflow-hidden relative transition-all duration-500">
+      <div class="p-4 flex items-center gap-3">
+        <div class="size-8 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 shrink-0">
+          <span class="material-symbols-outlined text-xl font-bold">error</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-bold text-red-400 uppercase tracking-wider">Error</p>
+          <p class="text-sm font-semibold text-white leading-tight mt-0.5"><%= error %></p>
+        </div>
+        <button onclick="dismissToast('flash-error')" class="text-white/40 hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+      <div class="h-1 bg-white/5 w-full">
+        <div class="h-full bg-red-500 animate-progress"></div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- 2. SUCCESS FLASH -->
+  <% if (typeof success !== 'undefined' && success && success.length) { %>
+    <div id="flash-success" class="flash-toast glass-card border-emerald-500/30 rounded-xl shadow-2xl overflow-hidden relative transition-all duration-500">
+      <div class="p-4 flex items-center gap-3">
+        <div class="size-8 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 shrink-0">
+          <span class="material-symbols-outlined text-xl font-bold">check_circle</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Success</p>
+          <p class="text-sm font-semibold text-white leading-tight mt-0.5"><%= success %></p>
+        </div>
+        <button onclick="dismissToast('flash-success')" class="text-white/40 hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+      <div class="h-1 bg-white/5 w-full">
+        <div class="h-full bg-emerald-500 animate-progress"></div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- 3. WARNING FLASH -->
+  <% if (typeof warning !== 'undefined' && warning && warning.length) { %>
+    <div id="flash-warning" class="flash-toast glass-card border-amber-500/30 rounded-xl shadow-2xl overflow-hidden relative transition-all duration-500">
+      <div class="p-4 flex items-center gap-3">
+        <div class="size-8 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-400 shrink-0">
+          <span class="material-symbols-outlined text-xl font-bold">warning</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Warning</p>
+          <p class="text-sm font-semibold text-white leading-tight mt-0.5"><%= warning %></p>
+        </div>
+        <button onclick="dismissToast('flash-warning')" class="text-white/40 hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+      <div class="h-1 bg-white/5 w-full">
+        <div class="h-full bg-amber-500 animate-progress"></div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- 4. INFO FLASH -->
+  <% if (typeof info !== 'undefined' && info && info.length) { %>
+    <div id="flash-info" class="flash-toast glass-card border-sky-500/30 rounded-xl shadow-2xl overflow-hidden relative transition-all duration-500">
+      <div class="p-4 flex items-center gap-3">
+        <div class="size-8 bg-sky-500/20 rounded-full flex items-center justify-center text-sky-400 shrink-0">
+          <span class="material-symbols-outlined text-xl font-bold">info</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-xs font-bold text-sky-400 uppercase tracking-wider">Notice</p>
+          <p class="text-sm font-semibold text-white leading-tight mt-0.5"><%= info %></p>
+        </div>
+        <button onclick="dismissToast('flash-info')" class="text-white/40 hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+      <div class="h-1 bg-white/5 w-full">
+        <div class="h-full bg-sky-500 animate-progress"></div>
+      </div>
+    </div>
+  <% } %>
+
+</div>
 </body>
 
 <script id="tailwind-config">
@@ -102,44 +140,27 @@
             },
         },
     }
-    function dismissFlash() {
-        const flash = document.getElementById('flash-message');
-        if (flash) {
-            // Optional: Add a fade-out effect before removing
-            flash.style.opacity = '0';
-            flash.style.transition = 'opacity 0.5s ease';
-
-            setTimeout(() => {
-                flash.remove();
-            }, 500);
-        }
-    }
-
-    // Auto-dismiss after 5 seconds (matching your CSS animation duration)
-    const flashExists = document.getElementById('flash-message');
-    if (flashExists) {
-        setTimeout(() => {
-            dismissFlash();
-        }, 5000);
-    }
-
-
-    function dismissError() {
-    const errorFlash = document.getElementById('error-flash');
-    if (errorFlash) {
-        errorFlash.style.opacity = '0';
-        errorFlash.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-            errorFlash.remove();
-        }, 500);
-    }
-}
-
-// Auto-dismiss logic for Error Flash
-const errorExists = document.getElementById('error-flash');
-if (errorExists) {
+    // Generic dismiss handler for any toast ID
+function dismissToast(toastId) {
+  const toast = document.getElementById(toastId);
+  if (toast) {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-10px)';
+    
     setTimeout(() => {
-        dismissError();
-    }, 5000); // Matches the 5s shrink animation
+      toast.remove();
+    }, 400); // Remove element after smooth fade-out
+  }
 }
+
+// Auto-dismiss all active flash messages exactly when progress completes (5s)
+document.addEventListener('DOMContentLoaded', () => {
+  const toasts = document.querySelectorAll('.flash-toast');
+  
+  toasts.forEach((toast) => {
+    setTimeout(() => {
+      dismissToast(toast.id);
+    }, 5000); // Synchronized with 5s CSS animation
+  });
+});
 </script>

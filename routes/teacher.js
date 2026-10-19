@@ -19,17 +19,18 @@ router.get(
   isTeacher,
   teacherController.addStudentPage,
 );
-router.post(
-  "/request/reject",
-  isLoggedIn,
-  isTeacher,
-  teacherController.requestReject
-);
-router.post('/request/accept',
-  isLoggedIn,
-  isTeacher,
-  teacherController.requestApprove
-);
+// router.post(
+//   "/request/reject",
+//   isLoggedIn,
+//   isTeacher,
+//   teacherController.requestReject,
+// );
+// router.post(
+//   "/request/accept",
+//   isLoggedIn,
+//   isTeacher,
+//   teacherController.requestApprove,
+// );
 router.get(
   "/addAssignment",
   isLoggedIn,
@@ -54,7 +55,7 @@ router.post(
   isTeacher,
   teacherController.addResource,
 );
-router.post("/addStudent", isLoggedIn, isTeacher, teacherController.addStudent);
+// router.post("/addStudent", isLoggedIn, isTeacher, teacherController.addStudent);
 router.post(
   "/submitAttendance",
   isLoggedIn,
@@ -121,6 +122,12 @@ router.get(
   isTeacher,
   teacherController.addExamPage,
 );
+router.get(
+  "/studentProfile/:id",
+  isLoggedIn,
+  isTeacher,
+  teacherController.renderStudentProfile,
+);
 
 router.post(
   "/exams/initialize",
@@ -142,10 +149,58 @@ router.post(
   teacherController.updateApplicationStatus,
 );
 
-router.get(
-  "/joinClass/:classId",
+// router.get(
+//   "/joinClass/:classId",
+//   isLoggedIn,
+//   teacherController.addStudentRequest,
+// );
+
+router.post(
+  "/addSingleStudent",
   isLoggedIn,
-  teacherController.addStudentRequest,
+  isTeacher,
+  teacherController.addSingleStudent,
 );
 
+router.post(
+  "/addMultipleStudents",
+  isLoggedIn,
+  isTeacher,
+  teacherController.addMultipleStudents,
+);
+
+router.post(
+  "/notice/delete",
+  isLoggedIn,
+  isTeacher,
+  teacherController.deleteNotice,
+);
+
+router.post(
+  "/student/edit/:id",
+  isLoggedIn,
+  isTeacher,
+  teacherController.updateStudentProfile,
+);
+
+router.post(
+  "/student/reset-password/:id",
+  isLoggedIn,
+  isTeacher,
+  teacherController.resetStudentPassword,
+);
+
+router.post(
+  "/student/suspend/:id",
+  isLoggedIn,
+  isTeacher,
+  teacherController.toggleStudentSuspension,
+);
+
+router.post(
+  "/class/timetable/update/:classId",
+  isLoggedIn,
+  isTeacher,
+  teacherController.updateTimetableSlot,
+);
 module.exports = router;

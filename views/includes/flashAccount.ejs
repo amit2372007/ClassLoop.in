@@ -1,0 +1,97 @@
+<!-- views/includes/flash.ejs -->
+
+<!-- Floating Flash Toast Container -->
+<div id="flash-container" class="fixed top-5 right-5 z-[9999] w-full max-w-sm flex flex-col gap-3 pointer-events-none">
+
+  <!-- 1. SUCCESS FLASH -->
+  <% if (typeof success !== 'undefined' && success && success.length) { %>
+    <div id="flash-success" class="flash-toast pointer-events-auto bg-white border border-slate-200 shadow-xl rounded-xl p-4 flex items-start gap-3 transition-all duration-300 relative overflow-hidden">
+      <div class="absolute left-0 top-0 h-full w-1.5 bg-emerald-500"></div>
+      <div class="h-9 w-9 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 ml-1">
+        <span class="material-symbols-outlined text-lg">check_circle</span>
+      </div>
+      <div class="flex-1 pr-1">
+        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Success</h4>
+        <p class="text-xs text-slate-600 mt-0.5 leading-relaxed"><%= success %></p>
+      </div>
+      <button onclick="dismissToast('flash-success')" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>
+  <% } %>
+
+  <!-- 2. ERROR FLASH -->
+  <% if (typeof error !== 'undefined' && error && error.length) { %>
+    <div id="flash-error" class="flash-toast pointer-events-auto bg-white border border-slate-200 shadow-xl rounded-xl p-4 flex items-start gap-3 transition-all duration-300 relative overflow-hidden">
+      <div class="absolute left-0 top-0 h-full w-1.5 bg-red-500"></div>
+      <div class="h-9 w-9 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-red-600 shrink-0 ml-1">
+        <span class="material-symbols-outlined text-lg">error</span>
+      </div>
+      <div class="flex-1 pr-1">
+        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Action Failed</h4>
+        <p class="text-xs text-slate-600 mt-0.5 leading-relaxed"><%= error %></p>
+      </div>
+      <button onclick="dismissToast('flash-error')" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>
+  <% } %>
+
+  <!-- 3. WARNING FLASH -->
+  <% if (typeof warning !== 'undefined' && warning && warning.length) { %>
+    <div id="flash-warning" class="flash-toast pointer-events-auto bg-white border border-slate-200 shadow-xl rounded-xl p-4 flex items-start gap-3 transition-all duration-300 relative overflow-hidden">
+      <div class="absolute left-0 top-0 h-full w-1.5 bg-amber-500"></div>
+      <div class="h-9 w-9 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0 ml-1">
+        <span class="material-symbols-outlined text-lg">warning</span>
+      </div>
+      <div class="flex-1 pr-1">
+        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Attention Required</h4>
+        <p class="text-xs text-slate-600 mt-0.5 leading-relaxed"><%= warning %></p>
+      </div>
+      <button onclick="dismissToast('flash-warning')" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>
+  <% } %>
+
+  <!-- 4. INFO FLASH -->
+  <% if (typeof info !== 'undefined' && info && info.length) { %>
+    <div id="flash-info" class="flash-toast pointer-events-auto bg-white border border-slate-200 shadow-xl rounded-xl p-4 flex items-start gap-3 transition-all duration-300 relative overflow-hidden">
+      <div class="absolute left-0 top-0 h-full w-1.5 bg-sky-500"></div>
+      <div class="h-9 w-9 rounded-lg bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 shrink-0 ml-1">
+        <span class="material-symbols-outlined text-lg">info</span>
+      </div>
+      <div class="flex-1 pr-1">
+        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Notice</h4>
+        <p class="text-xs text-slate-600 mt-0.5 leading-relaxed"><%= info %></p>
+      </div>
+      <button onclick="dismissToast('flash-info')" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>
+  <% } %>
+
+</div>
+
+<!-- Auto-dismiss and Animation Script -->
+<script>
+  function dismissToast(toastId) {
+    const toast = document.getElementById(toastId);
+    if (toast) {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const toasts = document.querySelectorAll('.flash-toast');
+    toasts.forEach((toast) => {
+      setTimeout(() => {
+        dismissToast(toast.id);
+      }, 5000); // Automatically disappears after 5 seconds
+    });
+  });
+</script>

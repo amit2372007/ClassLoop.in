@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accountant Dashboard | ClassLoop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0ea5e9", // Tailwind sky-500
+              finance: "#10b981", // Emerald for financial success
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Compact typography for data density */
+      body {
+        font-size: 14px;
+      }
+      .material-symbols-outlined {
+        font-size: 20px;
+      }
+      /* Hide scrollbar for clean look */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800 flex h-screen overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col transition-all">
+      <!-- Logo Area -->
+      <div
+        class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950"
+      >
+        <span class="material-symbols-outlined text-primary mr-2"
+          >account_balance</span
+        >
+        <span class="font-bold text-lg tracking-wide"
+          >Class<span class="text-primary">Loop</span> Finance</span
+        >
+      </div>
+
+      <!-- Navigation Links -->
+
+      <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+        <!-- Dashboard Tab -->
+        <a
+          href="/accountant?Tab=Dashboard"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'Dashboard' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          Dashboard
+        </a>
+
+        <!-- Fee Counter Tab -->
+        <a
+          href="/accountant?Tab=FeeCounter"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'FeeCounter' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">payments</span>
+          Fee Counter
+        </a>
+
+        <!-- Day Book & BRS Tab -->
+        <a
+          href="/accountant?Tab=DayBook"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'DayBook' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">menu_book</span>
+          Day Book & BRS
+        </a>
+
+        <!-- Payroll & Staff Tab -->
+        <a
+          href="/accountant?Tab=Payroll"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'Payroll' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">badge</span>
+          Payroll & Staff
+        </a>
+
+        <!-- Vendors & Payables Tab -->
+        <a
+          href="/accountant?Tab=Vendors"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'Vendors' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">local_shipping</span>
+          Vendors & Payables
+        </a>
+
+        <!-- Financial Reports Tab -->
+        <a
+          href="/accountant?Tab=Reports"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'Reports' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">analytics</span>
+          Financial Reports
+        </a>
+
+        <!-- Tax & Audit Tab -->
+        <a
+          href="/accountant?Tab=Tax"
+          class="flex items-center gap-3 px-3 py-2.5 <%= activeTab === 'Tax' ? 'bg-white/20 text-white font-bold border-l-4 border-primary shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium' %> rounded-lg transition-colors"
+        >
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          Tax & Audit
+        </a>
+      </nav>
+
+      <!-- User Profile Mini -->
+      <div
+        class="p-4 border-t border-slate-800 bg-slate-900 flex items-center gap-3"
+      >
+        <div
+          class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold"
+        >
+          AK
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold">Amit Kumar</span>
+          <span class="text-xs text-slate-400">Chief Accountant</span>
+        </div>
+      </div>
+    </aside>
+
+    <%- include("../includes/flashAccount.ejs") %>
+    <% if(activeTab==="Dashboard" ) { %>
+
+                    <%- include('../includes/accountant/Dashboard.ejs') %>
+
+                <% } else if(activeTab==="FeeCounter"){ %>
+                  <%- include('../includes/accountant/FeeCounter.ejs') %>
+              <%  }  %>
+
+    
+  </body>
+</html>

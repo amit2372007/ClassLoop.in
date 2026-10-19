@@ -33,49 +33,81 @@
         </div>
 
         <!-- Stats / Metrics Section -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <a href="/teacher?tab=Attendance" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-slate-500 text-xs md:text-sm font-medium">Today's Attendance</span>
-                    <span class="material-symbols-outlined text-primary text-xl md:text-2xl">groups</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl md:text-3xl font-bold">
-                        <%= isMarked ? `${attendancePercent}%` : '0%' %>
-                    </h3>
-                    <span class="text-[10px] md:text-xs font-bold <%= isMarked ? 'text-emerald-500' : 'text-slate-400' %> flex items-center">
-                        <%= isMarked ? 'Completed' : 'Pending' %>
-                        <span class="material-symbols-outlined text-xs ml-1">
-                            <%= isMarked ? 'check_circle' : 'pending' %>
-                        </span>
-                    </span>
-                </div>
-            </a>
+<section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+    
+    <!-- 1. Strength of the Class -->
+<a href="/teacher?tab=Students" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+    <div class="flex items-center justify-between mb-2">
+        <span class="text-slate-500 text-xs md:text-sm font-medium">Class Strength</span>
+        <span class="material-symbols-outlined text-indigo-500 text-xl md:text-2xl">diversity_3</span>
+    </div>
+    <div class="flex items-baseline gap-2">
+        <h3 class="text-2xl md:text-3xl font-bold">
+            <%= (currClass && currClass.students) ? currClass.students.length : 0 %>
+        </h3>
+        <span class="text-[10px] md:text-xs text-slate-400">Enrolled</span>
+    </div>
+</a>
 
-            <a href="/teacher?tab=Assignments" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-slate-500 text-xs md:text-sm font-medium">Class Assignments</span>
-                    <span class="material-symbols-outlined text-amber-500 text-xl md:text-2xl">pending_actions</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl md:text-3xl font-bold"><%= assignments.length %></h3>
-                    <span class="text-xs md:text-sm text-slate-400">Total Active</span>
-                </div>
-            </a>
+    <!-- 2. Today's Attendance -->
+    <a href="/teacher?tab=Attendance" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-xs md:text-sm font-medium">Today's Attendance</span>
+            <span class="material-symbols-outlined text-primary text-xl md:text-2xl">groups</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <h3 class="text-2xl md:text-3xl font-bold">
+                <%= isMarked ? `${attendancePercent}%` : '0%' %>
+            </h3>
+            <span class="text-[10px] md:text-xs font-bold <%= isMarked ? 'text-emerald-500' : 'text-slate-400' %> flex items-center">
+                <%= isMarked ? 'Completed' : 'Pending' %>
+                <span class="material-symbols-outlined text-xs ml-1">
+                    <%= isMarked ? 'check_circle' : 'pending' %>
+                </span>
+            </span>
+        </div>
+    </a>
 
-            <a href="/teacher?tab=Timetable" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-slate-500 text-xs md:text-sm font-medium">Current Status</span>
-                    <span class="material-symbols-outlined text-primary text-xl md:text-2xl">schedule</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-xl md:text-3xl font-bold">
-                        <%= new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
-                    </h3>
-                    <span class="text-[10px] md:text-xs font-bold text-rose-500 flex items-center">Live Updates</span>
-                </div>
-            </a>
-        </section>
+    <!-- 3. Total Assignments -->
+    <a href="/teacher?tab=Assignments" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-xs md:text-sm font-medium">Class Assignments</span>
+            <span class="material-symbols-outlined text-amber-500 text-xl md:text-2xl">assignment</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <h3 class="text-2xl md:text-3xl font-bold"><%= assignments.length %></h3>
+            <span class="text-[10px] md:text-xs text-slate-400">Active Tasks</span>
+        </div>
+    </a>
+
+    <!-- 4. Pending Applications -->
+    <a href="/teacher?tab=Applications" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-xs md:text-sm font-medium">Pending Apps</span>
+            <span class="material-symbols-outlined text-rose-500 text-xl md:text-2xl">mark_email_unread</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <h3 class="text-2xl md:text-3xl font-bold"><%= pendingApps %></h3>
+            <span class="text-[10px] md:text-xs text-rose-500 font-bold flex items-center">Action Required</span>
+        </div>
+    </a>
+
+    <!-- 5. Current Status (Sample Class) -->
+    <a href="/teacher?tab=Timetable" class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-xs md:text-sm font-medium">Ongoing Class</span>
+            <span class="material-symbols-outlined text-emerald-500 text-xl md:text-2xl">play_circle</span>
+        </div>
+        <div class="flex flex-col mt-1">
+            <h3 class="text-sm md:text-base font-bold text-slate-800 dark:text-white truncate">B.Tech CSE - 3rd Year</h3>
+            <span class="text-[10px] md:text-xs font-bold text-emerald-500 flex items-center mt-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                Room 402 • Live
+            </span>
+        </div>
+    </a>
+
+</section>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
             <!-- Middle Column: Feed -->
@@ -150,144 +182,152 @@
                 </form>
                 
                 <div class="space-y-4 mt-6 md:mt-8">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg md:text-xl font-bold flex items-center gap-2">
-                            Student Pending Requests
-                            <% if (request && request.length > 0) { %>
-                                <span class="bg-rose-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                    <%= request.length %>
-                                </span>
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+            Recent Notices
+            <% if (notices && notices.length > 0) { %>
+                <span class="bg-indigo-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <%= notices.length %>
+                </span>
+            <% } %>
+        </h3>
+    </div>
+
+    <!-- Notices List -->
+    <% if (notices && notices.length > 0) { %>
+        <div class="space-y-3">
+            <% notices.forEach(function(notice) { %>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 md:p-4 bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow gap-3 sm:gap-4">
+                    
+                    <!-- Left: Author Profile Pic & Notice Info -->
+                    <div class="flex items-start gap-3 md:gap-4 min-w-0 flex-1">
+                        <img 
+                            class="w-9 h-9 md:w-10 md:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 shrink-0 mt-0.5 sm:mt-0" 
+                            alt="Author Avatar" 
+                            src="<%= (notice.author && notice.author.profilePic && notice.author.profilePic.url) ? notice.author.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>" 
+                        />
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">
+                                    <%= notice.title %>
+                                </h4>
+                                <% if (notice.createdAt) { %>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 shrink-0">
+                                        • <%= new Date(notice.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+                                    </span>
+                                <% } %>
+                            </div>
+
+                            <% if (notice.content || notice.message) { %>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 font-normal line-clamp-2 mt-0.5">
+                                    <%= notice.content || notice.message %>
+                                </p>
                             <% } %>
-                        </h3>
-                    </div>
 
-                    <% if (request && request.length > 0) { %>
-                        <div class="space-y-3">
-                    <% request.forEach(function(reqItem) { %>
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 md:p-4 bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow gap-3 sm:gap-4">
-                            
-                            <div class="flex items-center gap-3 md:gap-4 min-w-0">
-                                <img 
-                                    class="w-9 h-9 md:w-10 md:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 shrink-0" 
-                                    alt="Student Avatar" 
-                                    src="<%= reqItem.sender.profilePic ? reqItem.sender.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>" 
-                                />
-                                <div class="min-w-0 flex-1">
-                                    <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">
-                                        <%= reqItem.sender.name || reqItem.sender.username %>
-                                    </h4>
-                                    <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 font-medium">
-                                        Requested to join this class
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-2 shrink-0">
-                                
-                                <form action="/teacher/request/accept" method="POST" class="m-0 flex items-center gap-2">
-                                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
-                                    <input type="hidden" name="studentId" value="<%= reqItem.sender._id %>">
-                                    <input type="hidden" name="classId" value="<%= currClass._id %>">
-                                    
-                                    <input 
-                                        type="number" 
-                                        name="rollNumber" 
-                                        placeholder="Roll No." 
-                                        required
-                                        class="w-16 sm:w-20 md:w-24 px-2 py-1.5 text-[11px] md:text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white"
-                                    >
-
-                                    <button type="submit" title="Accept" class="w-8 h-8 flex items-center justify-center bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
-                                        <span class="material-symbols-outlined text-sm font-bold">check</span>
-                                    </button>
-                                </form>
-
-                                <form action="/teacher/request/reject" method="POST" class="m-0">
-                                    <input type="hidden" name="requestId" value="<%= reqItem._id %>">
-                                    <button type="submit" title="Reject" class="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
-                                        <span class="material-symbols-outlined text-sm font-bold">close</span>
-                                    </button>
-                                </form>
-                            </div>
-
-                        </div>
-                    <% }) %>
-                </div>
-                    <% } else { %>
-                        <div class="flex flex-col items-center justify-center p-6 md:p-8 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 border-dashed rounded-xl text-center">
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
-                                <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-lg md:text-xl">inbox</span>
-                            </div>
-                            <h4 class="text-xs md:text-sm font-bold text-slate-700 dark:text-slate-300">No Pending Requests</h4>
-                            <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-[200px]">
-                                When students scan the QR code to join, their requests will appear here.
+                            <p class="text-[10px] md:text-xs text-slate-400 dark:text-slate-500 font-medium mt-1">
+                                Posted by <span class="font-semibold text-slate-700 dark:text-slate-300"><%= notice.author ? notice.author.name : 'System' %></span>
                             </p>
                         </div>
-                    <% } %>
+                    </div>
+
+                    <!-- Right: Delete Action -->
+                    <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                        <form action="/teacher/notice/delete" method="POST" class="m-0" onsubmit="return confirm('Are you sure you want to delete this notice?');">
+                            <input type="hidden" name="noticeId" value="<%= notice._id %>">
+                            <button type="submit" title="Delete Notice" class="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500 dark:hover:text-white rounded-lg transition-colors shrink-0">
+                                <span class="material-symbols-outlined text-sm font-bold">delete</span>
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <!-- Empty State -->
+        <div class="flex flex-col items-center justify-center p-6 md:p-8 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 border-dashed rounded-xl text-center">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-lg md:text-xl">campaign</span>
+            </div>
+            <h4 class="text-xs md:text-sm font-bold text-slate-700 dark:text-slate-300">No Recent Notices</h4>
+            <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-[200px]">
+                Notices created for this class or school will appear here.
+            </p>
+        </div>
+    <% } %>
+</div>
             </div>
             
             <!-- Right Column: My Classes -->
-            <div class="space-y-4 md:space-y-6">
-                <div
-                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm space-y-3 md:space-y-4">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
-                        <h4 class="text-xs md:text-sm font-bold">Register New Subject</h4>
-                    </div>
-                    <form action="/teacher/addSubject" class="space-y-3" method="POST">
-                        <div>
-                            <input
-                                class="w-full px-3 md:px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs md:text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
-                                name="subjectName" placeholder="Subject Name" type="text" />
-                        </div>
-                        <div>
-                            <input
-                                class="w-full px-3 md:px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs md:text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
-                                name="teacherId" placeholder="Teacher to Assign" type="text" />
-                        </div>
-                        <button
-                            class="w-full py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-                            type="submit">
-                            <span class="material-symbols-outlined text-base md:text-lg">add</span>
-                            Add Subject
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg md:text-xl font-bold">My Assigned Classes</h3>
-                </div>
-                
-                <div
-                    class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-sm">
-                    <% for(let Subject of currClass.subjects) { %>
-                        <div class="p-3 md:p-4 bg-primary/5 hover:bg-primary/10 transition-colors">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="min-w-0 flex-1">
-                                    <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">
-                                        <%=Subject.name %>
-                                    </h4>
-                                    <p class="text-[10px] md:text-xs text-primary font-semibold mt-0.5">Class <%=currClass.className%>-
-                                            <%=currClass.section%>
-                                    </p>
-                                </div>
-                                <span
-                                    class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] md:text-[10px] font-bold rounded uppercase shrink-0">Active</span>
-                            </div>
-                            <div class="flex items-center gap-2 mt-3 md:mt-4">
-                                <img class="w-5 h-5 md:w-6 md:h-6 rounded-full border border-slate-200 shrink-0"
-                                    data-alt="Small teacher avatar" src="<%=Subject.teacher.profilePic.url%>" />
-                                <span class="text-[10px] md:text-xs text-slate-600 dark:text-slate-400 font-medium truncate">Prof.
-                                    <%=Subject.teacher.name%>
-                                </span>
-                            </div>
-                        </div>
-                        <% } %>
-
-                </div>
-
+<div class="space-y-4 md:space-y-6">
+    <div
+        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-4 md:p-5 shadow-sm space-y-3 md:space-y-4">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
+            <h4 class="text-xs md:text-sm font-bold">Register New Subject</h4>
+        </div>
+        <form action="/teacher/addSubject" class="space-y-3" method="POST">
+            <div>
+                <input
+                    class="w-full px-3 md:px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs md:text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-primary"
+                    name="subjectName" placeholder="Subject Name" type="text" required />
             </div>
+            <div>
+                <select
+                    class="w-full px-3 md:px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs md:text-sm text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary outline-none"
+                    name="teacherId" required>
+                    <option value="" disabled selected>Select Teacher to Assign</option>
+                    <% if (currSchool && currSchool.teachers && currSchool.teachers.length > 0) { %>
+                        <% for (let teacher of currSchool.teachers) { %>
+                            <option value="<%= teacher._id %>">
+                                Prof. <%= teacher.name %>
+                            </option>
+                        <% } %>
+                    <% } else { %>
+                        <option value="" disabled>No teachers available</option>
+                    <% } %>
+                </select>
+            </div>
+            <button
+                class="w-full py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                type="submit">
+                <span class="material-symbols-outlined text-base md:text-lg">add</span>
+                Add Subject
+            </button>
+        </form>
+    </div>
+    
+    <div class="flex items-center justify-between">
+        <h3 class="text-lg md:text-xl font-bold">My Assigned Classes</h3>
+    </div>
+    
+    <div
+        class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-sm">
+        <% for(let Subject of currClass.subjects) { %>
+            <div class="p-3 md:p-4 bg-primary/5 hover:bg-primary/10 transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                    <div class="min-w-0 flex-1">
+                        <h4 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white truncate">
+                            <%=Subject.name %>
+                        </h4>
+                        <p class="text-[10px] md:text-xs text-primary font-semibold mt-0.5">Class <%=currClass.className%>-<%=currClass.section%>
+                        </p>
+                    </div>
+                    <span
+                        class="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] md:text-[10px] font-bold rounded uppercase shrink-0">Active</span>
+                </div>
+                <div class="flex items-center gap-2 mt-3 md:mt-4">
+                    <img class="w-5 h-5 md:w-6 md:h-6 rounded-full border border-slate-200 shrink-0"
+                        data-alt="Small teacher avatar" src="<%=Subject.teacher ? Subject.teacher.profilePic?.url : ''%>" />
+                    <span class="text-[10px] md:text-xs text-slate-600 dark:text-slate-400 font-medium truncate">Prof.
+                        <%=Subject.teacher ? Subject.teacher.name : 'Unassigned'%>
+                    </span>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
         </div>
     </div>
 </main>

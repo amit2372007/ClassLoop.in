@@ -112,8 +112,25 @@
                         <% } %>
                       </td>
                       <td class="px-6 py-4 text-right">
-                        <button class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-colors">Remind</button>
-                      </td>
+  <form action="/school/fees/remind" method="POST" class="inline-block m-0 p-0">
+    
+    <% if (fee.student && fee.student._id) { %>
+      <input type="hidden" name="studentId" value="<%= fee.student._id %>">
+    <% } %>
+    
+    <input type="hidden" name="month" value="<%= fee.month %>">
+    <input type="hidden" name="amount" value="<%= fee.calculatedBalance %>">
+
+    <button 
+      type="submit" 
+      class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-colors active:scale-95 shadow-sm shadow-indigo-600/20"
+      onclick="this.innerText = 'Sending...'; this.classList.add('opacity-70', 'cursor-not-allowed');"
+      <%= !(fee.student && fee.student._id) ? 'disabled' : '' %>
+    >
+      Remind
+    </button>
+  </form>
+</td>
                     </tr>
                   <% }) %>
                 <% } else { %>

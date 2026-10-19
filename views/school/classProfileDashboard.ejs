@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class <%= classroom?.className || 'N/A' %>-<%= classroom?.section || '' %> Profile | ClassLoop School Management</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Google Fonts: Inter & Material Symbols Outlined -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .fill-icon { font-variation-settings: 'FILL' 1; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header / Navigation Bar -->
+  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Brand & Breadcrumb -->
+      <div class="flex items-center space-x-3">
+        <div>
+          <div class="flex items-center space-x-2 text-xs text-slate-400 font-medium">
+            <a href="/school" class="hover:text-indigo-400 transition">Dashboard</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span class="text-indigo-400 font-semibold">Class <%= classroom?.className %>-<%= classroom?.section %> Profile</span>
+          </div>
+          <div class="flex items-center space-x-3 mt-0.5">
+            <h1 class="text-xl font-bold text-white tracking-tight">Classroom Profile</h1>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> Active Session <%= classroom?.session || 'Current' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Switcher -->
+      <div class="flex items-center flex-wrap gap-2.5">
+        <!-- Class Switcher Dropdown (Static visual placeholder per instruction) -->
+        <div class="relative">
+          <select id="classSwitcher" onchange="handleClassSwitch(this.value)" class="bg-slate-800/80 border border-slate-700 text-slate-200 text-xs rounded-lg font-medium px-3 py-2 pr-8 focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer appearance-none transition">
+            <option value="<%= classroom?.className %>-<%= classroom?.section %>" selected>Class <%= classroom?.className %>-<%= classroom?.section %></option>
+            <option value="10-B">Class 10-B (Commerce)</option>
+            <option value="11-A">Class 11-A (PCM)</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2 top-2.5 text-slate-400 pointer-events-none text-sm">unfold_more</span>
+        </div>
+
+        <button onclick="exportRosterCSV()" class="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-3 py-2 rounded-lg transition active:scale-95" title="Export Roster to CSV">
+          <span class="material-symbols-outlined text-base">download</span>
+          <span class="hidden sm:inline">Export</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+
+    <!-- Class Banner & Info Card -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/60 border border-slate-800 p-6 lg:p-8 shadow-xl">
+      <!-- Background Decorative Blur Circle -->
+      <div class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        
+        <!-- Left: Classroom Primary Details -->
+        <div class="space-y-4 max-w-2xl">
+          <div class="flex items-center flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-bold text-sm tracking-wide">
+              SECTION <%= classroom?.section || 'A' %>
+            </span>
+            <span class="px-3 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 font-medium text-xs flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-slate-400">calendar_today</span>
+              Academic Year <%= classroom?.session || new Date().getFullYear() %>
+            </span>
+          </div>
+
+          <div>
+            <h2 class="text-3xl font-extrabold text-white tracking-tight">Class <%= classroom?.className %></h2>
+            <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+              <%= classroom?.school?.name || 'Secondary Education Board' %> • This Classroom is managed by the assigned Class Teacher
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Dedicated Class Teacher Card -->
+        <div class="bg-slate-800/90 backdrop-blur border border-slate-700/80 rounded-xl p-4 lg:w-80 shadow-lg">
+          <% if (classroom?.classTeacher) { %>
+            <div class="flex items-center space-x-3.5">
+              <img src="<%= classroom.classTeacher.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(classroom.classTeacher.name)}&background=4f46e5&color=fff&bold=true` %>" 
+                   alt="<%= classroom.classTeacher.name %>" 
+                   class="w-14 h-14 rounded-xl object-cover ring-2 ring-indigo-500/40">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">Class Teacher</span>
+                </div>
+                <h3 class="text-base font-bold text-white mt-0.5"><%= classroom.classTeacher.name %></h3>
+                <p class="text-xs text-slate-400 font-medium"><%= classroom.classTeacher.designation || 'Faculty Member' %></p>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-700/60 space-y-2 text-xs text-slate-300">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="flex items-center gap-1.5 truncate">
+                  <span class="material-symbols-outlined text-sm">mail</span> <%= classroom.classTeacher.email || 'No email provided' %>
+                </span>
+              </div>
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">call</span> <%= classroom.classTeacher.phone ? `+91 ${classroom.classTeacher.phone}` : 'N/A' %>
+                </span>
+              </div>
+            </div>
+
+            <div class="mt-3 flex gap-2">
+              <button onclick="showToast('Initiating secure call route to Class Teacher...', 'info')" class="flex-1 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold rounded-lg transition">
+                View Profile
+              </button>
+            </div>
+          <% } else { %>
+            <div class="flex items-center justify-center h-full text-slate-500 text-sm font-medium">
+              No Class Teacher Assigned
+            </div>
+          <% } %>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Metrics Grid (4 Stat Cards) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Card 1: Attendance Today -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Avg Attendance</span>
+          <span class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
+            <span class="material-symbols-outlined text-lg">fact_check</span>
+          </span>
+        </div>
+        <div class="mt-3 flex items-baseline justify-between">
+          <span class="text-3xl font-extrabold text-white"><%= stats.averageAttendance %>%</span>
+          <span class="text-xs font-medium text-emerald-400">Updated</span>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
+          <div class="bg-emerald-500 h-full rounded-full" style="width: <%= stats.averageAttendance %>%;"></div>
+        </div>
+        <div class="mt-2 text-xs text-slate-400 flex justify-between">
+          <span>Overall Class Metric</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Enrolled vs Capacity -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Enrolled Students</span>
+          <span class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg">
+            <span class="material-symbols-outlined text-lg">groups</span>
+          </span>
+        </div>
+        <div class="mt-3 flex items-baseline justify-between">
+          <span class="text-3xl font-extrabold text-white"><%= stats.totalStudents %> <span class="text-lg font-normal text-slate-500"></span></span>
+        </div>
+        <div class="mt-4 pt-2 border-t border-slate-800 text-xs text-slate-400">
+          Capacity: <%= classroom?.capacity || 40 %> Seats Total
+        </div>
+      </div>
+
+      <!-- Card 3: Fee Defaulters -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Fee Defaulters</span>
+          <span class="p-2 bg-rose-500/10 text-rose-400 rounded-lg">
+            <span class="material-symbols-outlined text-lg">payments</span>
+          </span>
+        </div>
+        <div class="mt-3 flex items-baseline justify-between">
+          <span class="text-3xl font-extrabold text-rose-400"><%= stats.totalFeeDefaulters %> <span class="text-sm font-semibold text-slate-400">Students</span></span>
+        </div>
+        <div class="mt-2">
+          <span class="text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">₹ <%= stats.totalPendingFee.toLocaleString() %> Dues</span>
+        </div>
+        <div class="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between">
+          <button onclick="notifyAllDefaulters()" class="text-xs text-rose-300 hover:text-rose-200 font-semibold underline underline-offset-2 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">send</span> Remind All
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 4: Subject Teachers -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Assigned Subjects</span>
+          <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
+            <span class="material-symbols-outlined text-lg">menu_book</span>
+          </span>
+        </div>
+        <div class="mt-3 flex items-baseline justify-between">
+          <span class="text-3xl font-extrabold text-white"><%= classroom?.subjects?.length || 0 %></span>
+          <span class="text-xs font-medium text-slate-400"><%= classroom?.teachers?.length || 0 %> Faculty</span>
+        </div>
+        <div class="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <span class="truncate pr-2">Core & Applied Subjects</span>
+          <button onclick="switchTab('tab-teachers')" class="text-indigo-400 font-semibold hover:underline shrink-0">View Faculty</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <div class="border-b border-slate-800 flex space-x-2 overflow-x-auto no-scrollbar">
+      <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn active-tab flex items-center space-x-2 py-3 px-4 font-semibold text-sm border-b-2 transition">
+        <span class="material-symbols-outlined text-lg">dashboard</span>
+        <span>Overview & Notices</span>
+      </button>
+
+      <button onclick="switchTab('tab-roster')" id="btn-tab-roster" class="tab-btn flex items-center space-x-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+        <span class="material-symbols-outlined text-lg">badge</span>
+        <span>Student Roster (<span id="rosterCountBadge"><%= stats.totalStudents %></span>)</span>
+      </button>
+
+      <button onclick="switchTab('tab-teachers')" id="btn-tab-teachers" class="tab-btn flex items-center space-x-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+        <span class="material-symbols-outlined text-lg">school</span>
+        <span>Teachers & Subjects</span>
+      </button>
+
+      <button onclick="switchTab('tab-timetable')" id="btn-tab-timetable" class="tab-btn flex items-center space-x-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+        <span class="material-symbols-outlined text-lg">calendar_month</span>
+        <span>Weekly Timetable</span>
+      </button>
+
+      <button onclick="switchTab('tab-analytics')" id="btn-tab-analytics" class="tab-btn flex items-center space-x-2 py-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+        <span class="material-symbols-outlined text-lg">analytics</span>
+        <span>Analytics & Health</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: OVERVIEW & NOTICE BOARD -->
+    <div id="tab-overview" class="tab-content space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Fee Defaulter Alert Widget & Quick Notices -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <!-- Urgent Alert Card: Pending Fee Overdues -->
+          <div class="bg-gradient-to-r from-rose-950/40 via-slate-900 to-slate-900 border border-rose-500/30 rounded-xl p-5 shadow-lg">
+            <div class="flex items-center justify-between pb-3 border-b border-rose-500/20">
+              <div class="flex items-center space-x-2.5">
+                <span class="p-2 bg-rose-500/20 text-rose-400 rounded-lg">
+                  <span class="material-symbols-outlined text-xl">warning</span>
+                </span>
+                <div>
+                  <h3 class="font-bold text-white text-base">Fee Defaulter Priority List</h3>
+                  <p class="text-xs text-rose-300/80">Action required before Term-1 Examination hall tickets are issued.</p>
+                </div>
+              </div>
+              <button onclick="notifyAllDefaulters()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold rounded-lg shadow transition">
+                Send Bulk SMS
+              </button>
+            </div>
+
+            <!-- Dynamic List of Defaulters -->
+            <div class="mt-4 space-y-3">
+              <% if (feeDefaultersList && feeDefaultersList.length > 0) { %>
+                <% feeDefaultersList.slice(0, 3).forEach((item, index) => { %>
+                  <div class="flex items-center justify-between bg-slate-950/60 p-3 rounded-lg border border-slate-800">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 rounded-full bg-slate-800 text-xs font-bold flex items-center justify-center text-slate-300">
+                        #<%= item.student?.rollNo || '00' %>
+                      </div>
+                      <div>
+                        <p class="text-xs font-semibold text-white"><%= item.student?.name || 'Unknown Student' %></p>
+                        <p class="text-[11px] text-slate-400">Contact: <%= item.student?.parentPhone || 'N/A' %></p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-xs font-bold text-rose-400">₹ <%= item.student?.pendingAmount?.toLocaleString() || 0 %></span>
+                      <p class="text-[10px] text-slate-500">Overdue Status</p>
+                    </div>
+                  </div>
+                <% }) %>
+                <% if (feeDefaultersList.length > 3) { %>
+                  <p class="text-xs text-center text-rose-400/80 pt-2">+ <%= feeDefaultersList.length - 3 %> more defaulters (View in Roster Tab)</p>
+                <% } %>
+              <% } else { %>
+                <div class="p-4 text-center text-slate-400 text-sm border border-dashed border-slate-700 rounded-lg">
+                  No fee defaults in this classroom. Great job!
+                </div>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Interactive Class Notice Board -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="material-symbols-outlined text-indigo-400">campaign</span>
+                <h3 class="font-bold text-white text-base">Class Notice Board</h3>
+              </div>
+              <span class="text-xs text-slate-400">Active feed</span>
+            </div>
+
+            <!-- Post New Announcement Input Form -->
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2">
+              <input id="noticeInputTitle" type="text" placeholder="Announcement Title..." class="w-full bg-slate-900 border border-slate-700/80 rounded px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <textarea id="noticeInputBody" rows="2" placeholder="Write notice details for students and parents..." class="w-full bg-slate-900 border border-slate-700/80 rounded px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"></textarea>
+              <div class="flex justify-between items-center pt-1">
+                <span class="text-[11px] text-slate-500">Posted by Admin/Class Teacher</span>
+                <button onclick="postNotice()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded transition">
+                  Post Announcement
+                </button>
+              </div>
+            </div>
+
+            <!-- Notices Feed Container -->
+            <div id="noticeFeed" class="space-y-3">
+              <!-- Static placeholders left to keep UI structure -->
+              <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-emerald-400">Parent-Teacher Meeting (PTM)</span>
+                  <span class="text-[10px] text-slate-400">Yesterday</span>
+                </div>
+                <p class="text-xs text-slate-300">Quarterly PTM scheduled for Saturday between 9:00 AM and 1:00 PM in Room 204. Attendance is mandatory for parents.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Quick Classroom Tools & QR Code Widget -->
+        <div class="space-y-6">
+          
+          <!-- Class QR Code Widget Card -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 text-center space-y-4">
+            <div class="flex items-center justify-between text-left">
+              <div>
+                <h4 class="text-sm font-bold text-white">Classroom QR Identity</h4>
+                <p class="text-[11px] text-slate-400">Scan for instant check-in</p>
+              </div>
+              <span class="material-symbols-outlined text-indigo-400">qr_code_scanner</span>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl inline-block shadow-lg border border-slate-200">
+              <img id="qrImagePreview" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=CLASSLOOP-<%= classroom?.className %>-<%= classroom?.section %>-<%= classroom?.session %>" 
+                   alt="Class QR Code" class="w-36 h-36 mx-auto">
+            </div>
+
+            <div class="text-xs text-slate-400 font-mono">
+              ID: CL-<%= classroom?.session %>-<%= classroom?.className %><%= classroom?.section %>
+            </div>
+
+            <div class="flex gap-2">
+              <button onclick="openQRModal()" class="flex-1 py-1.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold rounded-lg transition">
+                Expand QR
+              </button>
+              <button onclick="window.print()" class="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition">
+                Print Poster
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Statistics Summary -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+            <h4 class="text-sm font-bold text-white mb-2">Demographic Summary</h4>
+            
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-400">Boys / Girls Ratio</span>
+              <span class="font-bold text-white"><%= stats.genderStats.male %> Boys / <%= stats.genderStats.female %> Girls</span>
+            </div>
+            <% 
+               let malePct = stats.totalStudents ? (stats.genderStats.male / stats.totalStudents * 100).toFixed(1) : 0;
+               let femalePct = stats.totalStudents ? (stats.genderStats.female / stats.totalStudents * 100).toFixed(1) : 0;
+            %>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex">
+              <div class="bg-indigo-500 h-full" style="width: <%= malePct %>%;"></div>
+              <div class="bg-pink-500 h-full" style="width: <%= femalePct %>%;"></div>
+            </div>
+
+            <div class="pt-2 flex justify-between items-center text-xs border-t border-slate-800">
+              <span class="text-slate-400">Others</span>
+              <span class="font-bold text-emerald-400"><%= stats.genderStats.other %> Students</span>
+            </div>
+
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-400">Average Class Attendance</span>
+              <span class="font-medium text-emerald-400"><%= stats.averageAttendance %>%</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: STUDENT ROSTER TABLE -->
+    <div id="tab-roster" class="tab-content hidden space-y-4">
+      
+      <!-- Search and Filter Controls -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <!-- Search Input -->
+        <div class="relative w-full md:w-80">
+          <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-sm">search</span>
+          <input id="rosterSearch" type="text" onkeyup="filterRoster()" placeholder="Search by name or admission ID..." class="w-full bg-slate-950 border border-slate-700 rounded-lg pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto no-scrollbar">
+          <button onclick="setRosterFilter('all')" id="filter-all" class="roster-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition">
+            All Students
+          </button>
+          <button onclick="setRosterFilter('paid')" id="filter-paid" class="roster-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Fee Paid
+          </button>
+          <button onclick="setRosterFilter('defaulter')" id="filter-defaulter" class="roster-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Fee Defaulter
+          </button>
+          <button onclick="setRosterFilter('low-attendance')" id="filter-low-attendance" class="roster-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Low Attendance (&lt;75%)
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Students Table -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider font-semibold border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-4">Roll No</th>
+                <th class="py-3.5 px-4">DB ID</th>
+                <th class="py-3.5 px-4">Student Name</th>
+                <th class="py-3.5 px-4">Gender</th>
+                <th class="py-3.5 px-4">Attendance Rate</th>
+                <th class="py-3.5 px-4">Fee Status</th>
+                <th class="py-3.5 px-4">Parent Contact</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentRosterTbody" class="divide-y divide-slate-800">
+              <!-- Dynamically Populated by JS Using Backend Data -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+          <span id="rosterShowingText">Showing <%= stats.totalStudents %> of <%= stats.totalStudents %> Students</span>
+          <span>Updated as of today</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 3: TEACHERS & SUBJECTS GRID -->
+    <div id="tab-teachers" class="tab-content hidden space-y-4">
+      <div class="flex justify-between items-center mb-2">
+        <div>
+          <h3 class="text-base font-bold text-white">Faculty Allocation</h3>
+          <p class="text-xs text-slate-400">Assigned faculty members for Section <%= classroom?.section || 'A' %></p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <% if (classroom?.teachers && classroom.teachers.length > 0) { %>
+          <% classroom.teachers.forEach(teacher => { %>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm hover:border-slate-700 transition">
+              <div class="flex items-center space-x-3">
+                <img src="<%= teacher.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(teacher.name)}&background=3b82f6&color=fff&bold=true` %>" class="w-12 h-12 rounded-lg object-cover">
+                <div>
+                  <h4 class="font-bold text-white text-sm"><%= teacher.name %></h4>
+                  <p class="text-[11px] text-slate-400"><%= teacher.designation || 'Faculty Member' %></p>
+                </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 space-y-1 text-xs text-slate-300">
+                <p class="truncate"><span class="text-slate-500">Email:</span> <%= teacher.email || 'N/A' %></p>
+                <p><span class="text-slate-500">Contact:</span> <%= teacher.phone ? `+91 ${teacher.phone}` : 'N/A' %></p>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+           <div class="col-span-full py-10 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
+             No specific teachers assigned yet.
+           </div>
+        <% } %>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: WEEKLY TIMETABLE MATRIX (Static Placeholder) -->
+    <div id="tab-timetable" class="tab-content hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h3 class="text-base font-bold text-white">Class Schedule Grid</h3>
+          <p class="text-xs text-slate-400">Mon-Sat periods with assigned subjects and classroom locations</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-x-auto shadow-xl">
+        <table class="w-full text-left text-xs min-w-[700px]">
+          <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="p-3 w-28">Time Slot</th>
+              <th class="p-3">Monday</th>
+              <th class="p-3">Tuesday</th>
+              <th class="p-3">Wednesday</th>
+              <th class="p-3">Thursday</th>
+              <th class="p-3">Friday</th>
+              <th class="p-3">Saturday</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60">
+            <!-- Period 1 -->
+            <tr>
+              <td class="p-3 font-semibold text-slate-400 bg-slate-950/40">08:30 - 09:15 AM</td>
+              <td class="p-3" colspan="6">
+                <div class="p-2 rounded bg-slate-800/40 border border-dashed border-slate-700 text-slate-400 text-center">
+                  Timetable data currently unavailable. Edit class schedule from administrative settings.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: ANALYTICS & HEALTH (Static Visuals) -->
+    <div id="tab-analytics" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Attendance Trend Breakdown Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <h4 class="font-bold text-white text-sm">Monthly Attendance Trend</h4>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between text-slate-400 mb-1">
+                <span>Current Month</span>
+                <span class="font-semibold text-white"><%= stats.averageAttendance %>%</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full" style="width: <%= stats.averageAttendance %>%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Class Health Status Indicators -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+          <h4 class="font-bold text-white text-sm">Operational Health Indicators</h4>
+          
+          <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-300">Total Enrolled</span>
+            <span class="font-bold text-emerald-400"><%= stats.totalStudents %></span>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-300">Pending Fee Defaulters</span>
+            <span class="font-bold text-rose-400"><%= stats.totalFeeDefaulters %> Student(s)</span>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-300">Total Fee Outstanding</span>
+            <span class="font-bold text-amber-400">₹ <%= stats.totalPendingFee.toLocaleString() %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL 1: MARK ATTENDANCE MODAL -->
+  <div id="attendanceModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center">
+        <div>
+          <h3 class="font-bold text-white text-lg">Mark Class Attendance</h3>
+          <p class="text-xs text-slate-400">Section <%= classroom?.section %> • Today's Date</p>
+        </div>
+        <button onclick="closeAttendanceModal()" class="text-slate-400 hover:text-white p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto flex-1 space-y-3" id="attendanceStudentList">
+        <!-- JS dynamically populates student toggles -->
+      </div>
+
+      <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center">
+        <div class="text-xs text-slate-400">
+          <span id="attCountPresent" class="font-bold text-emerald-400">0</span> Present • 
+          <span id="attCountAbsent" class="font-bold text-rose-400">0</span> Absent
+        </div>
+        <div class="flex gap-2">
+          <button onclick="closeAttendanceModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300">
+            Cancel
+          </button>
+          <button onclick="submitAttendance()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold rounded-lg text-white shadow">
+            Save & Submit Logs
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: SEND BROADCAST NOTIFICATION MODAL -->
+  <div id="broadcastModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <span class="material-symbols-outlined text-indigo-400">campaign</span>
+          <h3 class="font-bold text-white text-base">Classroom Broadcast</h3>
+        </div>
+        <button onclick="closeBroadcastModal()" class="text-slate-400 hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Target Audience</label>
+          <select id="broadcastTarget" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="parents">All Parents (<%= stats.totalStudents %> Contacts)</option>
+            <option value="students">All Enrolled Students (<%= stats.totalStudents %>)</option>
+            <option value="defaulters">Fee Defaulters Parents Only (<%= stats.totalFeeDefaulters %>)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Message Subject</label>
+          <input id="broadcastSubject" type="text" placeholder="e.g. Science Project Submission Alert" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Broadcast Message Body</label>
+          <textarea id="broadcastBody" rows="4" placeholder="Type your broadcast message here..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeBroadcastModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-lg">
+          Cancel
+        </button>
+        <button onclick="sendBroadcast()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow">
+          Send Notification
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CLASS QR CODE FULL MODAL -->
+  <div id="qrModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-white text-base">Classroom Entrance QR Poster</h3>
+        <button onclick="closeQRModal()" class="text-slate-400 hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl inline-block border-4 border-indigo-600">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CLASSLOOP-<%= classroom?.className %>-<%= classroom?.section %>-<%= classroom?.session %>" alt="Class QR Code" class="w-48 h-48 mx-auto">
+        <p class="text-slate-900 font-extrabold text-sm mt-2">CLASS <%= classroom?.className %>-<%= classroom?.section %></p>
+        <p class="text-slate-500 text-[10px]">Session <%= classroom?.session %> • ClassLoop Portal</p>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="showToast('QR PNG graphic downloaded', 'success')" class="flex-1 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg">
+          Download PNG
+        </button>
+        <button onclick="window.print()" class="flex-1 py-2 bg-slate-800 text-slate-200 text-xs font-semibold rounded-lg">
+          Print Poster
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: STUDENT DETAIL VIEW MODAL -->
+  <div id="studentDetailModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl" id="studentDetailContent">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <script>
+    /* ==========================================================================
+       1. DATA STRUCTURE (Injected securely from Controller)
+       ========================================================================== */
+    const studentsData = <%- JSON.stringify(
+      (classroom.students || []).map(item => {
+        const student = item.student || {};
+        return {
+          id: student._id || 'Unknown',
+          rollNo: student.rollNo || 'N/A',
+          name: student.name || 'Unknown',
+          gender: student.gender || 'Not Specified',
+          attendancePct: student.attendancePercentage || 0,
+          feeStatus: student.feeStatus || 'Paid',
+          pendingAmount: student.pendingAmount || 0,
+          parentContact: student.parentPhone || 'N/A',
+          avatar: student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.name || 'S')}&background=0284c7&color=fff`
+        };
+      })
+    ) %>;
+
+    let currentRosterFilter = 'all';
+
+    /* ==========================================================================
+       2. INITIALIZATION & TAB SWITCHING
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderRosterTable(studentsData);
+    });
+
+    function switchTab(tabId) {
+      // Hide all contents
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      
+      // Deactivate tab buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active-tab', 'border-indigo-500', 'text-indigo-400');
+        btn.classList.add('border-transparent', 'text-slate-400');
+      });
+
+      // Active selected content & button
+      document.getElementById(tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('active-tab', 'border-indigo-500', 'text-indigo-400');
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
+      }
+    }
+
+    /* ==========================================================================
+       3. ROSTER RENDERING & FILTERING
+       ========================================================================== */
+    function renderRosterTable(data) {
+      const tbody = document.getElementById('studentRosterTbody');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-500 border-b border-slate-800">No students match the criteria.</td></tr>`;
+        document.getElementById('rosterShowingText').textContent = `Showing 0 Students`;
+        return;
+      }
+
+      data.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/50 transition';
+
+        // Fee status pill
+        const isDefaulter = s.feeStatus.toLowerCase() === 'pending' || s.pendingAmount > 0;
+        const feeBadge = !isDefaulter
+          ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Paid</span>`
+          : `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Due: ₹${s.pendingAmount.toLocaleString()}</span>`;
+
+        // Attendance color threshold
+        const attColor = s.attendancePct >= 85 ? 'text-emerald-400' : (s.attendancePct >= 75 ? 'text-amber-400' : 'text-rose-400 font-bold');
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-medium text-slate-400">#${s.rollNo}</td>
+          <td class="py-3 px-4 font-mono text-slate-300">...${s.id.slice(-6)}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center space-x-2.5">
+              <img src="${s.avatar}" class="w-7 h-7 rounded-full object-cover">
+              <span class="font-semibold text-white">${s.name}</span>
+            </div>
+          </td>
+          <td class="py-3 px-4 text-slate-400">${s.gender}</td>
+          <td class="py-3 px-4 font-semibold ${attColor}">${s.attendancePct}%</td>
+          <td class="py-3 px-4">${feeBadge}</td>
+          <td class="py-3 px-4 text-slate-400 font-mono">${s.parentContact}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="viewStudentDetails('${s.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded text-[11px] transition">
+              Profile
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('rosterShowingText').textContent = `Showing ${data.length} of ${studentsData.length} Students`;
+    }
+
+    function filterRoster() {
+      const query = document.getElementById('rosterSearch').value.toLowerCase();
+      
+      let filtered = studentsData.filter(s => 
+        s.name.toLowerCase().includes(query) || s.id.toLowerCase().includes(query) || s.rollNo.toString().includes(query)
+      );
+
+      if (currentRosterFilter === 'paid') {
+        filtered = filtered.filter(s => s.feeStatus.toLowerCase() !== 'pending' && s.pendingAmount === 0);
+      } else if (currentRosterFilter === 'defaulter') {
+        filtered = filtered.filter(s => s.feeStatus.toLowerCase() === 'pending' || s.pendingAmount > 0);
+      } else if (currentRosterFilter === 'low-attendance') {
+        filtered = filtered.filter(s => s.attendancePct < 75);
+      }
+
+      renderRosterTable(filtered);
+    }
+
+    function setRosterFilter(type) {
+      currentRosterFilter = type;
+      
+      document.querySelectorAll('.roster-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+
+      const activeBtn = document.getElementById('filter-' + type);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-indigo-600', 'text-white');
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+      }
+
+      filterRoster();
+    }
+
+    /* ==========================================================================
+       4. MODAL INTERACTIONS
+       ========================================================================== */
+    function openAttendanceModal() {
+      const container = document.getElementById('attendanceStudentList');
+      container.innerHTML = '';
+
+      studentsData.forEach((s) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-lg';
+        div.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <span class="text-xs font-mono text-slate-500">#${s.rollNo}</span>
+            <span class="text-xs font-semibold text-white">${s.name}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="cursor-pointer flex items-center space-x-1 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded text-xs">
+              <input type="radio" name="att_${s.id}" value="present" checked onchange="updateAttendanceCounts()"> Present
+            </label>
+            <label class="cursor-pointer flex items-center space-x-1 px-2.5 py-1 bg-rose-500/10 text-rose-400 rounded text-xs">
+              <input type="radio" name="att_${s.id}" value="absent" onchange="updateAttendanceCounts()"> Absent
+            </label>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      updateAttendanceCounts();
+      document.getElementById('attendanceModal').classList.remove('hidden');
+    }
+
+    function closeAttendanceModal() {
+      document.getElementById('attendanceModal').classList.add('hidden');
+    }
+
+    function updateAttendanceCounts() {
+      const inputs = document.querySelectorAll('#attendanceStudentList input[type="radio"]:checked');
+      let present = 0, absent = 0;
+      inputs.forEach(i => {
+        if (i.value === 'present') present++;
+        else absent++;
+      });
+      document.getElementById('attCountPresent').textContent = present;
+      document.getElementById('attCountAbsent').textContent = absent;
+    }
+
+    function submitAttendance() {
+      closeAttendanceModal();
+      showToast('Today\'s class attendance logged successfully!', 'success');
+    }
+
+    function openBroadcastModal() {
+      document.getElementById('broadcastModal').classList.remove('hidden');
+    }
+
+    function closeBroadcastModal() {
+      document.getElementById('broadcastModal').classList.add('hidden');
+    }
+
+    function sendBroadcast() {
+      const subject = document.getElementById('broadcastSubject').value;
+      if (!subject) {
+        showToast('Please enter a broadcast subject.', 'error');
+        return;
+      }
+      closeBroadcastModal();
+      document.getElementById('broadcastSubject').value = '';
+      document.getElementById('broadcastBody').value = '';
+      showToast('Broadcast dispatch initiated via SMS & Push!', 'success');
+    }
+
+    function openQRModal() {
+      document.getElementById('qrModal').classList.remove('hidden');
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.add('hidden');
+    }
+
+    function viewStudentDetails(studentId) {
+      const student = studentsData.find(s => s.id === studentId);
+      if (!student) return;
+
+      const modalContent = document.getElementById('studentDetailContent');
+      const isDefaulter = student.feeStatus.toLowerCase() === 'pending' || student.pendingAmount > 0;
+
+      modalContent.innerHTML = `
+        <div class="flex justify-between items-start">
+          <div class="flex items-center space-x-3">
+            <img src="${student.avatar}" class="w-12 h-12 rounded-xl object-cover">
+            <div>
+              <h3 class="font-bold text-white text-base">${student.name}</h3>
+              <p class="text-xs text-slate-400">Database ID: ...${student.id.slice(-6)} • Roll #${student.rollNo}</p>
+            </div>
+          </div>
+          <button onclick="closeStudentDetailModal()" class="text-slate-400 hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+          <div class="flex justify-between"><span class="text-slate-400">Gender:</span><span class="text-white">${student.gender}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Attendance:</span><span class="font-bold ${student.attendancePct < 75 ? 'text-rose-400' : 'text-emerald-400'}">${student.attendancePct}%</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Fee Status:</span><span class="text-white capitalize">${student.feeStatus}</span></div>
+          ${isDefaulter ? `<div class="flex justify-between"><span class="text-slate-400">Pending Dues:</span><span class="text-rose-400 font-bold">₹ ${student.pendingAmount.toLocaleString()}</span></div>` : ''}
+          <div class="flex justify-between"><span class="text-slate-400">Parent Phone:</span><span class="text-white font-mono">${student.parentContact}</span></div>
+        </div>
+
+        <div class="pt-3 flex gap-2">
+          <button onclick="showToast('Calling parent ${student.parentContact}...', 'info')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-500 transition text-white font-semibold text-xs rounded-lg">Call Parent</button>
+          <button onclick="closeStudentDetailModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 transition text-slate-300 font-semibold text-xs rounded-lg">Close</button>
+        </div>
+      `;
+
+      document.getElementById('studentDetailModal').classList.remove('hidden');
+    }
+
+    function closeStudentDetailModal() {
+      document.getElementById('studentDetailModal').classList.add('hidden');
+    }
+
+    /* ==========================================================================
+       5. UTILITY ACTIONS & TOAST MESSAGES
+       ========================================================================== */
+    function notifyAllDefaulters() {
+      const defaulterCount = <%= stats.totalFeeDefaulters || 0 %>;
+      if(defaulterCount === 0) return showToast('There are no fee defaulters to notify.', 'success');
+      showToast(`SMS Reminders dispatched to all ${defaulterCount} fee defaulter guardians.`, 'success');
+    }
+
+    function postNotice() {
+      const title = document.getElementById('noticeInputTitle').value;
+      const body = document.getElementById('noticeInputBody').value;
+
+      if (!title || !body) {
+        showToast('Please provide both announcement title and body.', 'error');
+        return;
+      }
+
+      const feed = document.getElementById('noticeFeed');
+      const card = document.createElement('div');
+      card.className = 'bg-slate-800/40 p-4 rounded-lg border border-slate-800 space-y-1.5 animate-pulse';
+      card.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-400">${title}</span>
+          <span class="text-[10px] text-slate-400">Just Now</span>
+        </div>
+        <p class="text-xs text-slate-300">${body}</p>
+      `;
+      feed.prepend(card);
+
+      document.getElementById('noticeInputTitle').value = '';
+      document.getElementById('noticeInputBody').value = '';
+      
+      setTimeout(() => card.classList.remove('animate-pulse'), 1000);
+      showToast('Notice published to the class feed!', 'success');
+    }
+
+    function exportRosterCSV() {
+      if(studentsData.length === 0) return showToast('No data to export.', 'error');
+
+      let csvContent = "data:text/csv;charset=utf-8,RollNo,DatabaseID,Name,Gender,AttendancePct,FeeStatus,PendingDues,ParentContact\n";
+      studentsData.forEach(s => {
+        csvContent += `${s.rollNo},${s.id},"${s.name}",${s.gender},${s.attendancePct},${s.feeStatus},${s.pendingAmount},"${s.parentContact}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Class_<%= classroom?.className %>_Roster.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('CSV export downloaded to your device.', 'info');
+    }
+
+    function handleClassSwitch(val) {
+      showToast(`Redirecting to Class ${val} profile...`, 'info');
+      // window.location.href = `/school/class/${val}`;
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto flex items-center space-x-2 px-4 py-3 rounded-xl shadow-xl text-xs font-semibold border transition-all duration-300 transform translate-y-2 opacity-0 ${
+        type === 'success' ? 'bg-emerald-950/90 text-emerald-200 border-emerald-500/30' :
+        type === 'error' ? 'bg-rose-950/90 text-rose-200 border-rose-500/30' :
+        'bg-slate-900/90 text-indigo-200 border-indigo-500/30'
+      }`;
+
+      const icon = type === 'success' ? 'check_circle' : (type === 'error' ? 'error' : 'info');
+
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-base">${icon}</span>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

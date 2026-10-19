@@ -82,6 +82,7 @@ const chat = require("./routes/chat.js");
 //school routes
 const school = require("./routes/school.js");
 const teacher = require("./routes/teacher.js");
+const accountant = require("./routes/accountant.js");
 const { error } = require("console");
 //loopSpace Routes
 const loopSpace = require("./routes/loopSpace.js");
@@ -142,6 +143,8 @@ passport.deserializeUser(Users.deserializeUser());
 app.use(async (req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.warning = req.flash("warning");
+  res.locals.info = req.flash("info");
   res.locals.currUser = req.user;
   res.locals.formatDistanceToNow = formatDistanceToNow;
   res.locals.currPath = req.path;
@@ -168,6 +171,7 @@ app.use("/teacher", teacher);
 app.use("/loopSpace", loopSpace);
 app.use("/notifications", notification);
 app.use("/school", school);
+app.use("/accountant", accountant);
 
 app.get("/", (req, res) => {
   res.render("./webpage/info.ejs");
@@ -195,35 +199,61 @@ app.post("/admin/addSchool", async (req, res) => {
     // 1. Extract data from the form
     const { name, email, phone, address, id: principalId } = req.body;
 
-    // 2. Create the new school in the database
+    // 2. Create the new school instance
     const newSchool = new Schools({
       name: name,
       email: email,
-      phone: phone, // This matches the field we added to the School model earlier
-      location: `${address.city}, ${address.state}`, // Combining for your location string
+      phone: phone,
+      location: `${address.city}, ${address.state}`,
       address: {
         city: address.city,
         state: address.state,
         pincode: address.pincode,
       },
-      principle: principalId, // Linking the Principal's User ID
+      principle: principalId,
     });
 
+    // 3. SAVE THE SCHOOL FIRST so it gets written to the database
     await newSchool.save();
+    const schoolId = newSchool._id;
 
-    // 3. Update the Principal's user record
-    // We link this school to the user and change their designation
+    // 4. Generate the QR Code for the newly saved school
+    try {
+      const joinLink = `https://www.classloop.in/school/joinSchool/${schoolId}`;
+      const qrBase64Data = await QRCode.toDataURL(joinLink);
+
+      const imageKitResponse = await imagekit.upload({
+        file: qrBase64Data,
+        fileName: `school_qr_${schoolId}.png`, // Updated to say 'school'
+        folder: "/ClassLoop/QRCodes",
+      });
+
+      // Directly update the object we already have in memory and save again
+      newSchool.QRCode = {
+        url: imageKitResponse.url,
+        fileId: imageKitResponse.fileId,
+      };
+      await newSchool.save();
+    } catch (qrError) {
+      console.error("Error generating QR code:", qrError);
+      // We don't 'return' here. We just flash a warning and let the code
+      // continue so the Principal still gets their designation updated.
+      req.flash("error", "School created, but failed to generate QR code.");
+    }
+
+    // 5. Update the Principal's user record
     await Users.findByIdAndUpdate(principalId, {
       "instituition.school": newSchool._id,
       designation: "principle",
     });
 
-    req.flash("success", "Created a new School");
+    // 6. Final success redirect for the Admin
+    req.flash("success", "School created successfully!");
     res.redirect("/admin");
   } catch (err) {
-    req.flash("error", `error : ${err}`);
     console.error("Error creating school:", err);
-    res.status(500).send("Server Error: Could not create school.");
+    req.flash("error", `Error: ${err.message || "Could not create school."}`);
+    res.redirect("/admin");
   }
 });
 
@@ -245,6 +275,10 @@ app.use((err, req, res, next) => {
   const message = err.message || "Something went wrong";
   // Set the status on the response so the browser knows it's an error
   res.status(statusCode).render("error.ejs", { err, statusCode, message });
+});
+
+redis.on("error", (err) => {
+  console.error("❌ Redis Connection Error:", err.message);
 });
 
 server.listen(process.env.PORT, () => {

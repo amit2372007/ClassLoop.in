@@ -1,121 +1,81 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const priceSetter = (val) =>
+  typeof val === "number" ? Math.round(val * 100) / 100 : val;
+
 const monthlyFeeSchema = new Schema(
   {
-    // 1. Linking Data
     student: {
       type: Schema.Types.ObjectId,
-      ref: "User", // Assuming your student model is 'User'
+      ref: "User",
       required: true,
-      index: true, // Helps in searching fees by student
+      index: true,
     },
-    admissionNo: {
-      type: String,
-      required: true,
-    },
-    class: {
-      type: Schema.Types.ObjectId,
-      ref: "Class",
-    },
+    admissionNo: { type: String, required: true },
+    class: { type: Schema.Types.ObjectId, ref: "Class", required: true },
     school: {
       type: Schema.Types.ObjectId,
       ref: "School",
+      required: true,
+      index: true,
     },
 
-    // 2. Time Period
-    month: {
-      type: String, // e.g., "November" or use numbers 1-12
-      required: true,
-      enum: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ],
-    },
-    year: {
-      type: Number,
-      required: true,
-      default: new Date().getFullYear(),
-    },
+    month: { type: String, required: true },
+    year: { type: Number, required: true },
 
-    // 3. Financial Breakdown
+    billingDate: { type: Date, required: true, index: true },
+    dueDate: { type: Date, required: true },
+
     feeComponents: [
       {
-        name: { type: String, required: true }, // e.g., "Tuition Fee", "Bus Fee"
-        amount: { type: Number, required: true, min: 0 },
+        name: { type: String, required: true },
+        amount: { type: Number, required: true, min: 0, set: priceSetter },
       },
     ],
 
-    // 4. Payment Calculations
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
+    totalAmount: { type: Number, required: true, min: 0, set: priceSetter },
+
     discount: {
-      reason: String, // e.g., "Scholarship", "Sibling Discount"
-      amount: { type: Number, default: 0 },
+      reason: String,
+      amount: { type: Number, default: 0, set: priceSetter },
     },
     fine: {
-      amount: { type: Number, default: 0 },
-      reason: String, // e.g., "Late Payment"
+      amount: { type: Number, default: 0, set: priceSetter },
+      reason: String,
     },
-    amountPaid: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
+    amountPaid: { type: Number, default: 0, min: 0, set: priceSetter },
 
-    // 5. Status & Tracking
     status: {
       type: String,
       enum: ["Pending", "Partial", "Paid", "Overdue", "Waived"],
       default: "Pending",
-      index: true, // Vital for "Who hasn't paid?" queries
-    },
-    dueDate: {
-      type: Date,
-      required: true,
+      index: true,
     },
 
-    // 6. Payment History (Embedded for quick access)
-    transactions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Transaction",
-      },
-    ],
-
-    // 7. Audit
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "User", // ID of the Principal/Admin who generated this
-    },
+    transactions: [{ type: Schema.Types.ObjectId, ref: "Transaction" }],
+    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
 );
 
-// === CRITICAL INDEX ===
-// This prevents creating two fee records for "Amit Kumar" for "November 2025"
-monthlyFeeSchema.index({ student: 1, month: 1, year: 1 }, { unique: true });
+// Multi-Tenant Compound Unique Index
+monthlyFeeSchema.index(
+  { student: 1, month: 1, year: 1, school: 1 },
+  { unique: true },
+);
 
-// === VIRTUAL FOR BALANCE ===
-// Calculates how much is left to pay on the fly
+// Safe Virtual Balance Calculation
 monthlyFeeSchema.virtual("balanceDue").get(function () {
-  const total = this.totalAmount + this.fine.amount - this.discount.amount;
-  return Math.max(0, total - this.amountPaid);
+  const fineAmount = this.fine?.amount || 0;
+  const discountAmount = this.discount?.amount || 0;
+  const total = this.totalAmount + fineAmount - discountAmount;
+  return Math.max(0, priceSetter(total - (this.amountPaid || 0)));
 });
 
-module.exports = mongoose.model("MonthlyFee", monthlyFeeSchema);
+module.exports =
+  mongoose.models.MonthlyFee || mongoose.model("MonthlyFee", monthlyFeeSchema);

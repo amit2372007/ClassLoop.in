@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Class Timetable Management | ClassLoop.in</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- html2pdf Library for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4848e5",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111121",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", sans-serif; }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+      
+      /* Specific styling to ensure PDF prints nicely */
+      .pdf-container { background: #ffffff !important; color: #0f172a !important; }
+      .pdf-table th { background: #f8fafc !important; color: #334155 !important; border-color: #cbd5e1 !important; }
+      .pdf-table td { border-color: #cbd5e1 !important; }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-200">
+    
+    <% 
+      // Helper function to format 24-hour time (e.g., "14:30") to 12-hour AM/PM
+      function formatTime(timeStr) {
+        if (!timeStr) return '';
+        const [h, m] = timeStr.split(':');
+        if (!h || !m) return timeStr;
+        let hour = parseInt(h, 10);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12 || 12; 
+        const formattedHour = hour < 10 ? '0' + hour : hour;
+        return `${formattedHour}:${m} ${ampm}`;
+      }
+
+      // Calculate the maximum number of periods in the timetable for the grid
+      let maxPeriods = 7; // Default baseline
+      if (timetable && timetable.weeklySchedule) {
+        timetable.weeklySchedule.forEach(d => {
+          if (d.slots) {
+            d.slots.forEach(s => {
+              if (s.periodNumber > maxPeriods) {
+                maxPeriods = s.periodNumber;
+              }
+            });
+          }
+        });
+      }
+      const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    %>
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white dark:bg-[#1a1a2e] border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex justify-between items-center sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+        <button onclick="window.history.back()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2 text-slate-600 dark:text-slate-300">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span class="font-medium hidden sm:block">Back to Dashboard</span>
+        </button>
+      </div>
+      <div class="text-lg font-bold text-primary">
+        ClassLoop<span class="text-slate-900 dark:text-white">.in</span>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      
+      <!-- Header & Class Info Card -->
+      <div class="bg-white dark:bg-[#1a1a2e] rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-3xl">calendar_view_week</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-3">
+              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
+                Class <%= currClass.className %> - <%= currClass.section %>
+              </h1>
+              <span class="px-3 py-0.5 text-xs font-bold bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 rounded-full">
+                Session <%= currClass.session %>
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Class Teacher: <%= currClass.classTeacher ? currClass.classTeacher.name : 'Unassigned' %> • Total Subjects: <%= currClass.subjects ? currClass.subjects.length : 0 %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Summary Stats -->
+        <div class="flex items-center gap-4 sm:gap-6 border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100 dark:border-slate-800">
+          <div class="text-center">
+            <p class="text-xs text-slate-400 font-medium uppercase">Daily Periods</p>
+            <p class="text-lg font-bold text-slate-900 dark:text-white"><%= maxPeriods %> Slots</p>
+          </div>
+          <div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
+          <div class="text-center">
+            <p class="text-xs text-slate-400 font-medium uppercase">Assigned Teachers</p>
+            <p class="text-lg font-bold text-slate-900 dark:text-white"><%= currClass.teachers ? currClass.teachers.length : 0 %></p>
+          </div>
+          <button onclick="openEmptyDrawer()" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold text-sm rounded-xl hover:bg-indigo-600 transition-colors shadow-md ml-auto">
+            <span class="material-symbols-outlined text-lg">edit_calendar</span>
+            Manage Slot
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= DAY-BY-DAY EDIT VIEW ================= -->
+      <div class="space-y-6">
+        <!-- Day Navigation Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2">
+          <% weekDays.forEach((day, index) => { %>
+            <button
+              onclick="switchDay('<%= day %>')"
+              id="tab-<%= day %>"
+              class="day-tab px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 <%= index === 0 ? 'bg-primary text-white shadow-md' : 'bg-white dark:bg-[#1a1a2e] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-primary/50' %>"
+            >
+              <span class="material-symbols-outlined text-base">today</span>
+              <%= day %>
+            </button>
+          <% }); %>
+        </div>
+
+        <!-- Timetable Periods Grid -->
+        <div class="bg-white dark:bg-[#1a1a2e] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <h2 id="active-day-title" class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">schedule</span>
+              Monday Schedule
+            </h2>
+            <span class="text-xs text-slate-400 font-medium">Standard Duration: 45 Mins / Slot</span>
+          </div>
+
+          <!-- Schedule Slots List -->
+          <div id="slots-container" class="divide-y divide-slate-100 dark:divide-slate-800/60">
+            <% if (timetable && timetable.weeklySchedule && timetable.weeklySchedule.length > 0) { %>
+              <% weekDays.forEach((day) => { %>
+                <div id="schedule-<%= day %>" class="day-schedule <%= day === 'Monday' ? '' : 'hidden' %>">
+                  <% 
+                    const dayData = timetable.weeklySchedule.find(d => d.day === day);
+                    let slots = dayData && dayData.slots ? dayData.slots : [];
+                    slots = slots.sort((a, b) => a.periodNumber - b.periodNumber);
+                  %>
+                  <% if (slots.length > 0) { %>
+                    <% slots.forEach(slot => { %>
+                      <% if (slot.type === 'recess') { %>
+                        <div class="p-4 bg-amber-50/50 dark:bg-amber-500/5 flex items-center justify-between gap-4 border-l-4 border-amber-400">
+                          <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
+                              <span class="material-symbols-outlined text-xl">restaurant</span>
+                            </div>
+                            <div>
+                              <h4 class="font-bold text-amber-900 dark:text-amber-300 text-sm"><%= slot.subject || 'Lunch & Recess Break' %></h4>
+                              <p class="text-xs text-amber-700/70 dark:text-amber-400/70">Refectory & Playground Open</p>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-3">
+                            <span class="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                              <%= formatTime(slot.startTime) %> - <%= formatTime(slot.endTime) %>
+                            </span>
+                            <button onclick="populateAndOpenDrawer('<%= day %>', '<%= slot.periodNumber %>', '<%= slot.subject %>', '', '<%= slot.roomNo %>', '<%= slot.startTime %>', '<%= slot.endTime %>', 'recess')" class="p-2 text-amber-600/50 hover:text-amber-600 rounded-lg transition-colors" title="Edit Recess">
+                              <span class="material-symbols-outlined text-xl">edit</span>
+                            </button>
+                          </div>
+                        </div>
+                      <% } else { %>
+                        <div class="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                          <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex flex-col items-center justify-center shrink-0">
+                              <span class="text-xs font-bold text-slate-400">P-<%= slot.periodNumber %></span>
+                              <span class="text-[10px] font-semibold text-slate-500"><%= formatTime(slot.startTime).split(' ')[0] %></span>
+                            </div>
+                            <div>
+                              <div class="flex items-center gap-2">
+                                <h3 class="font-bold text-slate-900 dark:text-white text-base"><%= slot.subject %></h3>
+                                <% if(slot.type === 'lab') { %>
+                                  <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400">Practical</span>
+                                <% } else { %>
+                                  <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">Lecture</span>
+                                <% } %>
+                              </div>
+                              <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-3 mt-1">
+                                <span class="flex items-center gap-1">
+                                  <span class="material-symbols-outlined text-sm">person</span>
+                                  <%= slot.teacher ? slot.teacher.name : 'Unassigned' %>
+                                </span>
+                                <span>•</span>
+                                <span class="flex items-center gap-1">
+                                  <span class="material-symbols-outlined text-sm">meeting_room</span>
+                                  <%= slot.roomNo || 'TBA' %>
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-3 self-end sm:self-center">
+                            <span class="text-xs font-semibold text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
+                              <%= formatTime(slot.startTime) %> - <%= formatTime(slot.endTime) %>
+                            </span>
+                            <button onclick="populateAndOpenDrawer('<%= day %>', '<%= slot.periodNumber %>', '<%= slot.subject %>', '<%= slot.teacher ? slot.teacher._id : '' %>', '<%= slot.roomNo %>', '<%= slot.startTime %>', '<%= slot.endTime %>', '<%= slot.type || 'lecture' %>')" class="p-2 text-slate-400 hover:text-primary rounded-lg transition-colors" title="Edit Slot">
+                              <span class="material-symbols-outlined text-xl">edit</span>
+                            </button>
+                          </div>
+                        </div>
+                      <% } %>
+                    <% }) %>
+                  <% } else { %>
+                    <div class="p-12 text-center flex flex-col items-center">
+                      <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-full flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-3xl">event_busy</span>
+                      </div>
+                      <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300">No classes mapped for <%= day %></h3>
+                      <p class="text-xs text-slate-500 mt-1">Click on "Manage Slot" above to start adding classes to this day.</p>
+                    </div>
+                  <% } %>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="p-12 text-center flex flex-col items-center">
+                <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-full flex items-center justify-center mb-4">
+                  <span class="material-symbols-outlined text-3xl">calendar_add_on</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300">Timetable not initialized</h3>
+                <p class="text-xs text-slate-500 mt-1">Add your first slot to activate the weekly schedule.</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= WEEKLY MASTER GRID (PRINTABLE) ================= -->
+      <div class="mt-12">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">grid_on</span>
+              Weekly Master View
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Complete overview of the class schedule.</p>
+          </div>
+          <button onclick="downloadTimetablePDF()" class="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm rounded-xl hover:opacity-90 transition-opacity shadow-md">
+            <span class="material-symbols-outlined text-lg">download</span>
+            Download PDF
+          </button>
+        </div>
+
+        <!-- This wrapper holds the specific styles to ensure standard colors on the PDF regardless of Dark Mode -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm bg-white pdf-container custom-scrollbar pb-2">
+          
+          <!-- Hidden Title block that is ONLY formatted for the PDF export -->
+          <!-- Hidden Title block that is ONLY formatted for the PDF export -->
+          <div id="pdf-export-area" class="p-4 bg-white w-full min-w-[1000px]">
+            
+            <div class="text-center mb-4 pb-4 border-b border-slate-200">
+              <h1 class="text-2xl font-bold text-slate-900 uppercase tracking-wide">Class Timetable</h1>
+              <h2 class="text-lg font-semibold text-primary mt-1"><%= currClass.className %> - <%= currClass.section %></h2>
+              <div class="flex items-center justify-center gap-4 mt-2 text-sm text-slate-600">
+                <span class="font-medium">Class Teacher: <%= currClass.classTeacher ? currClass.classTeacher.name : 'Unassigned' %></span>
+                <span>•</span>
+                <span class="font-medium">Session: <%= currClass.session %></span>
+              </div>
+            </div>
+
+            <table class="w-full text-left border-collapse border border-slate-300 pdf-table">
+              <thead>
+                <tr>
+                  <th class="border border-slate-300 p-2 font-bold text-sm text-center w-24">Day</th>
+                  <% for(let i = 1; i <= maxPeriods; i++) { %>
+                    <th class="border border-slate-300 p-2 font-bold text-sm text-center">Period <%= i %></th>
+                  <% } %>
+                </tr>
+              </thead>
+              <tbody>
+                <% weekDays.forEach(day => { %>
+                  <tr>
+                    <td class="border border-slate-300 p-2 font-bold text-slate-800 text-center bg-slate-50"><%= day %></td>
+                    
+                    <% for(let i = 1; i <= maxPeriods; i++) { 
+                        let slot = null;
+                        if (timetable && timetable.weeklySchedule) {
+                          const dayData = timetable.weeklySchedule.find(d => d.day === day);
+                          if (dayData && dayData.slots) {
+                            slot = dayData.slots.find(s => s.periodNumber == i);
+                          }
+                        }
+                    %>
+                      <td class="border border-slate-300 p-1.5 text-center align-top h-auto min-h-[4.5rem]">
+                        <% if(slot) { %>
+                          <% if(slot.type === 'recess') { %>
+                            <div class="flex flex-col items-center justify-center h-full min-h-[4.5rem] bg-amber-50/50 rounded p-1">
+                              <span class="font-bold text-amber-600 text-[11px] tracking-wider uppercase"><%= slot.subject || 'Recess' %></span>
+                              <span class="text-[9px] text-amber-500 mt-0.5"><%= formatTime(slot.startTime) %> - <%= formatTime(slot.endTime) %></span>
+                            </div>
+                          <% } else { %>
+                            <div class="flex flex-col h-full min-h-[4.5rem] justify-center">
+                              <div class="font-bold text-[13px] leading-tight text-slate-900"><%= slot.subject %></div>
+                              <div class="text-[11px] text-slate-600 font-medium mt-0.5"><%= slot.teacher ? slot.teacher.name : 'TBA' %></div>
+                              <div class="text-[9px] text-slate-500 mt-0.5">Rm: <%= slot.roomNo || 'TBA' %></div>
+                              <div class="text-[9px] font-semibold text-primary mt-0.5"><%= formatTime(slot.startTime) %> - <%= formatTime(slot.endTime) %></div>
+                            </div>
+                          <% } %>
+                        <% } else { %>
+                          <div class="flex items-center justify-center h-full min-h-[4.5rem] text-slate-300 font-bold">-</div>
+                        <% } %>
+                      </td>
+                    <% } %>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+            
+            <div class="mt-4 flex justify-between text-[11px] text-slate-500 font-medium">
+              <p>Generated by ClassLoop.in</p>
+              <p>Standard Slot Duration: 45 Minutes</p>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Slide-Out Edit Timetable Drawer -->
+    <div id="timetableDrawer" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div onclick="closeEditDrawer()" id="drawerBackdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+
+      <!-- Drawer Content -->
+      <div id="drawerContent" class="fixed inset-y-0 right-0 w-full max-w-lg bg-white dark:bg-[#1a1a2e] border-l border-slate-200 dark:border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col z-10">
+        
+        <!-- Header -->
+        <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+          <div>
+            <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">edit_calendar</span>
+              Update Timetable Slot
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Assign subject, teacher, and schedule times.</p>
+          </div>
+          <button onclick="closeEditDrawer()" class="text-slate-400 hover:text-rose-500 transition-colors">
+            <span class="material-symbols-outlined text-xl">close</span>
+          </button>
+        </div>
+
+        <!-- Form -->
+        <form action="/teacher/class/timetable/update/<%= currClass._id %>" method="POST" id="slotForm" class="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar">
+          
+          <!-- Day Selection -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Target Day</label>
+            <select name="day" id="drawerDay" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+            </select>
+          </div>
+
+          <!-- Slot Type -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Slot Category</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="flex items-center justify-center p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer text-xs font-bold bg-slate-50 dark:bg-slate-900">
+                <input type="radio" name="slotType" value="lecture" checked class="sr-only peer" />
+                <span class="peer-checked:text-primary">Lecture</span>
+              </label>
+              <label class="flex items-center justify-center p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer text-xs font-bold bg-slate-50 dark:bg-slate-900">
+                <input type="radio" name="slotType" value="lab" class="sr-only peer" />
+                <span class="peer-checked:text-primary">Practical / Lab</span>
+              </label>
+              <label class="flex items-center justify-center p-2.5 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer text-xs font-bold bg-slate-50 dark:bg-slate-900">
+                <input type="radio" name="slotType" value="recess" class="sr-only peer" />
+                <span class="peer-checked:text-primary">Recess</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Period & Room -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Period No.</label>
+              <input type="number" name="periodNumber" id="drawerPeriodNumber" min="1" max="15" required placeholder="e.g. 1" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Room / Venue</label>
+              <input type="text" name="roomNo" id="drawerRoomNo" placeholder="e.g. Room 204" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white" />
+            </div>
+          </div>
+
+          <!-- Subject Selection -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Subject</label>
+            <select name="subject" id="drawerSubject" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+              <option value="">Select Class Subject</option>
+              <% if (currClass.subjects && currClass.subjects.length > 0) { %>
+                <% currClass.subjects.forEach(sub => { %>
+                  <option value="<%= sub.name %>"><%= sub.name %></option>
+                <% }) %>
+              <% } %>
+              <option value="Lunch & Recess Break">Lunch & Recess Break (For Recess type)</option>
+            </select>
+          </div>
+
+          <!-- Assigned Teacher -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Subject Teacher</label>
+            <select name="teacherId" id="drawerTeacher" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+              <option value="">Select Teacher (Leave blank for Recess)</option>
+              <% if (currClass.teachers && currClass.teachers.length > 0) { %>
+                <% currClass.teachers.forEach(tech => { %>
+                  <option value="<%= tech._id %>"><%= tech.name %></option>
+                <% }) %>
+              <% } %>
+            </select>
+          </div>
+
+          <!-- Timing inputs -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Start Time</label>
+              <input type="time" name="startTime" id="drawerStartTime" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">End Time</label>
+              <input type="time" name="endTime" id="drawerEndTime" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white" />
+            </div>
+          </div>
+
+          <!-- Submit Buttons -->
+          <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+            <button type="button" onclick="closeEditDrawer()" class="px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              Cancel
+            </button>
+            <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-primary text-white rounded-xl hover:bg-indigo-600 transition-colors shadow-md flex items-center gap-2">
+              <span class="material-symbols-outlined text-base">save</span>
+              Save Timetable Slot
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Frontend Scripts -->
+    <script>
+      // Tab Switching Logic
+      function switchDay(selectedDay) {
+        document.querySelectorAll('.day-tab').forEach(tab => {
+          tab.classList.remove('bg-primary', 'text-white', 'shadow-md');
+          tab.classList.add('bg-white', 'dark:bg-[#1a1a2e]', 'text-slate-600', 'dark:text-slate-400');
+        });
+
+        const activeTab = document.getElementById(`tab-${selectedDay}`);
+        if (activeTab) {
+          activeTab.classList.add('bg-primary', 'text-white', 'shadow-md');
+          activeTab.classList.remove('bg-white', 'dark:bg-[#1a1a2e]', 'text-slate-600', 'dark:text-slate-400');
+        }
+
+        document.getElementById('active-day-title').innerHTML = `
+          <span class="material-symbols-outlined text-primary">schedule</span>
+          ${selectedDay} Schedule
+        `;
+
+        document.querySelectorAll('.day-schedule').forEach(el => {
+          el.classList.add('hidden');
+        });
+        const selectedSchedule = document.getElementById(`schedule-${selectedDay}`);
+        if(selectedSchedule) {
+          selectedSchedule.classList.remove('hidden');
+        }
+      }
+
+      // Drawer Logic
+      function openEditDrawer() {
+        const drawer = document.getElementById('timetableDrawer');
+        drawer.classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('drawerBackdrop').classList.remove('opacity-0');
+          document.getElementById('drawerContent').classList.remove('translate-x-full');
+        }, 10);
+      }
+
+      function closeEditDrawer() {
+        document.getElementById('drawerBackdrop').classList.add('opacity-0');
+        document.getElementById('drawerContent').classList.add('translate-x-full');
+        setTimeout(() => {
+          document.getElementById('timetableDrawer').classList.add('hidden');
+        }, 300);
+      }
+
+      function openEmptyDrawer() {
+        document.getElementById('slotForm').reset();
+        const activeTabBtn = document.querySelector('.day-tab.bg-primary');
+        if (activeTabBtn) {
+          const currentDay = activeTabBtn.innerText.replace('today\n', '').trim();
+          document.getElementById('drawerDay').value = currentDay;
+        }
+        openEditDrawer();
+      }
+
+      function populateAndOpenDrawer(day, periodNo, subject, teacherId, room, start, end, type) {
+        document.getElementById('drawerDay').value = day;
+        document.getElementById('drawerPeriodNumber').value = periodNo;
+        document.getElementById('drawerSubject').value = subject || '';
+        document.getElementById('drawerTeacher').value = teacherId || '';
+        document.getElementById('drawerRoomNo').value = room || '';
+        document.getElementById('drawerStartTime').value = start || '';
+        document.getElementById('drawerEndTime').value = end || '';
+        
+        const radios = document.getElementsByName('slotType');
+        for(let i = 0; i < radios.length; i++) {
+          if(radios[i].value === type) {
+            radios[i].checked = true;
+          }
+        }
+        openEditDrawer();
+      }
+
+      // PDF Generation Logic
+      function downloadTimetablePDF() {
+        const element = document.getElementById('pdf-export-area');
+        
+        // Define settings for html2pdf
+        const opt = {
+          margin:       0.4,
+          filename:     `Class_<%= currClass.className %>_<%= currClass.section %>_Timetable.pdf`,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+          jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        // Generate and Save the PDF
+        html2pdf().set(opt).from(element).save();
+      }
+    </script>
+  </body>
+</html>

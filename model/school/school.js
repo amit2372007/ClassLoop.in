@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Employee = require("./principle/employee");
 const Schema = mongoose.Schema;
 
 const schoolSchema = Schema({
@@ -19,6 +20,10 @@ const schoolSchema = Schema({
   phone: {
     type: Number,
   },
+  QRCode: {
+    url: String,
+    fileId: String,
+  },
   principle: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -33,6 +38,12 @@ const schoolSchema = Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Class",
+    },
+  ],
+  Employee: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "employee",
     },
   ],
   status: {

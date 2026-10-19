@@ -65,10 +65,22 @@
                             <span class="material-symbols-outlined">dashboard</span>
                             Dashboard
                         </a>
+                        <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Attendance' ? 'sidebar-item-active' : '' %>"
+                            href="/school?tab=Attendance">
+                            <span class="material-symbols-outlined">how_to_reg</span>
+                            Attendance
+                        </a>
+
+                        
                         <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Calendar' ? 'sidebar-item-active' : '' %>"
                             href="/school/feeStructure">
                             <span class="material-symbols-outlined">calendar_today</span>
                             Fee Structure
+                        </a>
+                        <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Fees' ? 'sidebar-item-active' : '' %>"
+                            href="/school?tab=Fees">
+                            <span class="material-symbols-outlined">payments</span>
+                            Fees
                         </a>
                         <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Expenses' ? 'sidebar-item-active' : '' %>"
                             href="/school?tab=Expenses">
@@ -90,20 +102,21 @@
                             <span class="material-symbols-outlined">group</span>
                             Students
                         </a>
-                        <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Requests' ? 'sidebar-item-active' : '' %>"
+                        <!-- <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Requests' ? 'sidebar-item-active' : '' %>"
                             href="/school?tab=Requests">
                             <span class="material-symbols-outlined">pending_actions</span>
                             Requests
-                        </a>
-                        <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Fees' ? 'sidebar-item-active' : '' %>"
-                            href="/school?tab=Fees">
-                            <span class="material-symbols-outlined">payments</span>
-                            Fees
-                        </a>
-                        <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Transport' ? 'sidebar-item-active' : '' %>"
+                        </a> -->
+                        
+                        <!-- <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Transport' ? 'sidebar-item-active' : '' %>"
                             href="/school?tab=Transport">
                             <span class="material-symbols-outlined">directions_bus</span>
                             Transport
+                        </a> -->
+                        <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Notice' ? 'sidebar-item-active' : '' %>"
+                            href="/school?tab=Notice">
+                            <span class="material-symbols-outlined">campaign</span>
+                            Notice Board
                         </a>
                         <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors <%= activeTab === 'Complaints' ? 'sidebar-item-active' : '' %>"
                             href="/school?tab=Complaints">
@@ -112,6 +125,16 @@
                         </a>
                     </nav>
                     <div class="p-4 border-t border-slate-700">
+                       <a class="flex items-center gap-3 px-4 py-3 bg-white/20 text-white font-bold text-sm rounded-lg shadow-sm border-l-4 border-primary transition-colors"
+                        href="/accountant">
+                            <span class="material-symbols-outlined">payments</span>
+                            Fee Counter
+                        </a>
+                        <!-- <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors"
+                            href="/school/QRCode">
+                            <span class="material-symbols-outlined">qr_code</span>
+                            School QR
+                        </a> -->
                         <a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white text-sm font-medium rounded-lg transition-colors"
                             href="#">
                             <span class="material-symbols-outlined">settings</span>
@@ -153,9 +176,9 @@
 
                     <%- include('../includes/principleDashboard/Fees.ejs') %>
 
-                <% } else if(activeTab==='Transport' ) { %>
-
-                    
+                <% } else if(activeTab==='Attendance' ) { %>
+         
+                    <%- include('../includes/principleDashboard/Attendance.ejs') %>
 
                 <% } else if(activeTab==='Complaints' ) { %>
 

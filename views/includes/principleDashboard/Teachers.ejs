@@ -7,10 +7,21 @@
       <p class="text-slate-500 text-sm">Manage and oversee faculty members</p>
     </div>
     <div class="flex items-center gap-6">
-      <a href="/school/add-teacher" class="bg-primary text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
+
+      <button onclick="toggleAddTeacherModal()" class="bg-indigo-50 text-primary dark:bg-indigo-900/30 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/50 px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-bold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors shadow-sm">
         <span class="material-symbols-outlined text-lg">add</span>
-        Add New Teacher
+        Add Teacher
+      </button>
+      
+      <a href="/school/teacher-requests" class="bg-primary text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm relative">
+        <span class="material-symbols-outlined text-lg">person_add</span>
+        Teacher Requests
+        <span class="absolute -top-1 -right-1 flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+        </span>
       </a>
+
       <div class="flex items-center gap-3">
         <div class="text-right hidden md:block">
           <p class="text-sm font-bold text-slate-800 dark:text-white">
@@ -80,14 +91,14 @@
     <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row gap-4">
       <div class="flex-1 relative">
         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-        <input class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 dark:text-slate-200" placeholder="Search teacher by name or subject..." type="text" />
+        <input id="teacherSearchInput" class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 dark:text-slate-200" placeholder="Search teacher by name or subject..." type="text" />
       </div>
       <div class="flex gap-4">
-        <select class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm py-2 px-4 focus:ring-2 focus:ring-primary/20 text-slate-600 dark:text-slate-300 min-w-[160px]">
-          <option>All Departments</option>
-          <option>Science</option>
-          <option>Arts</option>
-          <option>Commerce</option>
+        <select id="teacherSubjectFilter" class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm py-2 px-4 focus:ring-2 focus:ring-primary/20 text-slate-600 dark:text-slate-300 min-w-[160px]">
+          <option value="all">All Departments</option>
+          <option value="Science">Science</option>
+          <option value="Arts">Arts</option>
+          <option value="Commerce">Commerce</option>
         </select>
         <button class="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
           <span class="material-symbols-outlined text-xl leading-none align-middle">filter_list</span>
@@ -95,7 +106,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="teacherGrid">
       
       <% if (Teachers && Teachers.length > 0) { %>
         <% Teachers.forEach((teacher) => { %>
@@ -105,9 +116,14 @@
              if (School.classes && School.classes.length > 0) {
                 assignedClass = School.classes.find(c => c.classTeacher && c.classTeacher.toString() === teacher._id.toString());
              }
+             // Determine subject string for filtering
+             const teacherUsername = teacher.username ? teacher.username : 'Invalid Username';
           %>
 
-          <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+          <div class="teacher-card bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow"
+               data-name="<%= teacher.name.toLowerCase() %>"
+               data-subject="<%= teacherUsername %>">
+            
             <div class="p-6 text-center flex-1">
               <div class="relative inline-block mb-4">
                 <img 
@@ -123,7 +139,7 @@
               </h4>
               
               <p class="text-primary dark:text-indigo-400 font-semibold text-sm mb-4">
-                <%= teacher.assignedSubject ? teacher.assignedSubject : 'General Faculty' %>
+                <%= teacherUsername %>
               </p>
 
               <% if (assignedClass) { %>
@@ -156,16 +172,22 @@
 
         <% }) %>
       <% } else { %>
-        <div class="col-span-full py-10 text-center">
+        <div class="col-span-full py-10 text-center" id="serverEmptyState">
             <p class="text-slate-500 text-lg">No teachers found in the directory.</p>
         </div>
       <% } %>
+
+      <div id="noResultsMessage" class="col-span-full py-12 text-center" style="display: none;">
+        <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-3 block">search_off</span>
+        <p class="text-slate-500 text-lg font-medium">No teachers match your search filters.</p>
+        <button onclick="document.getElementById('teacherSearchInput').value=''; document.getElementById('teacherSubjectFilter').value='all'; filterTeachers();" class="mt-4 text-primary hover:underline text-sm font-bold">Clear Filters</button>
+      </div>
 
     </div>
 
     <div class="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800">
       <p class="text-sm text-slate-500">
-        Showing <span class="font-bold text-slate-800 dark:text-white"><%= Teachers.length %></span> Teachers
+        Showing <span id="visibleTeacherCount" class="font-bold text-slate-800 dark:text-white"><%= Teachers ? Teachers.length : 0 %></span> Teachers
       </p>
       <div class="flex gap-2">
         <button disabled class="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-600 dark:text-slate-300 opacity-50 cursor-not-allowed">
@@ -181,4 +203,160 @@
     </div>
 
   </div>
+
+ <!-- ================= ADD TEACHER MODAL ================= -->
+  <div id="addTeacherModal" class="fixed inset-0 z-[60] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 opacity-0">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg mx-4 transform scale-95 transition-transform duration-300 overflow-hidden border border-slate-200 dark:border-slate-800">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 dark:text-white">Add New Teacher</h3>
+          <p class="text-xs text-slate-500 mt-1">Register a new faculty member to your institution.</p>
+        </div>
+        <button type="button" onclick="toggleAddTeacherModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors rounded-lg p-1 hover:bg-slate-200 dark:hover:bg-slate-800">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Form) -->
+      <!-- Ensure the action URL matches your actual backend POST route -->
+      <form action="/school/teacher/add" method="POST" class="p-6 space-y-5">
+        
+        <!-- Row 1: Name & Phone -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="space-y-1.5">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name <span class="text-rose-500">*</span></label>
+            <input type="text" name="name" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-all placeholder:text-slate-400" placeholder="e.g. Rajdeep Sharma">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Phone Number <span class="text-rose-500">*</span></label>
+            <input type="tel" name="phone" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-all placeholder:text-slate-400" placeholder="e.g. 9876543210">
+          </div>
+        </div>
+        
+        <!-- Row 2: Designation & Password -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="space-y-1.5">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Designation <span class="text-rose-500">*</span></label>
+            <select name="designation" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-all">
+              <option value="teacher" selected>Teacher</option>
+              <option value="classTeacher">Class Teacher</option>
+              <option value="faculty">Faculty</option>
+            </select>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Temp Password <span class="text-rose-500">*</span></label>
+            <input type="password" name="password" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-all placeholder:text-slate-400" placeholder="Set initial password">
+          </div>
+        </div>
+
+        <!-- Row 3: Employee ID -->
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Employee ID</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">badge</span>
+            <input type="text" name="employeeId" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-all placeholder:text-slate-400" placeholder="e.g. EMP-2026-001">
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="pt-2 flex gap-3 justify-end border-t border-slate-100 dark:border-slate-800 mt-6">
+          <button type="button" onclick="toggleAddTeacherModal()" class="px-5 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-primary hover:bg-indigo-700 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">person_add</span>
+            Register Teacher
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </main>
+
+<script>
+  const searchInput = document.getElementById('teacherSearchInput');
+  const subjectFilter = document.getElementById('teacherSubjectFilter');
+  const teacherCards = document.querySelectorAll('.teacher-card');
+  const noResultsMessage = document.getElementById('noResultsMessage');
+  const visibleTeacherCount = document.getElementById('visibleTeacherCount');
+
+  // Attach event listeners to trigger instantly on type/select
+  searchInput.addEventListener('input', filterTeachers);
+  subjectFilter.addEventListener('change', filterTeachers);
+
+  function filterTeachers() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const filterValue = subjectFilter.value; // e.g., 'all', 'Science', etc.
+    let visibleCount = 0;
+
+    teacherCards.forEach(card => {
+      // Extract data from the dataset attributes
+      const name = card.dataset.name || "";
+      const subject = card.dataset.subject || "";
+      
+      // Match checks
+      const matchesSearch = name.includes(searchTerm) || subject.toLowerCase().includes(searchTerm);
+      
+      // We check if filter is "all" or if the subject includes the exact dropdown value (e.g. "Science")
+      const matchesFilter = (filterValue === "all") || (subject.includes(filterValue));
+
+      // Toggle display
+      if (matchesSearch && matchesFilter) {
+        card.style.display = "flex"; // Restores to original flex layout
+        visibleCount++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    // Handle Empty State
+    if (noResultsMessage) {
+      if (visibleCount === 0 && teacherCards.length > 0) {
+        noResultsMessage.style.display = "block";
+      } else {
+        noResultsMessage.style.display = "none";
+      }
+    }
+
+    // Update the counter at the bottom
+    if (visibleTeacherCount) {
+      visibleTeacherCount.textContent = visibleCount;
+    }
+  }
+
+  // --- ADD TEACHER MODAL LOGIC ---
+  const addTeacherModal = document.getElementById('addTeacherModal');
+  const modalInner = addTeacherModal.querySelector('div');
+
+  function toggleAddTeacherModal() {
+    if (addTeacherModal.classList.contains('hidden')) {
+      // Open Modal
+      addTeacherModal.classList.remove('hidden');
+      // Small delay allows CSS transition to trigger after removing 'hidden'
+      setTimeout(() => {
+        addTeacherModal.classList.remove('opacity-0');
+        modalInner.classList.remove('scale-95');
+        modalInner.classList.add('scale-100');
+      }, 10);
+    } else {
+      // Close Modal
+      addTeacherModal.classList.add('opacity-0');
+      modalInner.classList.remove('scale-100');
+      modalInner.classList.add('scale-95');
+      // Wait for the transition to finish before adding 'hidden'
+      setTimeout(() => {
+        addTeacherModal.classList.add('hidden');
+      }, 300);
+    }
+  }
+
+  // Optional: Close modal if user clicks outside the form container
+  addTeacherModal.addEventListener('click', (e) => {
+    if (e.target === addTeacherModal) {
+      toggleAddTeacherModal();
+    }
+  });
+</script>

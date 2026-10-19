@@ -93,7 +93,7 @@
                                             <span class="text-sm font-semibold text-slate-700 max-md:text-xs"><%= res.student.name %></span>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-slate-500 max-md:px-4 max-md:py-3 max-md:text-xs"><%= res.student.rollNumber || 'N/A' %></td>
+                                    <td class="px-6 py-4 text-sm text-slate-500 max-md:px-4 max-md:py-3 max-md:text-xs"><%= res.student.admissionNumber || 'N/A' %></td>
                                     <td class="px-6 py-4 text-sm text-slate-500 max-md:hidden">
                                         <%= res.createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %> • 
                                         <%= res.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>

@@ -1,0 +1,189 @@
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+  <!-- Top Header -->
+  <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 z-10">
+    <!-- Search Bar -->
+    <div class="flex items-center bg-slate-100 rounded-lg px-3 py-1.5 w-96 border border-slate-200 focus-within:border-primary focus-within:bg-white transition-colors">
+      <span class="material-symbols-outlined text-slate-400 text-[18px]">search</span>
+      <input
+        type="text"
+        placeholder="Search admission no, transaction ID, or student..."
+        class="bg-transparent border-none focus:ring-0 outline-none w-full px-2 text-sm text-slate-700"
+      />
+    </div>
+
+    <!-- Header Actions -->
+    <div class="flex items-center gap-3">
+      <a href="/accountant/dashboard?tab=FeeCounter" class="bg-primary hover:bg-sky-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold shadow-sm shadow-primary/30 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-[18px]">point_of_sale</span> Fee Counter Desk
+      </a>
+    </div>
+  </header>
+
+  <!-- Scrollable Dashboard Content -->
+  <div class="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar bg-slate-50/50">
+    <!-- Page Title & Date Range -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold text-slate-900">Financial Overview</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Live metrics and institutional collection ledger</p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-medium flex items-center gap-2 shadow-sm text-slate-700">
+        <span class="material-symbols-outlined text-slate-400 text-[18px]">calendar_today</span>
+        Today: <%= new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+      </div>
+    </div>
+
+    <!-- KPI Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- KPI 1: Today's Collection -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Today's Collection</span>
+          <span class="material-symbols-outlined text-emerald-600 bg-emerald-50 p-1 rounded-md text-[18px]">payments</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <h2 class="text-2xl font-black text-slate-900">₹<%= typeof stats !== 'undefined' && stats.dailyCollection ? stats.dailyCollection.toLocaleString('en-IN') : '0' %></h2>
+          <span class="text-xs font-bold text-emerald-600">Desk 01 Live</span>
+        </div>
+      </div>
+
+      <!-- KPI 2: Total Collected (Session) -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Collected</span>
+          <span class="material-symbols-outlined text-amber-500 bg-amber-50 p-1 rounded-md text-[18px]">account_balance_wallet</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <h2 class="text-2xl font-black text-slate-900">₹<%= typeof stats !== 'undefined' && stats.totalCollected ? stats.totalCollected.toLocaleString('en-IN') : '0' %></h2>
+          <span class="text-xs text-slate-400">Session total</span>
+        </div>
+      </div>
+
+      <!-- KPI 3: Total Pending Dues -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pending Dues</span>
+          <span class="material-symbols-outlined text-red-500 bg-red-50 p-1 rounded-md text-[18px]">warning</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <h2 class="text-2xl font-black text-slate-900">₹<%= typeof stats !== 'undefined' && stats.totalPending ? stats.totalPending.toLocaleString('en-IN') : '0' %></h2>
+          <span class="text-xs font-bold text-red-500">Unsettled</span>
+        </div>
+      </div>
+
+      <!-- KPI 4: Enrolled Students -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Students</span>
+          <span class="material-symbols-outlined text-primary bg-sky-50 p-1 rounded-md text-[18px]">groups</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <h2 class="text-2xl font-black text-slate-900"><%= typeof stats !== 'undefined' ? stats.totalStudents : '0' %></h2>
+          <span class="text-xs text-slate-400">Registered</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Split Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column (Wider): Recent Transactions -->
+      <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="font-bold text-slate-800 text-sm">Recent Desk Transactions</h3>
+          <a href="/accountant/dashboard?tab=FeeCounter" class="text-xs font-semibold text-primary hover:underline">Open Fee Counter</a>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50/50">
+                <th class="px-5 py-2.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Txn ID</th>
+                <th class="px-5 py-2.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Student Info</th>
+                <th class="px-5 py-2.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">Mode</th>
+                <th class="px-5 py-2.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 text-right">Amount</th>
+                <th class="px-5 py-2.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200 text-center">Receipt</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% if (typeof feeRecords !== 'undefined' && feeRecords.length > 0) { %>
+                <% feeRecords.forEach(record => { %>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-3 font-mono text-xs text-slate-600">
+                      #<%= record._id.toString().slice(-8).toUpperCase() %>
+                    </td>
+                    <td class="px-5 py-3">
+                      <div class="font-semibold text-slate-800 text-sm">
+                        <%= record.student?.name || 'Unknown Student' %>
+                      </div>
+                      <div class="text-xs text-slate-500">
+                        Adm: <%= record.student?.admissionNumber || 'N/A' %> • Class <%= record.class?.className || '' %> <%= record.class?.section || '' %>
+                      </div>
+                    </td>
+                    <td class="px-5 py-3">
+                      <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                        <span class="material-symbols-outlined text-[14px]">payments</span>
+                        <%= record.status === 'Paid' ? 'Paid' : 'Pending' %>
+                      </span>
+                    </td>
+                    <td class="px-5 py-3 text-right font-bold text-slate-900">
+                      ₹<%= (record.totalAmount || record.amount || 0).toLocaleString('en-IN') %>
+                    </td>
+                    <td class="px-5 py-3 text-center">
+                      <a href="/accountant/receipt/<%= record._id %>" target="_blank" class="text-slate-400 hover:text-primary transition-colors" title="View Receipt">
+                        <span class="material-symbols-outlined text-[18px]">print</span>
+                      </a>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="px-5 py-8 text-center text-slate-500 text-sm">
+                    No recent fee records found.
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right Column (Narrow): Fast Operations & Quick Summary -->
+      <div class="space-y-6">
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h3 class="font-bold text-slate-800 mb-4 text-xs uppercase tracking-wider text-slate-500">Fast Operations</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <a href="/accountant/dashboard?tab=FeeCounter" class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border border-slate-200 hover:border-primary hover:bg-sky-50 transition-colors group">
+              <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">point_of_sale</span>
+              <span class="text-xs font-semibold text-slate-700">Fee Counter</span>
+            </a>
+            <a href="/accountant/dashboard?tab=Dashboard" class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border border-slate-200 hover:border-primary hover:bg-sky-50 transition-colors group">
+              <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">dashboard</span>
+              <span class="text-xs font-semibold text-slate-700">Overview</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- System Notice Card -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+          <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-slate-500">Desk Information</h3>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-xs space-y-2 text-slate-600">
+            <div class="flex justify-between">
+              <span class="font-medium text-slate-500">Active Tenant:</span>
+              <span class="font-bold text-slate-800">School Enforced</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium text-slate-500">FIFO Enforcement:</span>
+              <span class="text-emerald-600 font-bold">Active</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium text-slate-500">Database Session:</span>
+              <span class="text-emerald-600 font-bold">ACID Secure</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

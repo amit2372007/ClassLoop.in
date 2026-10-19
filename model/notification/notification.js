@@ -26,7 +26,8 @@ const notificationSchema = new Schema({
       "EXAM",
       "APPLICATION",
       "REQUEST_REJECT",
-      "REQUEST_APPROVED"
+      "REQUEST_APPROVED",
+      "PENDING_FEE",
     ],
     required: true,
   },

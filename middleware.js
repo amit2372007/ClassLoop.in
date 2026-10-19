@@ -82,6 +82,21 @@ module.exports.isPrinciple = (req, res, next) => {
   next(); // User is a teacher, proceed to the controller
 };
 
+module.exports.isAccountant = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "You must be logged in first!");
+    return res.redirect("/user/login");
+  }
+  const authorizedRoles = ["accountant", "principle"];
+
+  if (!authorizedRoles.includes(req.user.designation)) {
+    req.flash("warning", "Access Denied: Unauthorized Entry");
+    return res.redirect("/home");
+  }
+
+  next();
+};
+
 module.exports.isNotDemo = (req, res, next) => {
   if (req.user._id.toString() === "699eab879571b658bb87c8a3") {
     req.flash(

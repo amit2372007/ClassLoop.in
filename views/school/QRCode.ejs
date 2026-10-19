@@ -1,0 +1,266 @@
+<%- include("../includes/loader.ejs") -%>
+<% layout("/layout/boilerplate2.ejs") -%>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#4c44e9",
+            "background-light": "#f6f6f8",
+            "background-dark": "#121121",
+          },
+          fontFamily: {
+            display: ["Lexend", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <title>School QR Code</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+  <div class="layout-container flex h-full grow flex-col">
+
+    <!-- HEADER -->
+    <header class="print:hidden flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-6 py-3 bg-white dark:bg-background-dark/50 backdrop-blur-sm sticky top-0 z-50">
+      <div class="flex items-center gap-4 text-primary">
+        <a href="/school" class="size-6">
+          <span class="material-symbols-outlined text-3xl">arrow_back</span>
+        </a>
+        <h2 class="text-slate-900 pt-3 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">
+          Back To Panel
+        </h2>
+      </div>
+      <div class="flex flex-1 justify-end gap-4 items-center">
+        <button id="downloadQrOnlyBtn" class="flex min-w-[120px] cursor-pointer items-center justify-center rounded-xl h-10 px-5 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+          <span class="material-symbols-outlined mr-2 text-sm">qr_code_2</span>
+          <span class="truncate">Download QR</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-1 flex flex-col items-center py-12 px-4">
+
+      <!-- PAGE TITLE -->
+      <div class="print:hidden max-w-[800px] w-full mb-8 text-center">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-slate-100 mb-2">
+          Staff Onboarding QR
+        </h1>
+        <p class="text-slate-600 dark:text-slate-400">
+          Printable template for <span class="text-primary font-semibold"><%= school.name %></span>. Preview your high-fidelity flyer below.
+        </p>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           FLYER CARD  (this is what gets captured as PDF)
+           ═══════════════════════════════════════════════ -->
+      <div
+        id="flyer-card"
+        class="relative w-full max-w-[700px] bg-white shadow-2xl print:shadow-none rounded-3xl overflow-hidden border border-slate-200 print:border-none flex flex-col text-slate-900 mx-auto"
+        style="font-family: 'Lexend', sans-serif;"
+      >
+
+        <!-- ── TOP ACCENT BAR ── -->
+        <div class="h-2 w-full bg-gradient-to-r from-primary via-indigo-400 to-primary/60"></div>
+
+        <!-- ── SCHOOL HEADER ── -->
+        <div class="flex flex-col items-center text-center px-10 pt-10 pb-6">
+          <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-primary" style="font-size:2.5rem;">verified_user</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-primary tracking-wide uppercase mb-1">
+            <%= school.name %>
+          </h2>
+          <!-- School Address -->
+          <p class="text-sm text-slate-500 font-medium flex items-center gap-1">
+            <span class="material-symbols-outlined text-base text-slate-400">location_on</span>
+            <%= school.address.city %>, <%= school.address.state %>
+          </p>
+          <% if (school && school.email) { %>
+                <p class="text-xs text-slate-500 truncate"><%= school.email %></p>
+              <% } %>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight mt-4 leading-tight">
+            Join Our Faculty &amp; Staff Network
+          </h3>
+          <div class="w-20 h-1 bg-primary/20 mt-4 rounded-full"></div>
+        </div>
+
+        <!-- ── PRINCIPAL CARD ── -->
+        <div class="mx-8 mb-6">
+          <div class="flex items-center gap-4 bg-primary/5 border border-primary/10 rounded-2xl px-5 py-4">
+            <!-- Profile Pic -->
+            <% if (principle && principle.profilePic && principle.profilePic.url) { %>
+              <img
+                src="<%= principle.profilePic.url %>"
+                alt="Principal Photo"
+                crossorigin="anonymous"
+                class="w-14 h-14 rounded-xl object-cover border-2 border-primary/20 flex-shrink-0 shadow"
+              />
+            <% } else { %>
+              <div class="w-14 h-14 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-primary text-3xl">person</span>
+              </div>
+            <% } %>
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-0.5">Principal / Head of School</p>
+              <p class="text-base font-extrabold text-slate-900 truncate">
+                <%= principle ? principle.name || "Principal" : "Principal" %>
+              </p>
+              
+            </div>
+            <span class="material-symbols-outlined text-primary opacity-60 flex-shrink-0">badge</span>
+          </div>
+        </div>
+
+        <!-- ── QR CODE ── -->
+        <div class="flex-1 flex flex-col items-center justify-center px-10 mb-6">
+          <div class="relative">
+            <div class="absolute -inset-4 bg-primary/5 rounded-[2rem] blur-xl opacity-50"></div>
+            <div class="relative bg-white p-5 rounded-3xl border border-slate-100 shadow-xl">
+              <img
+                id="qr-img"
+                alt="QR Code for Onboarding"
+                class="w-52 h-52 sm:w-60 sm:h-60"
+                crossorigin="anonymous"
+                src="<%= school.QRCode.url %>"
+              />
+            </div>
+          </div>
+          <p class="mt-4 text-slate-400 font-medium text-sm italic">Scan to begin your onboarding journey</p>
+        </div>
+
+        <!-- ── STEP-BY-STEP GUIDE ── -->
+        <div class="bg-slate-50 mx-8 mb-6 rounded-2xl p-6 border border-slate-100">
+          <h4 class="text-base font-bold text-slate-900 mb-5 flex items-center">
+            <span class="material-symbols-outlined mr-2 text-primary text-xl">list_alt</span>
+            Step-by-Step Joining Guide
+          </h4>
+          <div class="grid grid-cols-2 gap-y-5 gap-x-6">
+            <% const steps = [
+              { n: 1, title: "Open Camera",      sub: "Point your phone at the QR code" },
+              { n: 2, title: "Scan Code",         sub: "Tap the notification that appears" },
+              { n: 3, title: "Log In",            sub: "Use your verified staff credentials" },
+              { n: 4, title: "Wait for Approval", sub: "Admin will verify your account" },
+            ]; %>
+            <% steps.forEach(s => { %>
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm"><%= s.n %></div>
+                <div>
+                  <p class="font-bold text-slate-900 text-sm"><%= s.title %></p>
+                  <p class="text-xs text-slate-500"><%= s.sub %></p>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- ── MANUAL LINK ── -->
+        <div class="mx-8 mb-6">
+          <div class="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3">
+            <span class="material-symbols-outlined text-slate-400 text-xl flex-shrink-0">link</span>
+            <code class="text-primary font-bold text-sm flex-1 truncate"><%= joinLink %></code>
+            <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold flex-shrink-0">Manual Link</span>
+          </div>
+        </div>
+
+        <!-- ── FOOTER ── -->
+        <div class="mx-8 mb-8 flex items-center justify-between pt-5 border-t border-slate-100">
+          <div class="flex items-center gap-2 opacity-50">
+            <span class="material-symbols-outlined text-sm">lock</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Secure Recruitment Portal</span>
+          </div>
+          <div class="flex items-center gap-1.5 grayscale opacity-40">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-600">Powered by</span>
+            <span class="text-xs font-black text-slate-900">ClassLoop</span>
+          </div>
+        </div>
+
+        <!-- ── BOTTOM ACCENT BAR ── -->
+        <div class="h-2 w-full bg-gradient-to-r from-primary/60 via-indigo-400 to-primary"></div>
+
+      </div>
+      <!-- END FLYER CARD -->
+
+      <!-- ── ACTION BUTTONS ── -->
+      <div class="print:hidden mt-10 flex flex-wrap justify-center gap-4">
+        <button id="printBtn" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-colors shadow-sm">
+          <span class="material-symbols-outlined">print</span>
+          Print Flyer
+        </button>
+        <button id="downloadPdfBtn" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">
+          <span class="material-symbols-outlined">picture_as_pdf</span>
+          Download as PDF
+        </button>
+        <button id="shareLinkBtn" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-colors shadow-sm">
+          <span class="material-symbols-outlined">share</span>
+          <span id="shareBtnText">Share Link</span>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/loader.js"></script>
+
+  <script>
+    // ── 1. PRINT ──────────────────────────────────────────────
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    // ── 2. SHARE LINK ─────────────────────────────────────────
+    document.getElementById('shareLinkBtn').addEventListener('click', function () {
+      navigator.clipboard.writeText('<%= joinLink %>').then(() => {
+        const textSpan = document.getElementById('shareBtnText');
+        textSpan.textContent = 'Copied!';
+        setTimeout(() => { textSpan.textContent = 'Share Link'; }, 2000);
+      });
+    });
+
+    // ── 3. DOWNLOAD AS PDF (full flyer) ──────────────────────
+    document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+      const btn = this;
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin">autorenew</span>&nbsp;Generating...';
+      btn.disabled = true;
+
+      const element = document.getElementById('flyer-card');
+      const opt = {
+        margin:      0,
+        filename:    '<%= school.name.replace(/\s+/g, "_") %>_Staff_QR.pdf',
+        image:       { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 3, useCORS: true, allowTaint: true, logging: false },
+        jsPDF:       { unit: 'px', format: [element.offsetWidth * 3, element.offsetHeight * 3], orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+      }).catch(() => {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+        alert('PDF generation failed. Please try again.');
+      });
+    });
+
+    // ── 4. DOWNLOAD QR CODE ONLY (bare QR png) ───────────────
+    document.getElementById('downloadQrOnlyBtn').addEventListener('click', function () {
+      fetch('<%= school.QRCode.url %>')
+        .then(res => res.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a   = document.createElement('a');
+          a.style.display = 'none';
+          a.href     = url;
+          a.download = '<%= school.name.replace(/\s+/g, "_") %>_QR_Code.png';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+        })
+        .catch(() => alert('Failed to download QR. Try right-clicking the QR image → Save Image As.'));
+    });
+  </script>
+</body>

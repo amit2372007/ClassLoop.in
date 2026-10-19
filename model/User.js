@@ -25,14 +25,23 @@ const userSchema = Schema({
     type: String,
     required: true,
     default: "other",
-    enum: ["student", "teacher", "principle", "admin", "classTeacher","other"],
+    enum: [
+      "student",
+      "teacher",
+      "principle",
+      "admin",
+      "classTeacher",
+      "other",
+      "faculty",
+      "accountant",
+    ],
   },
   skills: [
     {
       type: String,
       min: 3,
-      max: 10
-    }
+      max: 10,
+    },
   ],
 
   //social media
@@ -83,7 +92,7 @@ const userSchema = Schema({
   ],
 
   //instituition
-  rollNumber: Number,
+  admissionNumber: Number,
   employeeId: String,
   instituition: {
     school: {
@@ -103,6 +112,10 @@ const userSchema = Schema({
     default: Date.now,
   },
   isActive: {
+    type: Boolean,
+    default: false,
+  },
+  isSuspended: {
     type: Boolean,
     default: false,
   },

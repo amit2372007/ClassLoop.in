@@ -1,9 +1,7 @@
 <!-- Main Content -->
-<main class="flex-1 ml-64 min-h-screen flex flex-col">
+<main class="flex-1 ml-64 min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
   <!-- Header -->
-  <header
-    class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10"
-  >
+  <header class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 lg:px-8 sticky top-0 z-10">
     <div>
       <h2 class="text-xl font-bold text-slate-800 dark:text-white">
         <%= School.name %>
@@ -12,271 +10,403 @@
     </div>
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-2">
-        <button
-          class="size-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 relative"
-        >
+        <button class="size-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 relative transition-colors">
           <span class="material-symbols-outlined">notifications</span>
-          <span
-            class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"
-          ></span>
+          <span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
         </button>
         <div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
         <div class="flex items-center gap-3">
           <div class="text-right">
             <p class="text-sm font-bold text-slate-800 dark:text-white">
-              <%= Principle.name%>
+              <%= Principle.name %>
             </p>
             <p class="text-xs text-slate-500">Principal Administrator</p>
           </div>
-          <div
-            class="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/30"
-          >
+          <div class="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/30">
             <img
               alt="Principal Profile"
               class="w-full h-full object-cover"
-              data-alt="Professional portrait of a female principal administrator"
-              src="<%= Principle.profilePic.url%>"
+              src="<%= Principle.profilePic ? Principle.profilePic.url : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' %>"
             />
           </div>
         </div>
       </div>
     </div>
   </header>
-  <!-- Dashboard Content -->
-  <div class="p-8 space-y-8">
-    <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Total Students -->
-      <div
-        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
-      >
+
+  <!-- Dashboard Content Wrapper -->
+  <div class="p-6 lg:p-8 space-y-6 lg:space-y-8 flex-1 w-full max-w-full overflow-hidden">
+    
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
         <div class="flex justify-between items-start">
-          <div
-            class="size-12 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-primary"
-          >
+          <div class="size-12 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-primary">
             <span class="material-symbols-outlined">groups</span>
           </div>
-          <span
-            class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full"
-            >+2.5%</span
-          >
+          <span class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full">+2.5%</span>
         </div>
         <div>
           <p class="text-slate-500 text-sm font-medium">Total Students</p>
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-            <%=Students.length%>
+            <%= Students.length %>
           </h3>
         </div>
       </div>
-      <!-- Active Teachers -->
-      <div
-        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
-      >
+      
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
         <div class="flex justify-between items-start">
-          <div
-            class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600"
-          >
+          <div class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600">
             <span class="material-symbols-outlined">diversity_3</span>
           </div>
-          <span
-            class="text-rose-500 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full"
-            >-1.2%</span
-          >
+          <span class="text-rose-500 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full">-1.2%</span>
         </div>
         <div>
           <p class="text-slate-500 text-sm font-medium">Active Teachers</p>
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-            <%=Teachers.length%>
+            <%= Teachers.length %>
           </h3>
         </div>
       </div>
-      <!-- All Classes -->
-      <div
-        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
-      >
+      
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
         <div class="flex justify-between items-start">
-          <div
-            class="size-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"
-          >
+          <div class="size-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
             <span class="material-symbols-outlined">school</span>
           </div>
         </div>
         <div>
           <p class="text-slate-500 text-sm font-medium">Active Classes</p>
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-            <%=allClasses.length%>
+            <%= allClasses.length %>
           </h3>
         </div>
       </div>
-      <!-- pending Dues -->
-      <div
-        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
-      >
+      
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
         <div class="flex justify-between items-start">
-          <div
-            class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600"
-          >
+          <div class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600">
             <span class="material-symbols-outlined">hourglass_empty</span>
           </div>
-          <span
-            class="text-amber-600 text-xs font-bold bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded-full"
-            >Attention Needed</span
-          >
+          <span class="text-amber-600 text-xs font-bold bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded-full">Attention Needed</span>
         </div>
         <div>
           <p class="text-slate-500 text-sm font-medium">Pending Dues</p>
           <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-            ₹<%= stats.pendingDues.toLocaleString('en-IN') %>
+            ₹<%= stats && stats.pendingDues ? stats.pendingDues.toLocaleString('en-IN') : 0 %>
           </h3>
-        </div>
-      </div>
-      <!-- Attendance -->
-      <div
-        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
-      >
-        <div class="flex justify-between items-start">
-          <div
-            class="size-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"
-          >
-            <span class="material-symbols-outlined">event_available</span>
-          </div>
-          <span
-            class="text-emerald-500 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full"
-            >+0.5%</span
-          >
-        </div>
-        <div>
-          <p class="text-slate-500 text-sm font-medium">Attendance</p>
-          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">92%</h3>
-        </div>
-      </div>
-
-      <!-- Pending Complaints -->
-      <div
-        class="thick-edge bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
-      >
-        <div class="flex justify-between items-start">
-          <div
-            class="size-12 rounded-lg bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600"
-          >
-            <span class="material-symbols-outlined">priority_high</span>
-          </div>
-          <span
-            class="text-rose-600 text-xs font-bold bg-rose-50 dark:bg-rose-900/20 px-2 py-1 rounded-full"
-            >8 Urgent</span
-          >
-        </div>
-        <div>
-          <p class="text-slate-500 text-sm font-medium">Pending Complaints</p>
-          <h3 class="text-3xl font-bold text-slate-800 dark:text-white">8</h3>
         </div>
       </div>
     </div>
 
-    <!-- Secondary Section: Attendance Trend & Distribution -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div
-        class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
-      >
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="text-lg font-bold text-slate-800 dark:text-white">
-            Attendance Analytics
-          </h3>
-          <select
-            class="bg-background-light dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm rounded-lg py-1 px-3"
-          >
-            <option>Last 7 Days</option>
-            <option>Last 30 Days</option>
-          </select>
+    <!-- CLASS MANAGEMENT SECTION -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden w-full">
+      <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 dark:text-white">Class Management</h3>
+          <p class="text-sm text-slate-500 mt-1">Manage classes, sections, and assign class teachers</p>
         </div>
-        <div class="h-64 flex items-end gap-2 px-2">
-          <div
-            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[85%] rounded-t-lg group relative"
-          >
-            <span
-              class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold bg-slate-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-              >92%</span
-            >
-          </div>
-          <div
-            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[88%] rounded-t-lg group relative"
-          ></div>
-          <div
-            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[92%] rounded-t-lg group relative"
-          ></div>
-          <div
-            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[90%] rounded-t-lg group relative"
-          ></div>
-          <div
-            class="flex-1 bg-primary h-[94%] rounded-t-lg group relative"
-          ></div>
-          <div
-            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[82%] rounded-t-lg group relative"
-          ></div>
-          <div
-            class="flex-1 bg-primary/20 hover:bg-primary transition-colors h-[89%] rounded-t-lg group relative"
-          ></div>
-        </div>
-        <div
-          class="flex justify-between mt-4 text-xs font-bold text-slate-400 uppercase tracking-widest px-2"
-        >
-          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span
-          ><span>Fri</span><span>Sat</span><span>Sun</span>
-        </div>
-      </div>
-      <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col"
-      >
-        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6">
-          Student Distribution
-        </h3>
-        <div class="flex-1 flex flex-col justify-center gap-6">
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-600 dark:text-slate-400"
-                >Primary (K-5)</span
-              >
-              <span class="font-bold text-slate-800 dark:text-white">450</span>
-            </div>
-            <div
-              class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
-            >
-              <div class="h-full bg-primary" style="width: 36%"></div>
-            </div>
-          </div>
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-600 dark:text-slate-400"
-                >Middle (6-8)</span
-              >
-              <span class="font-bold text-slate-800 dark:text-white">380</span>
-            </div>
-            <div
-              class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
-            >
-              <div class="h-full bg-amber-500" style="width: 31%"></div>
-            </div>
-          </div>
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-slate-600 dark:text-slate-400"
-                >Senior (9-12)</span
-              >
-              <span class="font-bold text-slate-800 dark:text-white">410</span>
-            </div>
-            <div
-              class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"
-            >
-              <div class="h-full bg-emerald-500" style="width: 33%"></div>
-            </div>
-          </div>
-        </div>
-        <button
-          class="mt-8 w-full py-3 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-shadow shadow-lg shadow-primary/20"
-        >
-          Generate Report
+        <button onclick="toggleModal('addClassModal')" class="bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap">
+          <span class="material-symbols-outlined text-sm">add</span> New Class
         </button>
+      </div>
+
+      <!-- Data Table -->
+      <div class="overflow-x-auto w-full">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+          <thead>
+            <tr class="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 text-sm border-b border-slate-200 dark:border-slate-700">
+              <th class="p-4 font-semibold whitespace-nowrap">Class & Section</th>
+              <th class="p-4 font-semibold whitespace-nowrap">Session</th>
+              <th class="p-4 font-semibold whitespace-nowrap">Strength</th>
+              <th class="p-4 font-semibold whitespace-nowrap">Class Teacher</th>
+              <th class="p-4 font-semibold text-right whitespace-nowrap">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+            <% if (allClasses && allClasses.length > 0) { %>
+              <% allClasses.forEach(cls => { %>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                  <td class="p-4">
+                    <div class="flex items-center gap-3">
+                      <div class="size-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-primary font-bold text-lg">
+                        <%= cls.className %>
+                      </div>
+                      <div>
+                        <div class="font-bold text-slate-800 dark:text-white">Class <%= cls.className %></div>
+                        <div class="text-xs text-slate-500 font-medium">Section <%= cls.section %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-4 text-sm font-medium text-slate-600 dark:text-slate-300">
+                    <%= cls.session %>
+                  </td>
+                  <td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+                    <span class="bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full text-xs font-bold text-slate-600 dark:text-slate-400">
+                      <%= cls.students ? cls.students.length : 0 %> Students
+                    </span>
+                  </td>
+                  <td class="p-4">
+  <% if (cls.classTeacher) { %>
+    <div class="flex items-center gap-3">
+      <img src="<%= cls.classTeacher.profilePic?.url || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' %>" class="size-8 rounded-full object-cover border border-slate-200 dark:border-slate-700">
+      <div>
+        <p class="text-sm font-bold text-slate-700 dark:text-slate-200"><%= cls.classTeacher.name %></p>
+        <p class="text-xs text-slate-500 font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-xs">call</span>
+          <%= cls.classTeacher.phone || cls.classTeacher.mobile || 'N/A' %>
+        </p>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="flex items-center gap-2 text-amber-500 bg-amber-50 dark:bg-amber-900/20 w-max px-3 py-1.5 rounded-lg border border-amber-100 dark:border-amber-800/30">
+      <span class="material-symbols-outlined text-sm">warning</span>
+      <span class="text-xs font-bold">Unassigned</span>
+    </div>
+  <% } %>
+</td>
+                  <td class="p-4 text-right">
+                    <button onclick="openAssignTeacherModal('<%= cls._id %>', '<%= cls.className %>', '<%= cls.section %>')" class="text-sm text-primary hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-bold bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+                      <%= cls.classTeacher ? 'Change Teacher' : 'Assign Teacher' %>
+                    </button>
+
+                    <button onclick="openDeleteClassModal('<%= cls._id %>', '<%= cls.className %> <%= cls.section %>')" type="button" class="text-sm text-rose-500 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 font-bold bg-rose-50 dark:bg-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+  Delete
+</button>
+                    <a href="/school/classProfile/<%=cls._id%>" class="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 font-bold bg-slate-50 dark:bg-slate-800/30 hover:bg-slate-100 dark:hover:bg-slate-800/50 px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+                      View Details
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+               <tr>
+                 <td colspan="5" class="p-10 text-center">
+                   <div class="flex flex-col items-center justify-center space-y-3">
+                     <div class="size-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                       <span class="material-symbols-outlined text-3xl text-slate-300 dark:text-slate-600">school</span>
+                     </div>
+                     <p class="text-slate-500 font-medium">No classes established yet for this session.</p>
+                   </div>
+                 </td>
+               </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+
+  <!-- ADD NEW CLASS MODAL -->
+  <div id="addClassModal" class="fixed inset-0 z-[60] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 opacity-0">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 transform scale-95 transition-transform duration-300 overflow-hidden border border-slate-200 dark:border-slate-800">
+      <div class="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white">Create New Class</h3>
+        <button type="button" onclick="toggleModal('addClassModal')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <!-- Create Class Form -->
+      <form action="/school/class/create" method="POST" class="p-6 space-y-4">
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Class Name <span class="text-rose-500">*</span></label>
+          <input type="text" name="className" required placeholder="e.g. 10 or X" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-colors">
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Section <span class="text-rose-500">*</span></label>
+            <input type="text" name="section" required placeholder="e.g. A" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-colors">
+          </div>
+          
+          <div class="space-y-1.5">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Session <span class="text-rose-500">*</span></label>
+            <input type="text" name="session" required placeholder="e.g. 2026-2027" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-colors">
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Assign Teacher <span class="text-rose-500">*</span></label>
+          <select required name="classTeacher" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none transition-colors">
+            <option value="" disabled selected>-- Choose a faculty member --</option>
+            <% if (Teachers && Teachers.length > 0) { %>
+              <% Teachers.forEach(t => { %>
+                <% /* Prioritize t.user._id to ensure the referenced User ObjectId is submitted */ %>
+                <% const teacherId = (t.user && t.user._id) ? t.user._id : t._id; %>
+                <option value="<%= teacherId %>">
+                  <%= t.name || (t.user && t.user.name) %> (Emp ID: <%= t.employeeId || 'N/A' %>)
+                </option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="pt-4 flex gap-3 justify-end border-t border-slate-100 dark:border-slate-800 mt-6">
+          <button type="button" onclick="toggleModal('addClassModal')" class="px-5 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-primary hover:bg-indigo-700 rounded-lg shadow-md transition-all">Create Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ASSIGN TEACHER MODAL -->
+  <div id="assignTeacherModal" class="fixed inset-0 z-[60] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 opacity-0">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 transform scale-95 transition-transform duration-300 overflow-hidden border border-slate-200 dark:border-slate-800">
+      <div class="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 dark:text-white">Assign Class Teacher</h3>
+          <p id="assignModalSubtitle" class="text-sm text-slate-500 mt-1">Class X - Section Y</p>
+        </div>
+        <button type="button" onclick="toggleModal('assignTeacherModal')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form action="/school/class/assign-teacher" method="POST" class="p-6 space-y-5">
+        <input type="hidden" name="classId" id="assignClassIdInput">
+        
+        <div class="space-y-1.5">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Select Teacher <span class="text-rose-500">*</span></label>
+          <select name="teacherId" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-slate-200 outline-none">
+            <option value="" disabled selected>-- Choose a faculty member --</option>
+            <% if (Teachers && Teachers.length > 0) { %>
+              <% Teachers.forEach(t => { %>
+                <% const teacherId = (t.user && t.user._id) ? t.user._id : t._id; %>
+                <option value="<%= teacherId %>"><%= t.name || (t.user && t.user.name) %> (<%= t.designation || 'Teacher' %>)</option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="pt-4 flex gap-3 justify-end border-t border-slate-100 dark:border-slate-800">
+          <button type="button" onclick="toggleModal('assignTeacherModal')" class="px-5 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-primary hover:bg-indigo-700 rounded-lg shadow-md transition-all">Save Assignment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+<div id="deleteClassModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity p-4">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-slate-200 dark:border-slate-800">
+    
+    <!-- Modal Header -->
+    <div class="p-6 pb-0 flex items-center gap-4">
+      <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+        <svg class="w-6 h-6 text-rose-600 dark:text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Delete Class</h3>
+        <p class="text-sm font-semibold text-rose-600 dark:text-rose-400 mt-1" id="deleteModalClassName">Class Name</p>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <form id="deleteClassForm" method="POST" action="">
+      <div class="p-6">
+        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+          Are you completely sure? Deleting this class will result in the <strong>permanent loss</strong> of:
+        </p>
+        <ul class="text-sm text-slate-600 dark:text-slate-400 list-disc list-inside mb-5 space-y-1 ml-2">
+          <li>All student enrollments and data associated with this class</li>
+          <li>Assigned class teacher records</li>
+          <li>Class-specific attendance and academic records</li>
+        </ul>
+
+        <!-- Confirmation Checkbox -->
+        <label class="flex items-start gap-3 p-3 bg-rose-50 dark:bg-rose-900/10 rounded-lg cursor-pointer border border-rose-100 dark:border-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-900/20 transition-colors">
+          <div class="flex items-center h-5">
+            <input type="checkbox" id="confirmDeleteCheckbox" onchange="toggleDeleteButton()" class="w-4 h-4 text-rose-600 bg-white border-rose-300 rounded focus:ring-rose-500 dark:focus:ring-rose-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600 cursor-pointer">
+          </div>
+          <div class="text-sm">
+            <span class="font-medium text-rose-800 dark:text-rose-300">I understand that this action cannot be undone.</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+        <button type="button" onclick="closeDeleteClassModal()" class="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+          Cancel
+        </button>
+        <button type="submit" id="confirmDeleteBtn" disabled class="px-4 py-2 text-sm font-semibold text-white bg-rose-600 rounded-lg hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+          Confirm Delete
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <script>
+    function openDeleteClassModal(classId, className) {
+    const modal = document.getElementById('deleteClassModal');
+    const classNameDisplay = document.getElementById('deleteModalClassName');
+    const form = document.getElementById('deleteClassForm');
+    const checkbox = document.getElementById('confirmDeleteCheckbox');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+    // Display the dynamic class name in the warning text
+    classNameDisplay.textContent = className;
+    
+    // Set the form action to your backend delete route. 
+    // Update the URL structure '/school/deleteClass/' to match your actual Express route
+    form.action = `/school/deleteClass/${classId}?_method=DELETE`;
+
+    // Reset the modal state
+    checkbox.checked = false;
+    confirmBtn.disabled = true;
+
+    // Show the modal
+    modal.classList.remove('hidden');
+  }
+
+  function closeDeleteClassModal() {
+    const modal = document.getElementById('deleteClassModal');
+    modal.classList.add('hidden');
+  }
+
+  function toggleDeleteButton() {
+    const checkbox = document.getElementById('confirmDeleteCheckbox');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    
+    // Enable the confirm button only if the checkbox is checked
+    confirmBtn.disabled = !checkbox.checked;
+  }
+
+  // Close modal if user clicks outside of the modal container
+  document.getElementById('deleteClassModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeDeleteClassModal();
+    }
+  });
+
+
+    function toggleModal(modalID) {
+      const modal = document.getElementById(modalID);
+      if (!modal) return;
+      const modalInner = modal.querySelector('div');
+
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          modal.classList.remove('opacity-0');
+          modalInner.classList.remove('scale-95');
+          modalInner.classList.add('scale-100');
+        }, 10);
+      } else {
+        modal.classList.add('opacity-0');
+        modalInner.classList.remove('scale-100');
+        modalInner.classList.add('scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+      }
+    }
+
+    function openAssignTeacherModal(classId, className, section) {
+      document.getElementById('assignClassIdInput').value = classId;
+      document.getElementById('assignModalSubtitle').textContent = `Class ${className} - Section ${section}`;
+      toggleModal('assignTeacherModal');
+    }
+  </script>
 </main>

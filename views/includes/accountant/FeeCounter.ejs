@@ -1,0 +1,676 @@
+<main class="flex-1 h-full overflow-y-auto bg-slate-50 p-4 md:p-6 no-scrollbar">
+  <!-- Header -->
+  <div class="mb-5 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-slate-800">Fee Counter</h1>
+      <p class="text-sm text-slate-500">Find student, view ledger, and process payments</p>
+    </div>
+    <div class="text-sm font-medium text-slate-600 bg-white px-3 py-1.5 border border-slate-200 rounded-lg shadow-sm flex items-center gap-2">
+      <span class="material-symbols-outlined text-finance text-base">point_of_sale</span>
+      Counter: Desk 01
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+    
+    <!-- LEFT COLUMN: Search & Filters -->
+    <div class="lg:col-span-4 space-y-4">
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+        <h2 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-base text-primary">search</span>
+          Student Lookup
+        </h2>
+
+        <!-- Search Mode Tabs -->
+        <div class="flex p-1 bg-slate-100 rounded-lg mb-4">
+          <button onclick="switchTab('admTab')" id="btn-admTab" class="flex-1 text-xs py-1.5 font-bold bg-white shadow-sm rounded-md text-primary transition-all">
+            Adm No.
+          </button>
+          <button onclick="switchTab('classTab')" id="btn-classTab" class="flex-1 text-xs py-1.5 font-medium text-slate-500 hover:text-slate-800 transition-all">
+            Class
+          </button>
+          <button onclick="switchTab('userTab')" id="btn-userTab" class="flex-1 text-xs py-1.5 font-medium text-slate-500 hover:text-slate-800 transition-all">
+            Username
+          </button>
+        </div>
+
+        <!-- 1. Admission Number Search -->
+        <div id="admTab" class="search-form block">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Admission Number</label>
+          <div class="flex gap-2">
+            <input type="text" id="searchAdmNo" placeholder="e.g. ADM-2025-0142" class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" />
+            <button onclick="handleSearch('adm')" class="bg-primary hover:bg-sky-600 text-white px-3 py-1.5 rounded-md transition-colors flex items-center justify-center">
+              <span class="material-symbols-outlined text-base">search</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Class & Student Dropdown Search -->
+        <div id="classTab" class="search-form hidden space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Select Class & Section</label>
+            <select id="searchClass" onchange="populateStudents()" class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white">
+              <option value="">-- Select Class --</option>
+              <% if(classes && classes.length > 0) { %>
+                <% classes.forEach(cls => { %>
+                  <option value="<%= cls._id %>"><%= cls.className %> - <%= cls.section %></option>
+                <% }) %>
+              <% } %>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Select Student</label>
+            <select id="searchStudent" disabled class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-slate-50 text-slate-500">
+              <option value="">-- Select Class First --</option>
+            </select>
+          </div>
+          <button onclick="handleSearch('class')" class="w-full bg-primary hover:bg-sky-600 text-white text-sm font-medium py-1.5 rounded-md transition-colors">
+            Fetch Student
+          </button>
+        </div>
+
+        <!-- 3. Username Search -->
+        <div id="userTab" class="search-form hidden">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ClassLoop Username</label>
+          <div class="flex gap-2">
+            <div class="relative w-full">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-slate-400 text-sm">@</span>
+              <input type="text" id="searchUsername" placeholder="rahul.sharma" class="w-full border border-slate-300 rounded-md pl-6 pr-3 py-1.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" />
+            </div>
+            <button onclick="handleSearch('username')" class="bg-primary hover:bg-sky-600 text-white px-3 py-1.5 rounded-md transition-colors flex items-center justify-center">
+              <span class="material-symbols-outlined text-base">search</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Widget -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center gap-4">
+        <div class="h-10 w-10 rounded-full bg-finance/10 flex items-center justify-center text-finance">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium">Today's Collection</p>
+          <p class="text-lg font-bold text-slate-800" id="dailyCollection">
+            ₹<%= stats.dailyCollection ? stats.dailyCollection.toLocaleString('en-IN') : '0' %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Recent 5 Transactions Widget -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm text-primary">history</span>
+            Recent 5 Desk Transactions
+          </h3>
+        </div>
+
+        <div class="space-y-2.5 max-h-[320px] overflow-y-auto no-scrollbar">
+          <% if (typeof recentTransactions !== 'undefined' && recentTransactions.length > 0) { %>
+            <% recentTransactions.slice(0, 5).forEach(txn => { %>
+              <div class="p-2.5 rounded-lg border border-slate-200/80 bg-white hover:border-slate-300 transition-all text-xs space-y-1.5 shadow-xs">
+                
+                <!-- Header: Student Name & Paid Amount -->
+                <div class="flex justify-between items-center font-bold text-slate-800">
+                  <span class="truncate max-w-[170px]" title="<%= txn.student?.name || 'Student' %>">
+                    <%= txn.student?.name || 'Student' %>
+                  </span>
+                  <span class="text-emerald-600 font-extrabold text-xs">
+                    ₹<%= (txn.totalAmount || txn.amount || 0).toLocaleString('en-IN') %>
+                  </span>
+                </div>
+
+                <!-- Meta: Adm No, Method & Date -->
+                <div class="text-[11px] text-slate-500 flex justify-between items-center">
+                  <span class="font-medium text-slate-600">
+                    Adm: <%= txn.student?.admissionNumber || 'N/A' %> • <%= txn.paymentMethod || 'Cash' %>
+                  </span>
+                  <span class="font-mono text-slate-400 text-[10px]">
+                    <%= new Date(txn.createdAt || txn.updatedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+                  </span>
+                </div>
+
+                <!-- Action Links: Print, PDF Download, WhatsApp, Details Popup Trigger -->
+                <div class="flex items-center justify-between pt-1.5 border-t border-slate-100 mt-1">
+                  <div class="flex items-center gap-2.5">
+                    <!-- Print Receipt -->
+                    <a href="/accountant/receipt/<%= txn._id %>" target="_blank" title="Print Payment Receipt" class="text-slate-500 hover:text-primary transition-colors flex items-center gap-0.5 font-medium">
+                      <span class="material-symbols-outlined text-[14px]">print</span> Print
+                    </a>
+
+                    <!-- Download PDF -->
+                    <a href="/accountant/receipt/<%= txn._id %>" target="_blank" title="Download Slip PDF" class="text-slate-500 hover:text-primary transition-colors flex items-center gap-0.5 font-medium">
+                      <span class="material-symbols-outlined text-[14px]">download</span> PDF
+                    </a>
+
+                    <!-- Share to WhatsApp -->
+                    <% 
+                      let rawPhone = (txn.student?.phone || '').toString().replace(/\D/g, '');
+                      if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
+                      const waText = encodeURIComponent(`ClassLoop Fee Receipt\nStudent: ${txn.student?.name || 'Student'}\nAmount: ₹${txn.totalAmount || 0}\nTxn ID: ${txn.transactionId || txn._id}\nDate: ${new Date(txn.createdAt).toLocaleDateString('en-IN')}\nStatus: Paid\nThank you!`);
+                    %>
+                    <a href="https://api.whatsapp.com/send?phone=<%= rawPhone %>&text=<%= waText %>" target="_blank" rel="noopener noreferrer" title="Share via WhatsApp" class="text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-0.5 font-semibold">
+                      <span class="material-symbols-outlined text-[14px]">share</span> WhatsApp
+                    </a>
+                  </div>
+
+                  <!-- Details Modal Trigger Button -->
+                  <button type="button" onclick="openReceiptModal('<%= txn._id %>', '<%= txn.student?.name %>', '<%= txn.student?.admissionNumber %>', '<%= txn.totalAmount %>', '<%= txn.paymentMethod %>', '<%= txn.month %>', '<%= txn.year %>', '<%= txn.transactionId || txn._id %>', '<%= txn.paymentRemarks %>')" class="text-primary font-medium cursor-pointer hover:underline flex items-center gap-0.5 bg-transparent border-0 p-0 text-xs">
+                    Details <span class="material-symbols-outlined text-[12px]">info</span>
+                  </button>
+                </div>
+
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="text-center py-8 bg-slate-50/50 rounded-lg border border-dashed border-slate-200">
+              <span class="material-symbols-outlined text-slate-300 text-2xl mb-1">receipt</span>
+              <p class="text-xs text-slate-400 font-medium">No desk transactions recorded today.</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Student Details & Fee Ledger -->
+    <div class="lg:col-span-8 space-y-4">
+      
+      <!-- DEFAULT EMPTY STATE -->
+      <div id="empty-state" class="bg-white border border-slate-200 rounded-xl shadow-sm p-10 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
+        <div class="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-3xl text-slate-400">person_search</span>
+        </div>
+        <h3 class="text-lg font-bold text-slate-700">No Student Selected</h3>
+        <p class="text-sm text-slate-500 mt-1 max-w-sm">
+          Use the search panel on the left to find a student by Admission Number, Class, or Username.
+        </p>
+      </div>
+
+      <!-- STEP 1: Student Verification Card -->
+      <div id="student-verification-card" class="hidden bg-white border border-slate-200 rounded-xl shadow-sm p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+        <h2 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">Student Verification</h2>
+        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div class="flex items-center gap-4">
+            <img id="sv-avatar" src="" alt="Student" class="w-14 h-14 rounded-lg object-cover border border-slate-200 shadow-sm" />
+            <div>
+              <h3 id="sv-name" class="text-base font-bold text-slate-900"></h3>
+              <div class="grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-xs">
+                <p class="text-slate-600"><span class="font-semibold text-slate-500">Adm No:</span> <span id="sv-admNo"></span></p>
+                <p class="text-slate-600"><span class="font-semibold text-slate-500">Class:</span> <span id="sv-class"></span></p>
+                <p class="text-slate-600"><span class="font-semibold text-slate-500">Father:</span> <span id="sv-father"></span></p>
+                <p class="text-slate-600"><span class="font-semibold text-slate-500">Mobile:</span> <span id="sv-mobile"></span></p>
+              </div>
+            </div>
+          </div>
+          <div class="w-full sm:w-auto">
+            <button onclick="showFeeLedger()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium px-4 py-2 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              Confirm & View Fees
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: Fee Ledger & Payment Desk -->
+      <div id="fee-ledger-section" class="hidden bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col h-[calc(100vh-280px)] min-h-[450px]">
+        <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+          <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-outlined text-base text-finance">receipt_long</span>
+            Pending Dues Ledger
+          </h2>
+          <span id="pending-months-badge" class="text-xs font-bold px-2 py-1 bg-red-100 text-red-600 rounded-md border border-red-200"></span>
+        </div>
+
+        <!-- Scrollable Fee Table -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-0">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="text-xs text-slate-500 bg-slate-50 sticky top-0 border-b border-slate-200 shadow-sm z-10">
+              <tr>
+                <th class="px-4 py-3 w-10">
+                  <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllFees(this)" class="w-4 h-4 rounded border-slate-300 text-finance focus:ring-finance cursor-pointer" />
+                </th>
+                <th class="px-2 py-3 font-medium">Month</th>
+                <th class="px-2 py-3 font-medium">Fee Head</th>
+                <th class="px-4 py-3 font-medium text-right">Amount</th>
+                <th class="px-4 py-3 font-medium text-right">Late Fine</th>
+                <th class="px-4 py-3 font-medium text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="fee-table-body" class="divide-y divide-slate-100">
+              <!-- Dynamically Populated Rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Payment Settlement Section -->
+        <div class="border-t border-slate-200 p-4 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left: Payment Details -->
+            <div class="space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Payment Method</label>
+                  <select id="paymentMethod" onchange="handlePaymentMethodChange()" class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-finance focus:ring-1 focus:ring-finance outline-none">
+                    <option value="Cash">Cash</option>
+                    <option value="Online">UPI / QR Code</option>
+                    <option value="Card">Credit/Debit Card</option>
+                    <option value="Cheque">Bank Cheque</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Discount (₹)</label>
+                  <input type="number" id="paymentDiscount" oninput="calculateTotals()" placeholder="0" min="0" class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-finance focus:ring-1 focus:ring-finance outline-none" />
+                </div>
+              </div>
+
+              <!-- Transaction ID / UTR input for non-cash methods -->
+              <div id="utrFieldContainer" class="hidden">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Transaction ID / UTR No. <span class="text-red-500">*</span></label>
+                <input type="text" id="paymentTransactionId" placeholder="Enter bank reference or UTR..." class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-finance focus:ring-1 focus:ring-finance outline-none" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Remarks / Notes</label>
+                <input type="text" id="paymentRemarks" placeholder="Optional notes..." class="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:border-finance focus:ring-1 focus:ring-finance outline-none" />
+              </div>
+            </div>
+
+            <!-- Right: Total & Action -->
+            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col justify-between">
+              <div class="space-y-1">
+                <div class="flex justify-between text-sm text-slate-600">
+                  <span>Subtotal Selected:</span>
+                  <span id="summarySubtotal">₹0</span>
+                </div>
+                <div class="flex justify-between text-sm text-emerald-600 font-medium">
+                  <span>Discount Applied:</span>
+                  <span id="summaryDiscount">-₹0</span>
+                </div>
+                <div class="flex justify-between text-base font-bold text-slate-800 pt-2 border-t border-slate-200 mt-2">
+                  <span>Payable Amount:</span>
+                  <span id="summaryPayable">₹0</span>
+                </div>
+              </div>
+              <button type="button" onclick="openConfirmModal()" id="btnSubmitPayment" disabled class="mt-4 w-full bg-finance hover:bg-emerald-600 text-white text-sm font-bold py-2.5 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-base">payments</span>
+                Settle Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Confirmation Modal (Non-AJAX Standard Form Submission) -->
+  <div id="confirmPaymentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <span class="material-symbols-outlined text-finance">verified</span> Confirm Fee Settlement
+        </h3>
+        <button onclick="closeConfirmModal()" class="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+      </div>
+
+      <form action="/accountant/api/settle-fees" method="POST" class="p-5 space-y-4">
+        <input type="hidden" name="studentId" id="modalInputStudentId">
+        <input type="hidden" name="discount" id="modalInputDiscount">
+        <input type="hidden" name="method" id="modalInputMethod">
+        <input type="hidden" name="transactionId" id="modalInputTransactionId">
+        <input type="hidden" name="remarks" id="modalInputRemarks">
+        <div id="modalFeeIdsContainer"></div>
+
+        <div class="space-y-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <div class="flex justify-between"><span class="font-semibold text-slate-500">Student Name:</span> <span id="modalStudentName" class="font-bold text-slate-800"></span></div>
+          <div class="flex justify-between"><span class="font-semibold text-slate-500">Admission No:</span> <span id="modalStudentAdm" class="font-mono text-slate-800"></span></div>
+          <div class="flex justify-between"><span class="font-semibold text-slate-500">Payment Mode:</span> <span id="modalPaymentMethod" class="font-bold text-slate-800"></span></div>
+          <div id="modalUtrRow" class="hidden justify-between"><span class="font-semibold text-slate-500">UTR / Txn ID:</span> <span id="modalUtrVal" class="font-mono text-slate-800"></span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-2 mt-1"><span class="font-semibold text-slate-700">Total Payable:</span> <span id="modalPayableAmount" class="font-extrabold text-slate-900 text-sm text-finance"></span></div>
+        </div>
+
+        <p class="text-[11px] text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+          ⚠️ Please verify cash or bank reference carefully. This action will record the transaction and update the student ledger.
+        </p>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" onclick="closeConfirmModal()" class="flex-1 border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium py-2 rounded-md text-xs transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 bg-finance hover:bg-emerald-600 text-white font-bold py-2 rounded-md text-xs transition-colors shadow-sm">
+            Confirm & Settle
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Receipt Quick Details Modal Popup -->
+  <div id="receiptDetailModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div class="bg-slate-900 text-white px-5 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-emerald-400">receipt_long</span>
+          <h3 class="text-sm font-bold uppercase tracking-wider">Transaction Summary</h3>
+        </div>
+        <button onclick="closeReceiptModal()" class="text-slate-400 hover:text-white transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <div class="p-5 space-y-3 text-xs text-slate-600">
+        <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="font-semibold text-slate-500">Student Name:</span>
+          <span id="popupStudentName" class="font-bold text-slate-900"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="font-semibold text-slate-500">Admission Number:</span>
+          <span id="popupAdmNo" class="font-mono text-slate-800"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="font-semibold text-slate-500">Fee Period:</span>
+          <span id="popupPeriod" class="font-bold text-slate-800"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="font-semibold text-slate-500">Payment Method:</span>
+          <span id="popupMethod" class="font-bold text-emerald-700 uppercase"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="font-semibold text-slate-500">Transaction ID / UTR:</span>
+          <span id="popupTxnId" class="font-mono text-slate-800"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="font-semibold text-slate-500">Status:</span>
+          <span class="text-emerald-600 font-bold uppercase bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Success</span>
+        </div>
+        <div>
+          <span class="font-semibold text-slate-500 block mb-1">Remarks:</span>
+          <p id="popupRemarks" class="text-slate-700 italic bg-slate-50 p-2 rounded border border-slate-100"></p>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-between items-center">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-bold block">Paid Total</span>
+          <span id="popupAmount" class="text-base font-extrabold text-emerald-600 font-mono"></span>
+        </div>
+        <div class="flex gap-2">
+          <a id="popupPrintBtn" href="#" target="_blank" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all">
+            <span class="material-symbols-outlined text-sm">print</span> Print Full Slip
+          </a>
+          <button onclick="closeReceiptModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  // --- STATE MANAGEMENT ---
+  let currentStudent = null;
+  let pendingFees = [];
+
+  // --- UI TABS LOGIC ---
+  function switchTab(tabId) {
+    document.querySelectorAll(".search-form").forEach((el) => el.classList.add("hidden"));
+    ["admTab", "classTab", "userTab"].forEach((id) => {
+      document.getElementById("btn-" + id).className = "flex-1 text-xs py-1.5 font-medium text-slate-500 hover:text-slate-800 transition-all";
+    });
+    document.getElementById(tabId).classList.remove("hidden");
+    document.getElementById(tabId).classList.add("block");
+    document.getElementById("btn-" + tabId).className = "flex-1 text-xs py-1.5 font-bold bg-white shadow-sm rounded-md text-primary transition-all";
+  }
+
+  // --- API: FETCH STUDENTS FOR DROPDOWN ---
+  async function populateStudents() {
+    const classId = document.getElementById("searchClass").value;
+    const studentSelect = document.getElementById("searchStudent");
+
+    if (!classId) {
+      studentSelect.innerHTML = '<option value="">-- Select Class First --</option>';
+      studentSelect.disabled = true;
+      studentSelect.classList.add("bg-slate-50");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/accountant/api/students-by-class/${classId}`);
+      const data = await res.json();
+
+      if (data.success && data.students.length > 0) {
+        studentSelect.disabled = false;
+        studentSelect.classList.remove("bg-slate-50");
+        studentSelect.innerHTML = '<option value="">-- Select Student --</option>' + 
+          data.students.map(s => `<option value="${s._id}">${s.name} (Adm: ${s.admissionNumber || "N/A"})</option>`).join("");
+      } else {
+        studentSelect.innerHTML = '<option value="">No students found</option>';
+        studentSelect.disabled = true;
+      }
+    } catch (err) {
+      console.error("Error fetching students:", err);
+    }
+  }
+
+  // --- API: SEARCH STUDENT ---
+  async function handleSearch(type) {
+    let query = "";
+    if (type === "adm") query = document.getElementById("searchAdmNo").value;
+    if (type === "class") query = document.getElementById("searchStudent").value;
+    if (type === "username") query = document.getElementById("searchUsername").value;
+
+    if (!query) return alert("Please enter search criteria.");
+
+    document.getElementById("empty-state").classList.add("hidden");
+    document.getElementById("fee-ledger-section").classList.add("hidden");
+    document.getElementById("student-verification-card").classList.add("hidden");
+
+    try {
+      const res = await fetch(`/accountant/api/search-student?type=${type}&query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.message || "Student not found.");
+        document.getElementById("empty-state").classList.remove("hidden");
+        return;
+      }
+
+      currentStudent = data.student;
+      pendingFees = data.fees;
+
+      // Populate Verification Card
+      document.getElementById("sv-avatar").src = currentStudent.avatar || currentStudent.profilePic?.url || 'https://ik.imagekit.io/xcrdwi6be/classloop_avatars/9434619.jpg';
+      document.getElementById("sv-name").innerText = currentStudent.name;
+      document.getElementById("sv-admNo").innerText = currentStudent.admNo || currentStudent.admissionNumber || 'N/A';
+      document.getElementById("sv-class").innerText = currentStudent.class;
+      document.getElementById("sv-father").innerText = currentStudent.father || 'N/A';
+      document.getElementById("sv-mobile").innerText = currentStudent.mobile || currentStudent.phone || 'N/A';
+
+      document.getElementById("student-verification-card").classList.remove("hidden");
+    } catch (error) {
+      console.error("Search error:", error);
+      alert("Failed to connect to server.");
+      document.getElementById("empty-state").classList.remove("hidden");
+    }
+  }
+
+  // --- RENDER FEE LEDGER WITH FIFO ENFORCEMENT ---
+  function showFeeLedger() {
+    document.getElementById("fee-ledger-section").classList.remove("hidden");
+    renderFeeTable();
+  }
+
+  function renderFeeTable() {
+    const tbody = document.getElementById("fee-table-body");
+    const badge = document.getElementById("pending-months-badge");
+    tbody.innerHTML = "";
+
+    if (!pendingFees || pendingFees.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">No pending dues found for this student. All clear!</td></tr>`;
+      badge.innerText = "All Clear";
+      badge.className = "text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-md border border-green-200";
+      return;
+    }
+
+    const months = [...new Set(pendingFees.map((f) => `${f.month} ${f.year || ''}`))];
+    badge.innerText = `${months.length} Month(s) Pending`;
+    badge.className = "text-xs font-bold px-2 py-1 bg-red-100 text-red-600 rounded-md border border-red-200";
+
+    pendingFees.forEach((fee, index) => {
+      const amount = Number(fee.amount) || 0;
+      const fine = Number(fee.fine) || 0;
+      const total = amount + fine;
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-slate-50/80 transition-colors";
+      tr.innerHTML = `
+        <td class="px-4 py-3">
+          <input type="checkbox" name="feeIds" value="${fee._id}" data-total="${total}" onchange="handleFeeCheckboxChange()" class="fee-checkbox w-4 h-4 rounded border-slate-300 text-finance focus:ring-finance cursor-pointer" ${index === 0 ? '' : ''} />
+        </td>
+        <td class="px-2 py-3 font-medium text-slate-800">${fee.month} ${fee.year || ''}</td>
+        <td class="px-2 py-3 text-slate-600">${fee.feeHead || 'Tuition Fee'}</td>
+        <td class="px-4 py-3 text-right font-mono text-slate-700">₹${amount.toLocaleString('en-IN')}</td>
+        <td class="px-4 py-3 text-right font-mono text-red-600">₹${fine.toLocaleString('en-IN')}</td>
+        <td class="px-4 py-3 text-right font-mono font-bold text-slate-900">₹${total.toLocaleString('en-IN')}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    enforceFifoRules();
+  }
+
+  // FIFO Enforcement: Ensure checkboxes can only be selected sequentially from top to bottom
+  function handleFeeCheckboxChange() {
+    const checkboxes = Array.from(document.querySelectorAll('.fee-checkbox'));
+    let uncheckAllowed = false;
+    
+    checkboxes.forEach((cb, idx) => {
+      if (uncheckAllowed) {
+        cb.checked = false;
+      }
+      if (!cb.checked) {
+        uncheckAllowed = true;
+      }
+    });
+    calculateTotals();
+  }
+
+  function toggleAllFees(master) {
+    const checkboxes = document.querySelectorAll('.fee-checkbox');
+    checkboxes.forEach(cb => cb.checked = master.checked);
+    calculateTotals();
+  }
+
+  function handlePaymentMethodChange() {
+    const method = document.getElementById("paymentMethod").value;
+    const utrContainer = document.getElementById("utrFieldContainer");
+    if (method !== "Cash") {
+      utrContainer.classList.remove("hidden");
+    } else {
+      utrContainer.classList.add("hidden");
+      document.getElementById("paymentTransactionId").value = "";
+    }
+  }
+
+  function calculateTotals() {
+    const checkboxes = document.querySelectorAll('.fee-checkbox:checked');
+    let subtotal = 0;
+    checkboxes.forEach(cb => {
+      subtotal += Number(cb.getAttribute('data-total')) || 0;
+    });
+
+    const discount = Number(document.getElementById("paymentDiscount").value) || 0;
+    const payable = Math.max(0, subtotal - discount);
+
+    document.getElementById("summarySubtotal").innerText = `₹${subtotal.toLocaleString('en-IN')}`;
+    document.getElementById("summaryDiscount").innerText = `-₹${discount.toLocaleString('en-IN')}`;
+    document.getElementById("summaryPayable").innerText = `₹${payable.toLocaleString('en-IN')}`;
+
+    const btnSubmit = document.getElementById("btnSubmitPayment");
+    if (checkboxes.length > 0 && payable >= 0) {
+      btnSubmit.removeAttribute("disabled");
+    } else {
+      btnSubmit.setAttribute("disabled", "true");
+    }
+  }
+
+  // --- CONFIRMATION MODAL ---
+  function openConfirmModal() {
+    const checkboxes = document.querySelectorAll('.fee-checkbox:checked');
+    if (checkboxes.length === 0) return alert("Please select at least one fee record to settle.");
+
+    const method = document.getElementById("paymentMethod").value;
+    const utr = document.getElementById("paymentTransactionId").value.trim();
+
+    if (method !== "Cash" && !utr) {
+      alert("Please enter the Transaction ID / UTR reference number for non-cash payments.");
+      document.getElementById("paymentTransactionId").focus();
+      return;
+    }
+
+    let subtotal = 0;
+    const container = document.getElementById("modalFeeIdsContainer");
+    container.innerHTML = "";
+
+    checkboxes.forEach(cb => {
+      subtotal += Number(cb.getAttribute('data-total')) || 0;
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "feeIds[]";
+      input.value = cb.value;
+      container.appendChild(input);
+    });
+
+    const discount = Number(document.getElementById("paymentDiscount").value) || 0;
+    const payable = Math.max(0, subtotal - discount);
+    const remarks = document.getElementById("paymentRemarks").value;
+
+    document.getElementById("modalInputStudentId").value = currentStudent._id;
+    document.getElementById("modalInputDiscount").value = discount;
+    document.getElementById("modalInputMethod").value = method;
+    document.getElementById("modalInputTransactionId").value = utr;
+    document.getElementById("modalInputRemarks").value = remarks;
+
+    document.getElementById("modalStudentName").innerText = currentStudent.name;
+    document.getElementById("modalStudentAdm").innerText = currentStudent.admNo || currentStudent.admissionNumber || 'N/A';
+    document.getElementById("modalPaymentMethod").innerText = method;
+    document.getElementById("modalPayableAmount").innerText = `₹${payable.toLocaleString('en-IN')}`;
+
+    const utrRow = document.getElementById("modalUtrRow");
+    if (method !== "Cash") {
+      utrRow.classList.remove("hidden");
+      document.getElementById("modalUtrVal").innerText = utr;
+    } else {
+      utrRow.classList.add("hidden");
+    }
+
+    document.getElementById("confirmPaymentModal").classList.remove("hidden");
+    document.getElementById("confirmPaymentModal").classList.add("flex");
+  }
+
+  function closeConfirmModal() {
+    document.getElementById("confirmPaymentModal").classList.remove("flex");
+    document.getElementById("confirmPaymentModal").classList.add("hidden");
+  }
+
+  // --- RECEIPT DETAILS POPUP MODAL ---
+  function openReceiptModal(id, name, admNo, amount, method, month, year, txnId, remarks) {
+    document.getElementById('popupStudentName').textContent = name;
+    document.getElementById('popupAdmNo').textContent = admNo;
+    document.getElementById('popupPeriod').textContent = (month !== 'undefined' ? month : 'N/A') + ' ' + (year !== 'undefined' ? year : '');
+    document.getElementById('popupMethod').textContent = method;
+    document.getElementById('popupTxnId').textContent = txnId;
+    document.getElementById('popupAmount').textContent = '₹' + Number(amount).toLocaleString('en-IN');
+    document.getElementById('popupRemarks').textContent = remarks && remarks !== 'undefined' ? remarks : 'Direct Desk Settlement';
+    document.getElementById('popupPrintBtn').href = '/accountant/receipt/' + id;
+    
+    document.getElementById('receiptDetailModal').classList.remove('hidden');
+    document.getElementById('receiptDetailModal').classList.add('flex');
+  }
+
+  function closeReceiptModal() {
+    document.getElementById('receiptDetailModal').classList.remove('flex');
+    document.getElementById('receiptDetailModal').classList.add('hidden');
+  }
+</script>

@@ -134,12 +134,12 @@
                         <div class="bg-white dark:bg-[#1a192b] rounded-xl p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-400 shrink-0">
-                                    <%= student.rollNumber || index + 1 %>
+                                    <%= student.admissionNumber || index + 1 %>
                                 </div>
-                                <img src="<%= student.profilePic.url %>" class="size-10 rounded-full border-2 border-white shadow-sm shrink-0" />
+                                <img src="<%= student.student.profilePic.url %>" class="size-10 rounded-full border-2 border-white shadow-sm shrink-0" />
                                 <div class="min-w-0 flex-1">
-                                    <p class="text-sm font-bold text-[#121117] dark:text-white truncate"><%= student.name %></p>
-                                    <input type="hidden" name="results[<%= index %>][student]" value="<%= student._id %>">
+                                    <p class="text-sm font-bold text-[#121117] dark:text-white truncate"><%= student.student.name %></p>
+                                    <input type="hidden" name="results[<%= index %>][student]" value="<%= student.student._id %>">
                                 </div>
                                 <span class="material-symbols-outlined <%= result ? 'text-green-500' : 'text-amber-500' %> shrink-0">
                                     <%= result ? 'check_circle' : 'pending' %>
@@ -181,36 +181,50 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                                    <% currClass.students.forEach((student, index) => { 
-                                        const result = selectedExam.results.find(r => r.student._id.toString() === student._id.toString());
-                                    %>
-                                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                                        <td class="px-6 py-4 text-sm font-medium text-[#666487]"><%= student.rollNumber || index + 1 %></td>
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <img src="<%= student.profilePic.url %>" class="size-8 rounded-full border-2 border-white shadow-sm" />
-                                                <p class="text-sm font-bold text-[#121117] dark:text-white"><%= student.name %></p>
-                                                <input type="hidden" name="results[<%= index %>][student]" value="<%= student._id %>">
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <input name="results[<%= index %>][marksObtained]" type="number" max="<%= selectedExam.totalMarks %>" 
-                                                   class="w-24 h-9 bg-[#f1f0f4] dark:bg-gray-800 border-none rounded-lg text-sm font-bold text-center focus:ring-2 focus:ring-primary/50"
-                                                   value="<%= result ? result.marksObtained : '' %>" required />
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <input name="results[<%= index %>][remarks]" type="text" placeholder="Add a comment..."
-                                                   class="w-full h-9 bg-transparent border-none rounded-lg text-sm italic text-[#666487] dark:text-gray-400 focus:bg-[#f1f0f4] dark:focus:bg-gray-800 focus:ring-0"
-                                                   value="<%= result ? result.remarks : '' %>" />
-                                        </td>
-                                        <td class="px-6 py-4 text-center">
-                                            <span class="material-symbols-outlined <%= result ? 'text-green-500' : 'text-amber-500' %>">
-                                                <%= result ? 'check_circle' : 'pending' %>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <% }) %>
-                                </tbody>
+    <% currClass.students.forEach((item, index) => { 
+        // 1. Unwrap the nested student data
+        let studentData = item.student;
+        
+        // Safety check
+        if(studentData) {
+            // 2. FIXED: Compare the result with the actual studentData._id, not the array item's _id
+            const result = selectedExam.results.find(r => r.student._id.toString() === studentData._id.toString());
+    %>
+    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+        <td class="px-6 py-4 text-sm font-medium text-[#666487]">
+            <%= studentData.admissionNumber || index + 1 %>
+        </td>
+        <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+                <img src="<%= studentData.profilePic?.url || 'https://ui-avatars.com/api/?name=' + (studentData.name || 'User') + '&background=random' %>" 
+                     class="size-8 rounded-full border-2 border-white shadow-sm" alt="profile" />
+                
+                <p class="text-sm font-bold text-[#121117] dark:text-white">
+                    <%= studentData.name || 'Unknown' %>
+                </p>
+                
+                <input type="hidden" name="results[<%= index %>][student]" value="<%= studentData._id %>">
+            </div>
+        </td>
+        <td class="px-6 py-4">
+            <input name="results[<%= index %>][marksObtained]" type="number" max="<%= selectedExam.totalMarks %>" 
+                   class="w-24 h-9 bg-[#f1f0f4] dark:bg-gray-800 border-none rounded-lg text-sm font-bold text-center focus:ring-2 focus:ring-primary/50"
+                   value="<%= result ? result.marksObtained : '' %>" required />
+        </td>
+        <td class="px-6 py-4">
+            <input name="results[<%= index %>][remarks]" type="text" placeholder="Add a comment..."
+                   class="w-full h-9 bg-transparent border-none rounded-lg text-sm italic text-[#666487] dark:text-gray-400 focus:bg-[#f1f0f4] dark:focus:bg-gray-800 focus:ring-0"
+                   value="<%= result ? result.remarks : '' %>" />
+        </td>
+        <td class="px-6 py-4 text-center">
+            <span class="material-symbols-outlined <%= result ? 'text-green-500' : 'text-amber-500' %>">
+                <%= result ? 'check_circle' : 'pending' %>
+            </span>
+        </td>
+    </tr>
+    <%  } // End of safety check
+    }) %>
+</tbody>
                             </table>
                         </form>
                     </div>

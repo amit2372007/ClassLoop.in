@@ -1,0 +1,528 @@
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Teacher Profile | ClassLoop.in</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+  rel="stylesheet"
+/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#2563EB",
+          "background-light": "#f6f6f8",
+          "background-dark": "#161121",
+          "slate-sidebar": "#1e293b",
+          "slate-gray-border": "#E2E8F0",
+        },
+        fontFamily: {
+          display: ["Inter", "sans-serif"],
+        },
+        borderRadius: {
+          DEFAULT: "0.5rem",
+          lg: "1rem",
+          xl: "1.5rem",
+          full: "9999px",
+        },
+      },
+    },
+  };
+</script>
+<style type="text/tailwindcss">
+  body { font-family: "Inter", sans-serif; }
+  .material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4 sm:p-6 lg:p-8 transition-colors duration-200">
+  
+  <!-- Top Navigation / Breadcrumb -->
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-1">
+        <a href="/school" class="hover:underline">Dashboard</a>
+        <span>/</span>
+        <a href="/school?tab=Teachers" class="hover:underline">Teachers</a>
+        <span>/</span>
+        <span class="text-slate-800 dark:text-slate-200 font-medium">Profile</span>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Teacher Profile</h1>
+    </div>
+
+    <!-- Top Action CTA Buttons -->
+    <div class="flex items-center gap-3">
+      <button onclick="openResetPasswordModal('<%= teacher._id %>', '<%= teacher.name %>')" class="px-4 py-2 text-sm font-semibold rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"></path></svg>
+        Reset Password
+      </button>
+
+      <% if (teacher.status === 'suspended') { %>
+        <button onclick="openStatusModal('<%= teacher._id %>', 'activate')" class="px-4 py-2 text-sm font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-colors flex items-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Reactivate Teacher
+        </button>
+      <% } else { %>
+        <button onclick="openStatusModal('<%= teacher._id %>', 'suspend')" class="px-4 py-2 text-sm font-semibold rounded-xl bg-amber-500 hover:bg-amber-600 text-white transition-colors flex items-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+          Suspend Teacher
+        </button>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Header Card: Profile Banner -->
+  <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm mb-6">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-5">
+        <div class="relative">
+          <img src="<%= teacher.avatarUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(teacher.name) + '&background=6366f1&color=fff' %>" alt="<%= teacher.name %>" class="w-20 h-20 rounded-2xl object-cover border-2 border-indigo-500/20">
+          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 <%= teacher.status === 'suspended' ? 'bg-amber-500' : 'bg-emerald-500' %>"></span>
+        </div>
+
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white"><%= teacher.name %></h2>
+            <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full <%= teacher.status === 'suspended' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' %>">
+              <%= teacher.status === 'suspended' ? 'Suspended' : 'Active Staff' %>
+            </span>
+          </div>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5"><%= teacher.designation || 'Faculty Member' %> • Emp ID: <span class="font-mono text-slate-700 dark:text-slate-300"><%= teacher.employeeId || 'EMP-N/A' %></span>
+          Username: <span class="font-mono text-slate-700 dark:text-slate-300"><%= teacher.username %></span></p>
+          
+          <div class="flex flex-wrap items-center gap-4 mt-3 text-xs text-slate-600 dark:text-slate-400">
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+              <%= teacher.email %>
+            </span>
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+              <%= teacher.phone || 'No Phone Added' %>
+            </span>
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              Joined: <%= teacher.joiningDate ? new Date(teacher.joiningDate).toLocaleDateString('en-GB') : 'Not Set' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class Teacher Badge -->
+      <div class="bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900/50 p-4 rounded-xl w-full md:w-auto min-w-[200px]">
+        <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-1">Class Teacher Assignment</p>
+        <p class="text-lg font-extrabold text-slate-800 dark:text-white"><%= teacher.assignedClass ? teacher.assignedClass.className + ' - ' + teacher.assignedClass.section : 'Unassigned' %></p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1"><%= teacher.assignedSubjects && teacher.assignedSubjects.length > 0 ? teacher.assignedSubjects.join(', ') : 'No assigned subjects' %></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- KPI Overview Metrics -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Monthly Attendance Rate</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1"><%= typeof attendanceStats !== 'undefined' && attendanceStats.rate ? attendanceStats.rate : '0.0' %>%</h3>
+        </div>
+        <span class="p-2.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </span>
+      </div>
+      <p class="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-2 flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+        Target: 90%+
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Monthly Basic Salary</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">₹<%= teacher.basicSalary || 0 %></h3>
+        </div>
+        <span class="p-2.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Disbursed monthly</p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Assigned Subjects</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1"><%= teacher.assignedSubjects ? teacher.assignedSubjects.length : 0 %> Subjects</h3>
+        </div>
+        <span class="p-2.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Across school curriculum</p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Recorded Days</p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1"><%= typeof attendanceStats !== 'undefined' && attendanceStats.totalWorkingDays !== undefined ? attendanceStats.totalWorkingDays : 0 %> Days</h3>
+        </div>
+        <span class="p-2.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Attendance entries logged</p>
+    </div>
+  </div>
+
+  <!-- Detailed Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <div class="lg:col-span-2 space-y-6">
+
+      <!-- Dynamic Calendar & Attendance Section -->
+      <%
+        const currentYearNum = typeof selectedYear !== 'undefined' ? parseInt(selectedYear) : new Date().getFullYear();
+        const currentMonthNum = typeof selectedMonth !== 'undefined' ? parseInt(selectedMonth) : (new Date().getMonth() + 1);
+        const monthsList = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+        const monthName = monthsList[currentMonthNum - 1];
+        
+        const daysInMonth = new Date(currentYearNum, currentMonthNum, 0).getDate();
+        const firstDayOfWeek = new Date(currentYearNum, currentMonthNum - 1, 1).getDay(); // 0 = Sun, 1 = Mon ...
+        const startOffset = (firstDayOfWeek === 0) ? 6 : (firstDayOfWeek - 1); // Align to Mon-Sun grid
+
+        // Build a lookup map from attendanceLogs using 'YYYY-MM-DD'
+        const dateStatusMap = {};
+        if (typeof attendanceLogs !== 'undefined' && Array.isArray(attendanceLogs)) {
+          attendanceLogs.forEach(log => {
+            if (log.date) {
+              dateStatusMap[log.date] = log.status;
+            }
+          });
+        }
+      %>
+
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+        
+        <!-- Header Controls (Month & Year Filter) -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-indigo-600 dark:text-indigo-400">calendar_month</span>
+              Monthly Attendance Report
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Showing attendance calendar for <span class="font-semibold text-slate-700 dark:text-slate-300"><%= monthName %> <%= currentYearNum %></span>
+            </p>
+          </div>
+
+          <!-- Dynamic Filter Form -->
+          <form method="GET" action="" id="attendanceFilterForm" class="flex items-center gap-2">
+            <select name="month" onchange="this.form.submit()" class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all cursor-pointer">
+              <% monthsList.forEach((m, idx) => { %>
+                <option value="<%= idx + 1 %>" <%= (currentMonthNum === (idx + 1)) ? 'selected' : '' %>>
+                  <%= m %>
+                </option>
+              <% }); %>
+            </select>
+
+            <select name="year" onchange="this.form.submit()" class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all cursor-pointer">
+              <% for(let y = 2024; y <= 2027; y++) { %>
+                <option value="<%= y %>" <%= (currentYearNum === y) ? 'selected' : '' %>><%= y %></option>
+              <% } %>
+            </select>
+          </form>
+        </div>
+
+        <!-- Monthly Breakdown Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+            <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Total Logged Days</p>
+            <p class="text-xl font-bold text-slate-800 dark:text-white mt-0.5"><%= typeof attendanceStats !== 'undefined' && attendanceStats.totalWorkingDays !== undefined ? attendanceStats.totalWorkingDays : 0 %></p>
+          </div>
+          <div class="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-100 dark:border-emerald-900/40">
+            <p class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase">Present Days</p>
+            <p class="text-xl font-bold text-emerald-700 dark:text-emerald-400 mt-0.5"><%= typeof attendanceStats !== 'undefined' && attendanceStats.presentCount !== undefined ? attendanceStats.presentCount : 0 %></p>
+          </div>
+          <div class="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-100 dark:border-amber-900/40">
+            <p class="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase">Leaves / Half-Day</p>
+            <p class="text-xl font-bold text-amber-700 dark:text-amber-400 mt-0.5"><%= typeof attendanceStats !== 'undefined' ? ((attendanceStats.leaveCount || 0) + (attendanceStats.halfDayCount || 0)) : 0 %></p>
+          </div>
+          <div class="p-3 bg-rose-50 dark:bg-rose-950/30 rounded-xl border border-rose-100 dark:border-rose-900/40">
+            <p class="text-[11px] font-semibold text-rose-700 dark:text-rose-400 uppercase">Absent Days</p>
+            <p class="text-xl font-bold text-rose-700 dark:text-rose-400 mt-0.5"><%= typeof attendanceStats !== 'undefined' && attendanceStats.absentCount !== undefined ? attendanceStats.absentCount : 0 %></p>
+          </div>
+        </div>
+
+        <!-- Status Legend -->
+        <div class="flex flex-wrap items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
+          <span class="font-semibold text-slate-700 dark:text-slate-300">Calendar Legend:</span>
+          <div class="flex flex-wrap items-center gap-4">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Present</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Leave / Half-Day</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Absent</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700"></span> Holiday / Unmarked</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Calendar Days Grid -->
+        <div class="border border-slate-200 dark:border-slate-800 rounded-xl p-4 bg-slate-50/50 dark:bg-slate-900/50">
+          <div class="grid grid-cols-7 gap-1.5 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
+            <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div class="text-rose-500">Sat</div><div class="text-rose-500">Sun</div>
+          </div>
+          
+          <div class="grid grid-cols-7 gap-1.5">
+            <!-- Empty offset days for month start alignment -->
+            <% for(let i = 0; i < startOffset; i++) { %>
+              <div class="p-2"></div>
+            <% } %>
+
+            <!-- Render each day dynamically from attendanceLogs dateStatusMap -->
+            <% 
+              for(let day = 1; day <= daysInMonth; day++) { 
+                const dayPadded = String(day).padStart(2, '0');
+                const monthPadded = String(currentMonthNum).padStart(2, '0');
+                const fullDateKey = `${currentYearNum}-${monthPadded}-${dayPadded}`;
+                
+                const status = dateStatusMap[fullDateKey]; // 'Present', 'Absent', 'Leave', 'Half-Day', or undefined
+
+                let tileClass = "";
+                let statusLabel = "";
+
+                if (status === 'Present') {
+                  tileClass = "bg-emerald-500 text-white font-bold shadow-sm hover:bg-emerald-600 transition-all cursor-pointer";
+                  statusLabel = "Present";
+                } else if (status === 'Absent') {
+                  tileClass = "bg-rose-500 text-white font-bold shadow-sm hover:bg-rose-600 transition-all cursor-pointer";
+                  statusLabel = "Absent";
+                } else if (status === 'Leave' || status === 'Half-Day') {
+                  tileClass = "bg-amber-400 text-amber-950 font-bold shadow-sm hover:bg-amber-500 transition-all cursor-pointer";
+                  statusLabel = status;
+                } else {
+                  // Attendance not marked for this date -> Disabled / Holiday
+                  tileClass = "bg-slate-200/60 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 cursor-not-allowed select-none opacity-60";
+                  statusLabel = "Holiday";
+                }
+            %>
+              <div class="p-2 rounded-xl text-center flex flex-col items-center justify-center min-h-[52px] <%= tileClass %>" title="<%= fullDateKey %>: <%= statusLabel %>">
+                <span class="text-xs font-bold leading-none"><%= dayPadded %></span>
+                <span class="text-[9px] uppercase tracking-tighter mt-1 opacity-90 leading-none">
+                  <%= statusLabel %>
+                </span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Attendance Logs Table -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Attendance Log Entries</h4>
+            <span class="text-xs text-slate-500 dark:text-slate-400"><%= monthName %> <%= currentYearNum %></span>
+          </div>
+          
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3">Date</th>
+                  <th class="p-3">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <% if (typeof attendanceLogs !== 'undefined' && attendanceLogs.length > 0) { %>
+                  <% attendanceLogs.forEach(log => { %>
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                      <td class="p-3 font-medium text-slate-900 dark:text-white font-mono"><%= log.date %></td>
+                      <td class="p-3">
+                        <% if(log.status === 'Present') { %>
+                          <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400">Present</span>
+                        <% } else if(log.status === 'Absent') { %>
+                          <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400">Absent</span>
+                        <% } else if(log.status === 'Leave' || log.status === 'Half-Day') { %>
+                          <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400"><%= log.status %></span>
+                        <% } else { %>
+                          <span class="px-2.5 py-1 text-[11px] font-semibold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">N/A</span>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="2" class="p-4 text-center text-slate-400 dark:text-slate-500">No attendance logs available for this month.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Column 3: Personal & Financial Details -->
+    <div class="space-y-6">
+
+      <!-- Personal & Academic Details Card -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">Personal & Qualifications</h3>
+        
+        <div class="space-y-3 text-sm">
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Department</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200"><%= teacher.department || 'General' %></p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Teaching Experience</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200"><%= teacher.experience || 'Fresher' %></p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Gender / DOB</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200"><%= teacher.gender || 'Not Set' %> • <%= teacher.dob ? new Date(teacher.dob).toLocaleDateString('en-GB') : 'Not Set' %></p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Residential Address</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200"><%= teacher.location || 'No Address Provided' %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank Details Card -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Bank Account Details</h3>
+          <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">Verified</span>
+        </div>
+
+        <div class="space-y-3 text-sm">
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Bank Name</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200"><%= teacher.bankDetails?.bankName || 'Not Available' %></p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Account Holder Name</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200"><%= teacher.bankDetails?.accountHolder || 'Not Available' %></p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Account Number</p>
+            <p class="font-mono font-semibold text-slate-800 dark:text-slate-200"><%= teacher.bankDetails?.accountNumber || 'Not Available' %></p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">IFSC Code</p>
+            <p class="font-mono font-semibold text-slate-800 dark:text-slate-200"><%= teacher.bankDetails?.ifscCode || 'Not Available' %></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal 1: Reset Password -->
+<!-- Reset Password Modal -->
+<div id="resetPasswordModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Reset Password</h3>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Set a new login password for <span id="resetTeacherName" class="font-semibold text-slate-800 dark:text-slate-200">Teacher</span>.</p>
+
+    <form id="resetPasswordForm" method="POST" action="/school/teachers/reset-password/<%= teacher._id %>">
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">New Password</label>
+        <input 
+          type="password" 
+          name="newPassword" 
+          required 
+          minlength="6" 
+          placeholder="Enter new password" 
+          class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        >
+      </div>
+
+      <div class="flex items-center justify-end gap-3 mt-6">
+        <button type="button" onclick="closeModal('resetPasswordModal')" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">Cancel</button>
+        <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">Update Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal 2: Suspend / Reactivate Status -->
+<div id="statusModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+    <div class="flex items-center gap-3 text-amber-500 mb-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white" id="statusModalTitle">Confirm Action</h3>
+    </div>
+    
+    <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" id="statusModalMessage">Are you sure you want to change this teacher's account status?</p>
+
+    <form id="statusForm" method="POST" action="/school/teachers/toggle-status/<%=teacher._id%>">
+      <input type="hidden" name="teacherId" id="statusTeacherId">
+      <input type="hidden" name="action" id="statusAction">
+
+      <div class="flex items-center justify-end gap-3">
+        <button type="button" onclick="closeModal('statusModal')" class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">Cancel</button>
+        <button type="submit" id="statusModalSubmitBtn" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">Confirm</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Helper Scripts -->
+<script>
+  function openResetPasswordModal(id, name) {
+  const form = document.getElementById('resetPasswordForm');
+  form.action = `/school/teachers/reset-password/${id}`;
+  document.getElementById('resetTeacherName').innerText = name;
+  document.getElementById('resetPasswordModal').classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.add('hidden');
+}
+
+  function openStatusModal(id, action) {
+  const form = document.getElementById('statusForm');
+  
+  // Set target route dynamically with Teacher ID
+  form.action = `/school/teachers/toggle-status/${id}`;
+
+  document.getElementById('statusTeacherId').value = id;
+  document.getElementById('statusAction').value = action;
+  
+  const titleEl = document.getElementById('statusModalTitle');
+  const msgEl = document.getElementById('statusModalMessage');
+  const submitBtn = document.getElementById('statusModalSubmitBtn');
+
+  if (action === 'suspend') {
+    titleEl.innerText = 'Suspend Teacher';
+    msgEl.innerText = 'Are you sure you want to suspend this teacher account? They will lose access to school modules until reactivated.';
+    submitBtn.innerText = 'Confirm Suspension';
+    submitBtn.className = 'px-4 py-2 text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-xl transition-colors';
+  } else {
+    titleEl.innerText = 'Reactivate Teacher';
+    msgEl.innerText = 'Are you sure you want to reactivate this teacher account?';
+    submitBtn.innerText = 'Reactivate Account';
+    submitBtn.className = 'px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors';
+  }
+
+  document.getElementById('statusModal').classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.add('hidden');
+}
+</script>

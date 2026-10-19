@@ -1,37 +1,44 @@
-// models/FeeStructure.js
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
+// Helper to prevent floating-point bugs
+const priceSetter = (val) =>
+  typeof val === "number" ? Math.round(val * 100) / 100 : val;
 
 const feeStructureSchema = new Schema(
   {
     name: {
       type: String,
-      required: true, // e.g., "Class 10 Standard Fee - 2025"
+      required: true,
     },
     school: {
       type: Schema.Types.ObjectId,
       ref: "School",
       required: true,
+      index: true,
     },
-    // Link to your existing Class model
     classLink: {
       type: Schema.Types.ObjectId,
       ref: "Class",
       required: true,
     },
-
-    // The Breakdown
+    frequency: {
+      type: String,
+      enum: ["Monthly", "Yearly", "One-Time"],
+      default: "Monthly",
+    },
     components: [
       {
-        name: { type: String, required: true }, // "Tuition Fee", "Computer Lab"
-        amount: { type: Number, required: true },
+        name: { type: String, required: true },
+        amount: { type: Number, required: true, min: 0, set: priceSetter },
       },
     ],
-
-    totalAmount: { type: Number, required: true }, // Sum of components
-    isActive: { type: Boolean, default: true }, // Toggle off to stop using it
+    totalAmount: { type: Number, required: true, min: 0, set: priceSetter },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model("FeeStructure", feeStructureSchema);
+module.exports =
+  mongoose.models.FeeStructure ||
+  mongoose.model("FeeStructure", feeStructureSchema);

@@ -1,0 +1,292 @@
+<main class="flex-1 ml-64 min-h-screen flex flex-col relative bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
+  
+  <!-- Page Header & Controls -->
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-5 sticky top-0 z-10 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-1">
+          <a href="/school" class="hover:underline">Dashboard</a>
+          <span>/</span>
+          <span class="text-slate-800 dark:text-slate-200 font-medium">Staff Attendance</span>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-500">how_to_reg</span>
+          Daily Attendance Register
+        </h1>
+      </div>
+
+      <!-- Date Selection Logic -->
+      <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 p-2 rounded-xl border border-slate-200 dark:border-slate-700">
+        <label for="attendanceDate" class="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-2">Select Date:</label>
+        <input 
+          type="date" 
+          id="attendanceDate" 
+          value="<%= locals.selectedDate || '' %>"
+          class="px-3 py-1.5 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+        />
+        <span class="text-xs text-amber-600 dark:text-amber-400 font-medium mr-2" id="dateWarning">
+          *Last 5 days only
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <div class="p-6 flex-1 overflow-y-auto">
+    
+    <!-- Status Banner: Shown only if attendance is already recorded -->
+    <% if (locals.attendanceExists) { %>
+      <div class="mb-6 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 p-4 rounded-xl flex items-start gap-4">
+        <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 mt-0.5">verified</span>
+        <div>
+          <h3 class="text-sm font-bold text-emerald-800 dark:text-emerald-300">Attendance Already Submitted</h3>
+          <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">The attendance for the selected date has been successfully recorded and locked. You cannot modify it here.</p>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Tab Navigation -->
+    <div class="flex items-center gap-6 border-b border-slate-200 dark:border-slate-800 mb-6">
+      <button onclick="switchTab('teachers')" id="tab-teachers" class="pb-3 text-sm font-bold border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 transition-colors">
+        Teachers (<%= allTeachers.length %>)
+      </button>
+      <button onclick="switchTab('employees')" id="tab-employees" class="pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors">
+        Employees (<%= allEmployees.length %>)
+      </button>
+    </div>
+
+    <!-- MAIN FORM -->
+    <form action="/school/attendance/staff/save" method="POST" id="attendanceForm">
+      
+      <!-- Hidden Date Input to send with form submission -->
+      <input type="hidden" name="date" id="formDateHidden" value="<%= locals.selectedDate || '' %>">
+
+      <!-- Attendance Card Wrapper -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        
+        <!-- List Headers -->
+        <div class="grid grid-cols-12 gap-4 p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <div class="col-span-1 text-center">#</div>
+          <div class="col-span-4">Staff Details</div>
+          <div class="col-span-3">Designation / Role</div>
+          <div class="col-span-4 text-center">Attendance Status</div>
+        </div>
+
+        <!-- TEACHERS LIST -->
+        <div id="list-teachers" class="divide-y divide-slate-100 dark:divide-slate-800/50 block">
+          <% if(allTeachers && allTeachers.length > 0) { %>
+            <% allTeachers.forEach((teacher, index) => { 
+                // Determine pre-filled status if attendance already exists
+                let status = "present"; 
+                if (locals.attendanceRecords && locals.attendanceRecords[teacher._id]) {
+                    status = locals.attendanceRecords[teacher._id].toLowerCase();
+                }
+            %>
+              <div class="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors <%= locals.attendanceExists ? 'opacity-80' : '' %>">
+                <div class="col-span-1 text-center font-mono text-sm text-slate-400">
+                  <%= String(index + 1).padStart(2, '0') %>
+                </div>
+                <div class="col-span-4 flex items-center gap-3">
+                  <img src="<%= teacher.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(teacher.name)}&background=c7d2fe&color=3730a3` %>" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 object-cover" alt="Avatar" />
+                  <div>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white"><%= teacher.name %></p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400"><%= teacher.email %></p>
+                  </div>
+                </div>
+                <div class="col-span-3">
+                  <p class="text-sm text-slate-700 dark:text-slate-300"><%= teacher.role || 'Teacher' %></p>
+                </div>
+                
+                <!-- Hidden input to define the model reference for the backend -->
+                <input type="hidden" name="records[<%= teacher._id %>][model]" value="User">
+
+                <div class="col-span-4 flex justify-center gap-2">
+                  <!-- Present -->
+                  <label class="cursor-pointer">
+                    <input type="radio" name="records[<%= teacher._id %>][status]" value="Present" class="peer sr-only" <%= status === 'present' ? 'checked' : '' %> <%= locals.attendanceExists ? 'disabled' : '' %> />
+                    <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-emerald-100 peer-checked:text-emerald-700 peer-checked:border-emerald-300 dark:peer-checked:bg-emerald-900/30 dark:peer-checked:text-emerald-400 dark:peer-checked:border-emerald-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">Present</div>
+                  </label>
+                  <!-- Absent -->
+                  <label class="cursor-pointer">
+                    <input type="radio" name="records[<%= teacher._id %>][status]" value="Absent" class="peer sr-only" <%= status === 'absent' ? 'checked' : '' %> <%= locals.attendanceExists ? 'disabled' : '' %> />
+                    <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-rose-100 peer-checked:text-rose-700 peer-checked:border-rose-300 dark:peer-checked:bg-rose-900/30 dark:peer-checked:text-rose-400 dark:peer-checked:border-rose-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">Absent</div>
+                  </label>
+                  <!-- Half-Day -->
+                  <label class="cursor-pointer">
+                    <input type="radio" name="records[<%= teacher._id %>][status]" value="Half-Day" class="peer sr-only" <%= status === 'half-day' ? 'checked' : '' %> <%= locals.attendanceExists ? 'disabled' : '' %> />
+                    <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-amber-100 peer-checked:text-amber-700 peer-checked:border-amber-300 dark:peer-checked:bg-amber-900/30 dark:peer-checked:text-amber-400 dark:peer-checked:border-amber-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">Half-Day</div>
+                  </label>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="p-8 text-center text-slate-500 dark:text-slate-400 text-sm">No teachers found in the system.</div>
+          <% } %>
+        </div>
+
+        <!-- EMPLOYEES LIST -->
+        <div id="list-employees" class="divide-y divide-slate-100 dark:divide-slate-800/50 hidden">
+          <% if(allEmployees && allEmployees.length > 0) { %>
+            <% allEmployees.forEach((emp, index) => { 
+                let status = "present"; 
+                if (locals.attendanceRecords && locals.attendanceRecords[emp._id]) {
+                    status = locals.attendanceRecords[emp._id].toLowerCase();
+                }
+            %>
+              <div class="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors <%= locals.attendanceExists ? 'opacity-80' : '' %>">
+                <div class="col-span-1 text-center font-mono text-sm text-slate-400">
+                  <%= String(index + 1).padStart(2, '0') %>
+                </div>
+                <div class="col-span-4 flex items-center gap-3">
+                  <% if(emp.profilePic) { %>
+                    <img src="<%= emp.profilePic %>" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 object-cover" alt="Avatar" />
+                  <% } else { %>
+                    <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 font-bold border border-slate-300 dark:border-slate-700">
+                      <%= emp.name.charAt(0).toUpperCase() %>
+                    </div>
+                  <% } %>
+                  <div>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white"><%= emp.name %></p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400"><%= emp.employeeId || 'EMP-N/A' %></p>
+                  </div>
+                </div>
+                <div class="col-span-3">
+                  <p class="text-sm text-slate-700 dark:text-slate-300"><%= emp.department || 'Staff' %></p>
+                </div>
+                
+                <!-- Hidden input to define the model reference for the backend -->
+                <input type="hidden" name="records[<%= emp._id %>][model]" value="Employee">
+
+                <div class="col-span-4 flex justify-center gap-2">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="records[<%= emp._id %>][status]" value="Present" class="peer sr-only" <%= status === 'present' ? 'checked' : '' %> <%= locals.attendanceExists ? 'disabled' : '' %> />
+                    <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-emerald-100 peer-checked:text-emerald-700 peer-checked:border-emerald-300 dark:peer-checked:bg-emerald-900/30 dark:peer-checked:text-emerald-400 dark:peer-checked:border-emerald-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">Present</div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="records[<%= emp._id %>][status]" value="Absent" class="peer sr-only" <%= status === 'absent' ? 'checked' : '' %> <%= locals.attendanceExists ? 'disabled' : '' %> />
+                    <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-rose-100 peer-checked:text-rose-700 peer-checked:border-rose-300 dark:peer-checked:bg-rose-900/30 dark:peer-checked:text-rose-400 dark:peer-checked:border-rose-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">Absent</div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="records[<%= emp._id %>][status]" value="Half-Day" class="peer sr-only" <%= status === 'half-day' ? 'checked' : '' %> <%= locals.attendanceExists ? 'disabled' : '' %> />
+                    <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-amber-100 peer-checked:text-amber-700 peer-checked:border-amber-300 dark:peer-checked:bg-amber-900/30 dark:peer-checked:text-amber-400 dark:peer-checked:border-amber-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">Half-Day</div>
+                  </label>
+                  <!-- Leave -->
+<label class="cursor-pointer">
+  <input 
+    type="radio" 
+    name="records[<%= emp._id %>][status]" 
+    value="Leave" 
+    class="peer sr-only" 
+    <%= status === 'leave' ? 'checked' : '' %> 
+    <%= locals.attendanceExists ? 'disabled' : '' %> 
+  />
+  <div class="px-3 py-1.5 rounded-lg text-xs font-bold border peer-checked:bg-purple-100 peer-checked:text-purple-700 peer-checked:border-purple-300 dark:peer-checked:bg-purple-900/30 dark:peer-checked:text-purple-400 dark:peer-checked:border-purple-800 text-slate-500 border-slate-200 dark:border-slate-700 <%= !locals.attendanceExists ? 'hover:bg-slate-100 dark:hover:bg-slate-800 transition-all' : '' %>">
+    Leave
+  </div>
+</label>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="p-8 text-center text-slate-500 dark:text-slate-400 text-sm">No employees found in the system.</div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Bottom Actions -->
+      <div class="mt-6 flex justify-end gap-3">
+        <% if (!locals.attendanceExists) { %>
+          <button type="reset" class="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            Reset Form
+          </button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">save</span>
+            Save Attendance
+          </button>
+        <% } %>
+      </div>
+    </form>
+  </div>
+
+  <!-- JavaScript for Date Logic & Tabs -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dateInput = document.getElementById("attendanceDate");
+      const hiddenDateInput = document.getElementById("formDateHidden");
+      const warningText = document.getElementById("dateWarning");
+
+      // Set Max Date to Today, Min Date to 5 Days Ago
+      const today = new Date();
+      const minDate = new Date();
+      minDate.setDate(today.getDate() - 5);
+
+      const formatDate = (date) => date.toISOString().split("T")[0];
+      const maxDateStr = formatDate(today);
+      const minDateStr = formatDate(minDate);
+
+      dateInput.max = maxDateStr;
+      dateInput.min = minDateStr;
+      
+      // If no date was passed from the server, default to today
+      if (!dateInput.value) {
+        dateInput.value = maxDateStr;
+        hiddenDateInput.value = maxDateStr;
+      }
+
+      // Handle Date Change: Reload the page to fetch the selected date's data
+      dateInput.addEventListener("change", (e) => {
+        const selectedDate = new Date(e.target.value);
+        
+        if (selectedDate > today || selectedDate < minDate) {
+          e.target.value = maxDateStr; // reset to valid bounds
+          warningText.classList.remove("text-amber-600", "dark:text-amber-400");
+          warningText.classList.add("text-rose-600", "dark:text-rose-500", "animate-pulse");
+          setTimeout(() => {
+            warningText.classList.remove("text-rose-600", "dark:text-rose-500", "animate-pulse");
+            warningText.classList.add("text-amber-600", "dark:text-amber-400");
+          }, 1500);
+          return;
+        }
+
+        // Redirect to fetch attendance for the new date
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('tab', 'Attendance');
+        urlParams.set('date', e.target.value);
+        window.location.search = urlParams.toString();
+      });
+    });
+
+    // Tab Switcher Logic
+    function switchTab(tab) {
+      const btnTeachers = document.getElementById("tab-teachers");
+      const btnEmployees = document.getElementById("tab-employees");
+      const listTeachers = document.getElementById("list-teachers");
+      const listEmployees = document.getElementById("list-employees");
+
+      const activeClasses = ["border-indigo-600", "text-indigo-600", "dark:text-indigo-400", "font-bold"];
+      const inactiveClasses = ["border-transparent", "text-slate-500", "hover:text-slate-700", "dark:text-slate-400", "dark:hover:text-slate-200", "font-semibold"];
+
+      if (tab === "teachers") {
+        listTeachers.classList.remove("hidden");
+        listTeachers.classList.add("block");
+        listEmployees.classList.add("hidden");
+        listEmployees.classList.remove("block");
+
+        btnTeachers.classList.add(...activeClasses);
+        btnTeachers.classList.remove(...inactiveClasses);
+        btnEmployees.classList.add(...inactiveClasses);
+        btnEmployees.classList.remove(...activeClasses);
+      } else {
+        listEmployees.classList.remove("hidden");
+        listEmployees.classList.add("block");
+        listTeachers.classList.add("hidden");
+        listTeachers.classList.remove("block");
+
+        btnEmployees.classList.add(...activeClasses);
+        btnEmployees.classList.remove(...inactiveClasses);
+        btnTeachers.classList.add(...inactiveClasses);
+        btnTeachers.classList.remove(...activeClasses);
+      }
+    }
+  </script>
+</main>

@@ -235,13 +235,42 @@ module.exports.loginRender = (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
-  req.user.isActive = true;
-  await req.user.save();
-  req.flash("success", `Welcome Back! ${req.user.username}`);
-  // let redirectUrl =  res.locals.redirectUrl || "/listings";
-  let redirectUrl = req.session.redirectUrl || "/home";
-  delete req.session.redirectUrl;
-  res.redirect(redirectUrl);
+  try {
+    if (req.user.isSuspended === true) {
+      req.flash("warning", "Account Suspended by Authority");
+      return req.logout((err) => {
+        if (err) return next(err);
+        req.flash("warning", "ID Suspended! Please contact the authority.");
+        return res.redirect("/user/login");
+      });
+    }
+    req.user.isActive = true;
+    await req.user.save();
+    req.flash("success", `Welcome Back! ${req.user.username}`);
+
+    const user = await Users.findById(req.user._id);
+
+    // Add return here so execution stops after redirecting principles
+    if (user.designation === "principle") {
+      return res.redirect("/school");
+    }
+
+    if (user.designation === "teacher") {
+      try {
+        return res.redirect("/teacher?tab=Overview");
+      } catch (e) {
+        return res.redirect("/home");
+      }
+    }
+
+    let redirectUrl = req.session.redirectUrl || "/home";
+    delete req.session.redirectUrl;
+    return res.redirect(redirectUrl);
+  } catch (err) {
+    console.error("Login Handler Error:", err);
+    req.flash("error", "An error occurred during login.");
+    return res.redirect("/login");
+  }
 };
 
 module.exports.renderForgetPassword = (req, res) => {

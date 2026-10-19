@@ -1,4 +1,4 @@
-<main class="flex-1 flex flex-col overflow-hidden">
+<main class="flex-1 flex flex-col overflow-hidden relative">
 
     <header class="h-auto min-h-[56px] md:min-h-[64px] bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-3 md:px-6 py-2 md:py-3 flex items-center justify-between gap-2 md:gap-3 shrink-0 flex-wrap">
         <div class="flex items-center gap-2 md:gap-6 flex-wrap min-w-0">
@@ -10,78 +10,67 @@
             </div>
         </div>
         <div class="flex items-center gap-2 md:gap-4 shrink-0">
-            
             <div class="h-9 w-9 md:h-10 md:w-10 rounded-xl overflow-hidden bg-slate-200 border-2 border-slate-100 dark:border-slate-800 flex-shrink-0">
                 <img alt="Profile" src="<%=currUser.profilePic.url%>" />
             </div>
         </div>
     </header>
 
-    <div class="p-3 md:p-6 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 flex flex-col gap-3">
-        <div class="relative w-full">
+    <div class="p-3 md:p-6 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 flex flex-col lg:flex-row gap-3 lg:items-center justify-between">
+        <div class="relative w-full lg:w-1/2">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg md:text-xl">search</span>
-            <input
-                id="searchInput"
-                oninput="filterStudents()"
-                class="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                placeholder="Search by name or roll number..." type="text" />
+            <input id="searchInput" oninput="filterStudents()" class="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="Search by name or roll number..." type="text" />
         </div>
-        <div class="flex items-center gap-2 md:gap-3">
-            <form action="/teacher/addStudent" method="GET" class="flex-1 md:flex-none">
-                <button class="w-full flex items-center justify-center gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-shadow shadow-sm active:scale-95">
-                    <span class="material-symbols-outlined text-base md:text-lg">person_add</span>
-                    Add Student
-                </button>
-            </form>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center gap-2 md:gap-3 w-full lg:w-auto">
+            <button onclick="openModal('singleStudentModal')" class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 md:px-5 py-2 md:py-2.5 bg-white dark:bg-slate-800 border-2 border-primary/20 text-primary dark:text-primary text-xs md:text-sm font-bold rounded-xl hover:bg-primary/5 transition-shadow shadow-sm active:scale-95">
+                <span class="material-symbols-outlined text-base md:text-lg">person_add</span>
+                Single Student
+            </button>
+            <button onclick="openModal('multipleStudentModal')" class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 md:px-5 py-2 md:py-2.5 bg-primary text-white text-xs md:text-sm font-bold rounded-xl hover:bg-primary/90 transition-shadow shadow-sm active:scale-95">
+                <span class="material-symbols-outlined text-base md:text-lg">group_add</span>
+                Multiple Students
+            </button>
         </div>
     </div>
 
+    <!-- Student Grid -->
     <div class="flex-1 overflow-y-auto p-3 md:p-6 bg-slate-50/50 dark:bg-background-dark/50">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6" id="studentGrid">
-            <% for(Student of currClass.students) { %>
-            <div class="student-card bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-5 rounded-xl hover:shadow-lg transition-all group" 
-                 data-name="<%= Student.name ? Student.name.toLowerCase() : '' %>" 
-                 data-roll="<%= Student.rollNumber || '' %>">
-                
-                <div class="flex flex-col items-center text-center space-y-3 md:space-y-4">
-                    <div class="relative">
-                        <img alt="<%=Student.name%>"
-                            class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-800"
-                            src="<%=Student.profilePic ? Student.profilePic.url : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'%>" />
-                        <% if(Student.isActive == true) { %>
-                        <span class="absolute bottom-0 right-0 w-4 h-4 md:w-5 md:h-5 bg-emerald-500 border-2 sm:border-[3px] border-white dark:border-background-dark rounded-full"></span>
-                        <% } %>
-                    </div>
-                    <div class="min-w-0 w-full">
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm md:text-base leading-tight truncate"><%=Student.name%></h3>
-                        <p class="text-[11px] md:text-xs font-semibold text-primary uppercase tracking-wider mt-1">
-                            Roll No: <%=Student.rollNumber%></p>
-                    </div>
-                    <div class="w-full space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                        <div class="flex items-center justify-center gap-1.5 md:gap-2 text-slate-500 dark:text-slate-400">
-                            <span class="material-symbols-outlined text-sm md:text-base">call</span>
-                            <span class="text-[11px] md:text-xs font-medium truncate">+91 <%=Student.phone || 'N/A'%></span>
+            <% for(let Item of currClass.students) { %>
+                <% let studentData = Item.student; %>
+                <% if(studentData) { %>
+                <div class="student-card bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 p-4 md:p-5 rounded-xl hover:shadow-lg transition-all group" data-name="<%= studentData.name ? studentData.name.toLowerCase() : '' %>" data-roll="<%= studentData.admissionNumber || '' %>">
+                    <div class="flex flex-col items-center text-center space-y-3 md:space-y-4">
+                        <div class="relative">
+                            <img alt="<%= studentData.name || 'Student' %>" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-800" src="<%= studentData.profilePic?.url || 'https://ui-avatars.com/api/?name=' + (studentData.name || 'User') + '&background=random' %>" />
+                            <% if(studentData.isActive == true) { %>
+                            <span class="absolute bottom-0 right-0 w-4 h-4 md:w-5 md:h-5 bg-emerald-500 border-2 sm:border-[3px] border-white dark:border-background-dark rounded-full"></span>
+                            <% } %>
+                        </div>
+                        <div class="min-w-0 w-full">
+                            <h3 class="font-bold text-slate-900 dark:text-white text-sm md:text-base leading-tight truncate"><%= studentData.name || 'Unknown' %></h3>
+                            <p class="text-[11px] md:text-xs font-semibold text-primary uppercase tracking-wider mt-1">Admission No: <%= studentData.admissionNumber || 'N/A' %></p>
+                        </div>
+                        <div class="w-full space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center justify-center gap-1.5 md:gap-2 text-slate-500 dark:text-slate-400">
+                                <span class="material-symbols-outlined text-sm md:text-base">call</span>
+                                <span class="text-[11px] md:text-xs font-medium truncate">+91 <%= studentData.phone || 'N/A' %></span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 w-full pt-2 md:pt-4">
+                            <a href="/teacher/studentProfile/<%=studentData._id%>" class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95" title="View Performance">
+                                <span class="material-symbols-outlined text-lg md:text-xl">account_circle</span>
+                            </a>
+        
+                            <button class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95" title="Edit Details">
+                                <span class="material-symbols-outlined text-lg md:text-xl">edit</span>
+                            </button>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center gap-2 w-full pt-2 md:pt-4">
-                        <a href="/user/<%=Student._id%>"
-                            class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95"
-                            title="View Performance">
-                            <span class="material-symbols-outlined text-lg md:text-xl">account_circle</span>
-                        </a>
-                        <button
-                            class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95"
-                            title="Message Parent">
-                            <span class="material-symbols-outlined text-lg md:text-xl">mail</span>
-                        </button>
-                        <button
-                            class="p-2 md:p-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-primary hover:text-white transition-colors active:scale-95"
-                            title="Edit Details">
-                            <span class="material-symbols-outlined text-lg md:text-xl">edit</span>
-                        </button>
-                    </div>
                 </div>
-            </div>
+                <% } %>
             <% } %>
         </div>
     </div>
@@ -92,9 +81,132 @@
         </span>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL 1: ADD SINGLE STUDENT                    -->
+    <!-- ============================================== -->
+    <div id="singleStudentModal" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center hidden backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl relative animate-[fadeIn_0.2s_ease-out]">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+                <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">person_add</span> Register Student
+                </h3>
+                <button onclick="closeModal('singleStudentModal')" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <form action="/teacher/addSingleStudent" method="POST" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Full Name</label>
+                    <input type="text" id="single-name" name="name" required class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. Rahul Sharma" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Phone Number</label>
+                        <input type="tel" id="single-phone" name="phone" required class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="10-digit number" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Admission Number</label>
+                        <input type="text" name="admissionNumber" required class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. 101" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Temporary Password</label>
+                    <input type="password" name="password" required class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Set a temporary password" />
+                </div>
+
+                <!-- Username Preview Panel -->
+                <div class="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-between">
+                    <span class="text-xs font-semibold text-primary">Generated Username:</span>
+                    <span id="single-username-preview" class="text-sm font-bold text-slate-800 dark:text-white tracking-wide">Waiting...</span>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeModal('singleStudentModal')" class="px-5 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-sm">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 2: ADD MULTIPLE STUDENTS                 -->
+    <!-- ============================================== -->
+    <div id="multipleStudentModal" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center hidden backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-5xl overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh] animate-[fadeIn_0.2s_ease-out]">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 shrink-0">
+                <div>
+                    <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">group_add</span> Bulk Register Students
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">Add multiple students using a shared temporary password.</p>
+                </div>
+                <button onclick="closeModal('multipleStudentModal')" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <form action="/teacher/addMultipleStudents" method="POST" class="flex flex-col flex-1 overflow-hidden">
+                <!-- Master Password Box -->
+                <div class="p-6 pb-2 shrink-0">
+                    <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 p-4 rounded-xl flex flex-col sm:flex-row items-center gap-4">
+                        <div class="flex-1 w-full sm:w-auto">
+                            <label class="block text-xs font-bold text-amber-800 dark:text-amber-500 mb-1">Master Shared Password</label>
+                            <input type="text" name="masterPassword" required class="w-full max-w-sm px-4 py-2 bg-white dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. School@123" />
+                        </div>
+                        <p class="text-xs text-amber-700 dark:text-amber-600 sm:max-w-xs leading-relaxed">
+                            <span class="font-bold">Note:</span> This password will be assigned to all students listed below. They must change it upon their first login.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Table Container (Scrollable) -->
+                <div class="flex-1 overflow-y-auto p-6 pt-2">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-700">
+                                <th class="pb-3 text-xs font-semibold text-slate-500 w-1/4">Full Name</th>
+                                <th class="pb-3 text-xs font-semibold text-slate-500 w-1/4">Phone Number</th>
+                                <th class="pb-3 text-xs font-semibold text-slate-500 w-1/6">Admission No</th>
+                                <th class="pb-3 text-xs font-semibold text-slate-500 w-1/4">Generated Username</th>
+                                <th class="pb-3 text-xs font-semibold text-slate-500 w-12 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="multi-students-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+                            <!-- Row 0 -->
+                            <tr class="group">
+                                <td class="py-3 pr-2"><input type="text" name="students[0][name]" required class="multi-name w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Name" /></td>
+                                <td class="py-3 px-2"><input type="tel" name="students[0][phone]" required class="multi-phone w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="10-digit number" /></td>
+                                <td class="py-3 px-2"><input type="text" name="students[0][admissionNumber]" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Admission No" /></td>
+                                <td class="py-3 px-2"><div class="px-3 py-2 bg-slate-100 dark:bg-slate-800/50 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 multi-username-preview truncate">Waiting...</div></td>
+                                <td class="py-3 pl-2 text-center">
+                                    <button type="button" class="text-slate-300 opacity-50 cursor-not-allowed" title="Cannot delete first row"><span class="material-symbols-outlined text-lg">delete</span></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <button type="button" onclick="addStudentRow()" class="mt-4 flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary text-xs font-bold rounded-xl hover:bg-primary/20 transition-colors">
+                        <span class="material-symbols-outlined text-base">add</span> Add Another Row
+                    </button>
+                </div>
+
+                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 shrink-0">
+                    <button type="button" onclick="closeModal('multipleStudentModal')" class="px-5 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">upload</span> Upload All
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </main>
 
 <script>
+    // -----------------------------------------------------
+    // Search Filtering
+    // -----------------------------------------------------
     function filterStudents() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         const cards = document.querySelectorAll('.student-card');
@@ -103,22 +215,90 @@
         cards.forEach(card => {
             const name = card.getAttribute('data-name');
             const roll = card.getAttribute('data-roll');
-            
-            // Check if query matches name or roll number
             if (name.includes(query) || roll.includes(query)) {
-                card.style.display = 'block'; // Show card
+                card.style.display = 'block';
                 visibleCount++;
             } else {
-                card.style.display = 'none'; // Hide card
+                card.style.display = 'none';
             }
         });
 
-        // Update the footer text dynamically
         const countText = document.getElementById('studentCountText');
-        if (visibleCount === 0) {
-            countText.innerText = 'No students found matching your search.';
-        } else {
-            countText.innerText = `Showing ${visibleCount} student${visibleCount !== 1 ? 's' : ''}`;
-        }
+        countText.innerText = visibleCount === 0 
+            ? 'No students found matching your search.' 
+            : `Showing ${visibleCount} student${visibleCount !== 1 ? 's' : ''}`;
     }
+
+    // -----------------------------------------------------
+    // Modal Management
+    // -----------------------------------------------------
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+    }
+
+    // -----------------------------------------------------
+    // Username Generator Engine (Format: Year + Name + Last 5 Phone)
+    // -----------------------------------------------------
+    function formatUsername(name, phone) {
+        const currentYear = new Date().getFullYear();
+        let cleanName = (name || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        let cleanPhone = (phone || '').trim().replace(/\D/g, '');
+        
+        let phoneSuffix = cleanPhone.length >= 5 ? cleanPhone.slice(-5) : cleanPhone;
+        
+        if (!cleanName && !phoneSuffix) return 'Waiting...';
+        return `${currentYear}${cleanName}${phoneSuffix}`;
+    }
+
+    // -----------------------------------------------------
+    // Single Student Username Preview
+    // -----------------------------------------------------
+    document.getElementById('single-name').addEventListener('input', updateSinglePreview);
+    document.getElementById('single-phone').addEventListener('input', updateSinglePreview);
+    
+    function updateSinglePreview() {
+        const name = document.getElementById('single-name').value;
+        const phone = document.getElementById('single-phone').value;
+        document.getElementById('single-username-preview').innerText = formatUsername(name, phone);
+    }
+
+    // -----------------------------------------------------
+    // Multiple Students Engine (Dynamic Rows & Delegation)
+    // -----------------------------------------------------
+    let multiRowIndex = 1;
+
+    function addStudentRow() {
+        const tbody = document.getElementById('multi-students-body');
+        const tr = document.createElement('tr');
+        tr.className = 'group';
+        
+        // Express.js parses inputs natively formatted like students[index][key] using body-parser
+        tr.innerHTML = `
+            <td class="py-3 pr-2"><input type="text" name="students[${multiRowIndex}][name]" required class="multi-name w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Name" /></td>
+            <td class="py-3 px-2"><input type="tel" name="students[${multiRowIndex}][phone]" required class="multi-phone w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="10-digit number" /></td>
+            <td class="py-3 px-2"><input type="text" name="students[${multiRowIndex}][admissionNumber]" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Roll No" /></td>
+            <td class="py-3 px-2"><div class="px-3 py-2 bg-slate-100 dark:bg-slate-800/50 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 multi-username-preview truncate">Waiting...</div></td>
+            <td class="py-3 pl-2 text-center">
+                <button type="button" onclick="this.closest('tr').remove()" class="text-slate-400 hover:text-red-500 transition-colors" title="Remove Row">
+                    <span class="material-symbols-outlined text-lg">delete</span>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+        multiRowIndex++;
+    }
+
+    // Event Delegation: Listen for typing in the table to dynamically update the preview for that specific row
+    document.getElementById('multi-students-body').addEventListener('input', function(e) {
+        if (e.target.classList.contains('multi-name') || e.target.classList.contains('multi-phone')) {
+            const row = e.target.closest('tr');
+            const name = row.querySelector('.multi-name').value;
+            const phone = row.querySelector('.multi-phone').value;
+            row.querySelector('.multi-username-preview').innerText = formatUsername(name, phone);
+        }
+    });
 </script>
